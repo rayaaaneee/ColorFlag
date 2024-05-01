@@ -21,9 +21,13 @@ const RootLayout = ({
   return (
     <html lang="en">
       <header>
-        <Menu />
       </header>
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} flex` }>
+        <Menu />
+        <main className=" flex flex-col gap-5 h-full w-full items-center justify-center">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

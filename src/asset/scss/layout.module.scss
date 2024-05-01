@@ -1,18 +1,20 @@
-header {
+
+body {
 
     $dark-menu-color: #242527;
     $dark-menu-color-hover: #3a3b3d;
     $menu-color: #fff;
     $menu-color-hover: #685cfe;
-
-    $menu-border-radius: 10px;
+    $menu-border-radius: 0px;
+    
     .menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 300px;
+        width: 90px;
         height: 100%;
-        background: $menu-color;
+        background: $dark-menu-color;
         border-radius: 0 $menu-border-radius $menu-border-radius 0;
+
+        svg {
+            font-size: 30px;
+        }
     }
 }

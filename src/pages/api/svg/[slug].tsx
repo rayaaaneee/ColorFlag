@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         try {
             // Construct the file path using the query parameter
             const svgFilename = `${req.query.slug}.svg`;
-            const filePath = path.join(process.cwd(), 'asset', 'img', 'flags', '4x3', svgFilename);
+            const filePath = "src/asset/img/flags/4x3/" + svgFilename;
 
             // Read the SVG file content
             const svgContent = fs.readFileSync(filePath, 'utf-8');
