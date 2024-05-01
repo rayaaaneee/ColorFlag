@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+import path from 'path';
+
+const __dirname = import.meta.dirname;
+
+
+const nextConfig = {
+    sassOptions : {
+        includePaths: [path.join(__dirname, "asset", "scss")],
+    }
+};
 
 export default nextConfig;
