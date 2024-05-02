@@ -1,4 +1,9 @@
+"use client";
+
 import styles from "@/asset/scss/layout.module.scss";
+
+import { usePathname } from "next/navigation";
+import Link from 'next/link';
 
 import { FaPlay } from "react-icons/fa";
 import { RiAccountPinCircleFill } from "react-icons/ri";
@@ -10,12 +15,23 @@ const Menu = () => {
         color: "white",
         className: "cursor-pointer",
     }
+
+    const pathname = usePathname();
+ 
     return (
         <div className={ `${styles.menu} flex gap-5 flex-col items-center justify-center` }>
-            <FaPlay { ...iconAttr }/>
-            <RiAccountPinCircleFill { ...iconAttr }/>
-            <PiSignOutBold { ...iconAttr }/>
-            <PiSignInBold { ...iconAttr }/>
+            <Link href={"/play"}>
+                <FaPlay { ...iconAttr }/>
+            </Link>
+            <Link href={"/account"}>
+                <RiAccountPinCircleFill { ...iconAttr }/>
+            </Link>
+            <div onClick={(e) => {}}>
+                <PiSignOutBold { ...iconAttr }/>
+            </div>
+            <Link href={"/signin"}>
+                <PiSignInBold { ...iconAttr }/>
+            </Link>
         </div>
     );
 }
