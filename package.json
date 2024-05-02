@@ -2,24 +2,26 @@
   "name": "color-my-flag",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "npm i && npx prisma generate"
+    "init": "npm i && npx prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.0.0",
     "@prisma/client": "^5.13.0",
     "@svgr/cli": "^8.1.0",
     "autoprefixer": "^10.4.19",
+    "hex-rgb": "^5.0.0",
     "next": "14.2.3",
     "next-auth": "^5.0.0-beta.17",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.0",
-    "hex-rgb": "^5.0.0",
     "rgb-hex": "^4.1.0"
   },
   "devDependencies": {

@@ -1,10 +1,13 @@
 "use client";
 
 import { MouseEventHandler, ReactEventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
-import countries from "@/asset/data/countries.json";
+import Country from "@/useful/interfaces/country";
+import countriesArray from "@/asset/data/countries.json";
 import { useRouter } from "next/navigation";
 
 const Play = () => {
+
+    const countries: Country[] = countriesArray as Country[];
 
     const [selectedCountry, setSelectedCountry] = useState<string>();
     const router = useRouter();
@@ -22,12 +25,11 @@ const Play = () => {
                 className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 onChange={ (e) => setSelectedCountry(e.currentTarget.value) }>
                 <option value="null" selected>Please select a country</option>
-                {countries.map((element) => {
-                    const [key, value] = Object.entries(element)[0];
+                {countries.map((country: Country) => {
                     return (
                         <>
-                            <option value={key}>
-                                <p>{ value.name }</p>
+                            <option value={country.code}>
+                                <p>{ country.name }</p>
                             </option>
                         </>
                     )

@@ -3,16 +3,18 @@
 import { MouseEventHandler, useRef, useState, useEffect, useCallback } from "react";
 import styles from "@/asset/scss/play.module.scss";
 import { useParams } from 'next/navigation';
-import countries from "@/asset/data/countries.json";
-import { init } from "next/dist/compiled/webpack/webpack";
+import countriesArray from "@/asset/data/countries.json";
 import hexToRgb from "@/useful/hexToRgb";
-import Country from "@/useful/types/country";
+import Country from "@/useful/interfaces/country";
+import toast from "react-hot-toast";
 
 const uppercaseFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 const Play = () => {
+
+    const countries: Country[] = countriesArray as Country[];
 
     const svgContainer = useRef<HTMLDivElement>(null);
 
@@ -22,13 +24,9 @@ const Play = () => {
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-    const countryElement: any = countries.find((element) => {
-        const [key, _] = Object.entries(element)[0];
-        // return country if key === country
-        return (key === country);
-    });
+    const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country));
 
-    const countryName: string = countryElement ? uppercaseFirstLetter(Object.values<Country>(countryElement)[0].name as string) : 'Unknown';
+    const countryName: string = countryElement !== undefined ? uppercaseFirstLetter(countryElement.name) : 'Unknown';
 
     const loadCountrySVG = async () => {
         try {
@@ -50,9 +48,13 @@ const Play = () => {
     }, []);
 
     const onColorShape = useCallback((e: MouseEvent) => {
-        const shape = e.currentTarget as SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
-        shape.setAttribute('fill', selectedColor as string);
-        shape.classList.remove(styles.svgContent);
+        if (selectedColor !== null) {
+            const shape = e.currentTarget as SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
+            shape.setAttribute('fill', selectedColor as string);
+            shape.classList.remove(styles.svgContent);
+        } else {
+            toast.error("Please choose a color before start coloring !");
+        }
     }, [selectedColor]);
 
     useEffect(() => {

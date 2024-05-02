@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "@/asset/scss/globals.scss";
 import Menu from "../components/menu";
 
@@ -21,6 +22,7 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body className={`${inter.className} flex` }>
+        <Toaster position="top-right" containerStyle={{ textAlign: "end" }} />
         <Menu />
         <main className=" flex flex-col gap-5 h-full w-full items-center justify-center">
           {children}

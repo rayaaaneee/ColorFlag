@@ -1,17 +1,20 @@
 "use client";
 
 import { MouseEventHandler, ReactEventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
-import countries from "@/asset/data/countries.json";
+import Continent from "@/useful/interfaces/continent";
+import continentsArray from "@/asset/data/continents.json";
 import { useRouter } from "next/navigation";
 
 const Play = () => {
 
-    const [selectedCountry, setSelectedCountry] = useState<string>();
+    const continents: Continent[] = continentsArray as Continent[];
+
+    const [selectedContinent, setSelectedContinent] = useState<string>();
     const router = useRouter();
 
     const goToPage: MouseEventHandler<HTMLButtonElement> = (e) => {
-        if (selectedCountry) {
-            router.push(`/play/${selectedCountry}`);
+        if (selectedContinent) {
+            router.push(`/play/continent/${selectedContinent}`);
         }
     }
 
@@ -20,16 +23,13 @@ const Play = () => {
             <h1>Choose the region to train :</h1>
             <select
                 className="w-1/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                onChange={ (e) => setSelectedCountry(e.currentTarget.value) }>
-                <option value="null" selected>Please select a country</option>
-                {countries.map((element) => {
-                    const [key, value] = Object.entries(element)[0];
+                onChange={ (e) => setSelectedContinent(e.currentTarget.value) }>
+                <option value="null" selected>Please select a continent</option>
+                {continents.map((continent: Continent) => {
                     return (
-                        <>
-                            <option value={key}>
-                                <p>{ value.name }</p>
-                            </option>
-                        </>
+                        <option value={continent.code} key={continent.code}>
+                            <p>{ continent.name }</p>
+                        </option>
                     )
                 })}
             </select>
