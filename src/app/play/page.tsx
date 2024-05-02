@@ -27,7 +27,7 @@ const Play = () => {
                     return (
                         <>
                             <option value={key}>
-                                <p>{ value }</p>
+                                <p>{ value.name }</p>
                             </option>
                         </>
                     )

@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import countries from "@/asset/data/countries.json";
 import { init } from "next/dist/compiled/webpack/webpack";
 import hexToRgb from "@/useful/hexToRgb";
+import Country from "@/useful/types/country";
 
 const uppercaseFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -27,7 +28,7 @@ const Play = () => {
         return (key === country);
     });
 
-    const countryName: string = countryElement ? uppercaseFirstLetter(Object.values(countryElement)[0] as string) : 'Unknown';
+    const countryName: string = countryElement ? uppercaseFirstLetter(Object.values<Country>(countryElement)[0].name as string) : 'Unknown';
 
     const loadCountrySVG = async () => {
         try {
@@ -51,32 +52,30 @@ const Play = () => {
     const onColorShape = useCallback((e: MouseEvent) => {
         const shape = e.currentTarget as SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
         shape.setAttribute('fill', selectedColor as string);
-        console.log(shape.getAttribute('fill'));
         shape.classList.remove(styles.svgContent);
-        console.log(selectedColor);
     }, [selectedColor]);
 
     useEffect(() => {
-        console.log(svgColors);
         if (selectedColor !== null) initShape();
     }, [selectedColor]);
 
     const initShape = (firstCall = false) => {
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll('path, circle');
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll('path[fill], circle[fill]');
         if (allShapes != undefined) {
             const flagColors: string[] = [];
             allShapes.forEach((shape) => {
-
                 if (firstCall) {
-                    const initialFill: string = hexToRgb(shape.getAttribute('fill') as string);
+                    const initialFill: string | null = shape.getAttribute('fill');
                     if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
+                        console.log(initialFill)
+                        const rgbInitialFill: string = hexToRgb(initialFill); 
                         shape.setAttribute('fill', 'white');
+
                         shape.style.strokeWidth = '2.5px';
                         shape.style.stroke = 'black';
                         shape.classList.add(styles.svgContent);
-                        if (!flagColors.some((color) => (initialFill === color))
-                        ) {
-                            flagColors.push(initialFill);
+                        if (!flagColors.some((color) => (rgbInitialFill === color))) {
+                            flagColors.push(rgbInitialFill);
                         }
                     }
                 }
@@ -108,7 +107,6 @@ const Play = () => {
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-grey">Guess the flag of { countryName }</h1>
             <ul className="flex flex-row flex-wrap items-center justify-center w-fill h-fill gap-5">
                 { svgColors.map((color: string) => {
-                    console.log(color, selectedColor);
                     return (
                         <li onClick={selectColor} className={ `${styles.colorItem} ${ selectedColor === color && (styles.selected) } cursor-pointer` } key={color} style={{ backgroundColor: color }}>
                         </li>
