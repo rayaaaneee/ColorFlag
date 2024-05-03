@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "ColorFlag",
   description: "My First next project",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.ico",
   }
 };
 

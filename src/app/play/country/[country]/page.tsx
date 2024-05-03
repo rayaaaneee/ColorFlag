@@ -8,21 +8,28 @@ import hexToRgb from "@/useful/hexToRgb";
 import Country from "@/useful/interfaces/country";
 import toast from "react-hot-toast";
 
+import PaintBrushSVG from "@/components/svg/paintbrush";
+
 const uppercaseFirstLetter = (string: string) => {
     return string.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-const Play = () => {
+const PlayCountry = () => {
 
     const countries: Country[] = countriesArray as Country[];
 
     const svgContainer = useRef<HTMLDivElement>(null);
 
+    
     const { country } = useParams<{ country?: string }>() as any;
+    
 
+    const [colorableShapes, setColorableShapes] = useState<(SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[]>([]);
+    
     const [svgColors, setSvgColors] = useState<string[]>([]);
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
 
     const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country));
 
@@ -48,12 +55,13 @@ const Play = () => {
     }, []);
 
     const onColorShape = useCallback((e: MouseEvent) => {
+        console.log(selectedColor);
         if (selectedColor !== null) {
             const shape = e.currentTarget as SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
             shape.setAttribute('fill', selectedColor as string);
             shape.classList.remove(styles.svgContent);
         } else {
-            toast.error("Please choose a color before start coloring !");
+            toast.error("Please select a color");
         }
     }, [selectedColor]);
 
@@ -69,34 +77,37 @@ const Play = () => {
                 if (firstCall) {
                     const initialFill: string | null = shape.getAttribute('fill');
                     if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
-                        console.log(initialFill)
                         const rgbInitialFill: string = hexToRgb(initialFill); 
                         shape.setAttribute('fill', 'white');
 
                         shape.style.strokeWidth = '2.5px';
                         shape.style.stroke = 'black';
                         shape.classList.add(styles.svgContent);
+                        shape.onclick = onColorShape;
+                        setColorableShapes(colorableShapes => {
+                            colorableShapes.push(shape);
+                            return colorableShapes;
+                        });
+                            
                         if (!flagColors.some((color) => (rgbInitialFill === color))) {
                             flagColors.push(rgbInitialFill);
                         }
                     }
                 }
-                shape.addEventListener("click", onColorShape);
             });
             if (firstCall) setSvgColors(flagColors);
         }
     };
 
-    const validateFlag: MouseEventHandler<HTMLButtonElement> = (e) => {
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll('path, circle');
-        if (allShapes != undefined) {
-            allShapes.forEach(shape => {
+    const validateFlag: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
+        if (colorableShapes.length != 0) {
+            colorableShapes.forEach(shape => {
                 shape.classList.remove(styles.svgContent);
                 shape.removeAttribute("style");
                 shape.onclick = null;
             });
         }
-    }
+    }, [colorableShapes])
 
     const selectColor: MouseEventHandler<HTMLLIElement> = (e) => {
         const target = e.target as HTMLLIElement;
@@ -121,4 +132,4 @@ const Play = () => {
         </>
     );
 }
-export default Play;
+export default PlayCountry;
