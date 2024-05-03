@@ -12,6 +12,8 @@ body {
         height: 100%;
         background: $dark-menu-color;
         border-radius: 0 $menu-border-radius $menu-border-radius 0;
+        position: relative;
+        z-index: 100;
 
         svg {
             font-size: 30px;

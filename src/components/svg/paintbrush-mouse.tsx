@@ -1,25 +1,29 @@
 import { useEffect, useRef } from "react";
+import Position from "@/useful/interfaces/position";
 
 interface PaintbrushInterface {
-    color: string
+    color: string,
+    initialPosition: Position
 }
 
-const PaintbrushMouse = ({ color }: PaintbrushInterface) => {
+const PaintbrushMouse = ({ color, initialPosition }: PaintbrushInterface) => {
 
     const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
 
+        const divider = 2;
+
         // init position before event
-        //if (svgRef.current != null) {
-        //    svgRef.current.style.left = window.event.clientX;
-        //    svgRef.current.style.top = window.event.clientY;
-        //}
+        if (svgRef.current != null) {
+            svgRef.current.style.left = `${initialPosition.x - (svgRef.current.clientWidth / divider)}px`;
+            svgRef.current.style.top = `${initialPosition.y - (svgRef.current.clientHeight / divider)}px`;
+        }
 
         const handleMouseMove = (event: MouseEvent) => {
             if (svgRef.current) {
-                svgRef.current.style.left = `${event.clientX - (svgRef.current.clientWidth / 2)}px`;
-                svgRef.current.style.top = `${event.clientY - (svgRef.current.clientHeight / 2)}px`;
+                svgRef.current.style.left = `${event.clientX - (svgRef.current.clientWidth / divider)}px`;
+                svgRef.current.style.top = `${event.clientY - (svgRef.current.clientHeight / divider)}px`;
             }
         };
 
@@ -33,7 +37,12 @@ const PaintbrushMouse = ({ color }: PaintbrushInterface) => {
     return (
         <svg
           ref={ svgRef }
-          style={{ rotate: "-30deg", position: "absolute", pointerEvents: "none" }}
+          style={{ 
+            rotate: "-30deg", 
+            position: "absolute", 
+            pointerEvents: "none",
+            zIndex: 101
+          }}
           version="1.1"
           id="Paintbrush_1"
           xmlns="http://www.w3.org/2000/svg"

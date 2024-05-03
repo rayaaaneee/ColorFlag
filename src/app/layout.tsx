@@ -24,7 +24,7 @@ const RootLayout = ({
       <body className={`${inter.className} flex` }>
         <Toaster position="top-right" containerStyle={{ textAlign: "end" }} />
         <Menu />
-        <main className=" flex flex-col gap-5 h-full w-full items-center justify-center">
+        <main className="flex flex-col gap-5 h-full w-full items-center justify-center">
           {children}
         </main>
       </body>
