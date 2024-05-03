@@ -8,7 +8,7 @@ import hexToRgb from "@/useful/hexToRgb";
 import Country from "@/useful/interfaces/country";
 import toast from "react-hot-toast";
 
-import PaintBrushSVG from "@/components/svg/paintbrush";
+import PaintbrushMouse from "@/components/svg/paintbrush-mouse";
 
 const uppercaseFirstLetter = (string: string) => {
     return string.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -19,6 +19,8 @@ const PlayCountry = () => {
     const countries: Country[] = countriesArray as Country[];
 
     const svgContainer = useRef<HTMLDivElement>(null);
+
+    const paintbrush = useRef(null);
 
     
     const { country } = useParams<{ country?: string }>() as any;
@@ -66,20 +68,23 @@ const PlayCountry = () => {
     }, [selectedColor]);
 
     useEffect(() => {
-        if (selectedColor !== null) initShape();
+        if (selectedColor !== null) {
+            initShape();
+            document.body.style.cursor = "none";
+        }
     }, [selectedColor]);
 
     const initShape = (firstCall = false) => {
+        if (firstCall) { 
         const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll('path[fill], circle[fill]');
-        if (allShapes != undefined) {
-            const flagColors: string[] = [];
-            allShapes.forEach((shape) => {
-                if (firstCall) {
+            if (allShapes != undefined) {
+                const flagColors: string[] = [];
+                allShapes.forEach((shape) => {
                     const initialFill: string | null = shape.getAttribute('fill');
                     if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                         const rgbInitialFill: string = hexToRgb(initialFill); 
                         shape.setAttribute('fill', 'white');
-
+                    
                         shape.style.strokeWidth = '2.5px';
                         shape.style.stroke = 'black';
                         shape.classList.add(styles.svgContent);
@@ -93,13 +98,14 @@ const PlayCountry = () => {
                             flagColors.push(rgbInitialFill);
                         }
                     }
-                }
-            });
-            if (firstCall) setSvgColors(flagColors);
+                });
+                setSvgColors(flagColors);
+            }
         }
     };
 
     const validateFlag: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
+        console.log(colorableShapes);
         if (colorableShapes.length != 0) {
             colorableShapes.forEach(shape => {
                 shape.classList.remove(styles.svgContent);
@@ -121,7 +127,7 @@ const PlayCountry = () => {
             <ul className="flex flex-row flex-wrap items-center justify-center w-fill h-fill gap-5">
                 { svgColors.map((color: string) => {
                     return (
-                        <li onClick={selectColor} className={ `${styles.colorItem} ${ selectedColor === color && (styles.selected) } cursor-pointer` } key={color} style={{ backgroundColor: color }}>
+                        <li onClick={selectColor} className={ `${styles.colorItem} ${ selectedColor === color && (styles.selected) } ${ selectedColor === null && 'cursor-pointer' }` } key={color} style={{ backgroundColor: color }}>
                         </li>
                     );
                 })}
@@ -129,6 +135,7 @@ const PlayCountry = () => {
             <div ref={svgContainer} className={ `${styles.svgContainer} bg-gray-50 dark:bg-gray-900` }>
             </div>
             <button type="button" onClick={validateFlag} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">OK</button>
+            { selectedColor && <PaintbrushMouse color={ selectedColor }/> }
         </>
     );
 }

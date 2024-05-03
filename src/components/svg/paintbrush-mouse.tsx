@@ -1,10 +1,39 @@
-interface PaintBrushInterface {
-    paintbrushColor: string
+import { useEffect, useRef } from "react";
+
+interface PaintbrushInterface {
+    color: string
 }
 
-const PaintbrushSVG = ({ paintbrushColor }: PaintBrushInterface) => {
+const PaintbrushMouse = ({ color }: PaintbrushInterface) => {
+
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    useEffect(() => {
+
+        // init position before event
+        //if (svgRef.current != null) {
+        //    svgRef.current.style.left = window.event.clientX;
+        //    svgRef.current.style.top = window.event.clientY;
+        //}
+
+        const handleMouseMove = (event: MouseEvent) => {
+            if (svgRef.current) {
+                svgRef.current.style.left = `${event.clientX - (svgRef.current.clientWidth / 2)}px`;
+                svgRef.current.style.top = `${event.clientY - (svgRef.current.clientHeight / 2)}px`;
+            }
+        };
+
+        document.addEventListener("mousemove", handleMouseMove);
+
+        return () => {
+            document.removeEventListener("mousemove", handleMouseMove);
+        };
+    }, []);
+
     return (
         <svg
+          ref={ svgRef }
+          style={{ rotate: "-30deg", position: "absolute", pointerEvents: "none" }}
           version="1.1"
           id="Paintbrush_1"
           xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +44,7 @@ const PaintbrushSVG = ({ paintbrushColor }: PaintBrushInterface) => {
           className="h-20"
           xmlSpace="preserve"
         >
-            <style>{`.st0{fill:#E0E0D1;} .st1{fill:#4F5D73;} .st2{opacity:0.2;fill:#231F20;} .st3{fill:#E0995E;} .st4{fill:#FFFFFF;} .st5{fill:${paintbrushColor};}`}</style>
+            <style>{`.st0{fill:#E0E0D1;} .st1{fill:#4F5D73;} .st2{opacity:0.2;fill:#231F20;} .st3{fill:#E0995E;} .st4{fill:#FFFFFF;} .st5{fill:${color};}`}</style>
             <path className="st1" d="M47,36c0,1.1-0.9,2-2,2H19c-1.1,0-2-0.9-2-2V14c0-1.1,0.9-2,2-2h26c1.1,0,2,0.9,2,2V36z" />
             <path className="st2" d="M17,36c0,0,0,0.9,0,2v2c0,1.1,0.9,2,2,2h7c0,0,3,0,3,3c0,4.2-0.8,6.3-1,6.8c0,0,0,0.1-0.1,0.1c0,0,0,0,0,0h0 c-0.2,0.5-0.3,1-0.3,1.6c0,2.4,2,4.4,4.4,4.4c2.4,0,4.4-2,4.4-4.4c0-0.6-0.1-1.1-0.3-1.6h0c0,0,0,0,0,0c0,0,0-0.1-0.1-0.1 c-0.2-0.6-1-2.6-1-6.8c0,0,0-3,3-3h7c1.1,0,2-0.9,2-2v-2c0-1.1,0-2,0-2H17z" />
             <path className="st3" d="M17,34c0,0,0,0.9,0,2v2c0,1.1,0.9,2,2,2h7c0,0,3,0,3,3c0,4.2-0.8,6.3-1,6.8c0,0,0,0.1-0.1,0.1c0,0,0,0,0,0h0 c-0.2,0.5-0.3,1-0.3,1.6c0,2.4,2,4.4,4.4,4.4c2.4,0,4.4-2,4.4-4.4c0-0.6-0.1-1.1-0.3-1.6h0c0,0,0,0,0,0c0,0,0-0.1-0.1-0.1 c-0.2-0.6-1-2.6-1-6.8c0,0,0-3,3-3h7c1.1,0,2-0.9,2-2v-2c0-1.1,0-2,0-2H17z" />
@@ -39,4 +68,4 @@ const PaintbrushSVG = ({ paintbrushColor }: PaintBrushInterface) => {
     );
 }
 
-export default PaintbrushSVG;
+export default PaintbrushMouse;
