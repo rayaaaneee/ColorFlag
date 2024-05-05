@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import continentsImg from "@/asset/img/continents.webp";
-import countryImg from "@/asset/img/country.png";
-import sportsImg from "@/asset/img/sports.png"
+import continentsImg from "@/asset/img/pages/play/continents.webp";
+import countryImg from "@/asset/img/pages/play/country.png";
+import sportsImg from "@/asset/img/pages/sports.png"
 
 import Card from "@/useful/interfaces/card";
 import CardLink from "@/components/card-link";

@@ -1,7 +1,8 @@
 "use client";
 
-import { MouseEventHandler, useRef, useState, useEffect, useCallback } from "react";
+import { MouseEventHandler, useRef, useState, useEffect, useCallback, ReactNode } from "react";
 import { useParams } from 'next/navigation';
+import { renderToString } from 'react-dom/server'
 import toast from "react-hot-toast";
 
 import styles from "@/asset/scss/play.module.scss";
@@ -12,6 +13,7 @@ import Country from "@/useful/interfaces/country";
 import hexToRgb from "@/useful/hexToRgb";
 
 import PaintbrushMouse from "@/components/svg/paintbrush-mouse";
+import SvgDefs from "@/components/svg/svg-defs";
 import Position from "@/useful/interfaces/position";
 
 const uppercaseFirstWordLetters = (string: string) => (string.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
@@ -23,10 +25,9 @@ const PlayCountry = () => {
     const svgContainer = useRef<HTMLDivElement>(null);
 
     const { country } = useParams<{ country?: string }>() as any;
-    
 
     const [colorableShapes, setColorableShapes] = useState<(SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[]>([]);
-    
+
     const [svgColors, setSvgColors] = useState<string[]>([]);
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -45,6 +46,20 @@ const PlayCountry = () => {
                 .then((data) => {
                     if (svgContainer.current) {
                         svgContainer.current.innerHTML = data.svg;
+                        const svg: SVGElement | null = svgContainer.current.querySelector('svg');
+                        if (svg) {
+                            const svgWidth: number = svgContainer.current.clientWidth;
+                            const svgDefs: ReactNode = (<SvgDefs
+                                x={0}
+                                y={0}
+                                patternWidth={svgWidth}
+                                patternHeight={svgWidth}
+                                imageWidth={svgWidth}
+                                imageHeight={svgWidth}
+                            />);
+                            const svgDefsString = renderToString(svgDefs);
+                            svg.insertAdjacentHTML('afterbegin', svgDefsString);
+                        }
                     }
                     initShape(true);
                 });
@@ -82,16 +97,18 @@ const PlayCountry = () => {
             const colorableShapesTmp: (SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[] = [];
             if (allShapes != undefined) {
                 const flagColors: string[] = [];
-                allShapes.forEach((shape) => {
+                allShapes.forEach((shape: SVGElement, index: number) => {
                     if (!shape.classList.contains('keep')) {
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                             const rgbInitialFill: string = hexToRgb(initialFill); 
-                            shape.setAttribute('fill', 'white');
-                        
+                            shape.setAttribute('fill', 'url(#emptyPathImg)');
+
                             shape.style.strokeWidth = '2.5px';
                             shape.style.stroke = 'black';
                             shape.classList.add(styles.svgContent);
+
+                            //appendImageDefs(shape, index);
                             colorableShapesTmp.push(shape);
 
                             if (!flagColors.some((color) => (rgbInitialFill === color))) {

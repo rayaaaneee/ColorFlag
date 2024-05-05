@@ -6,7 +6,7 @@
     transition: all 0.3s;
 
     &:hover {
-        filter: grayscale(30%);
+        filter: brightness(80%);
     }
 
     &.selected {
@@ -40,7 +40,11 @@
                     background-color: white;
                 }
             }
-            &:hover {                
+            &:hover {
+                &[fill="url(#emptyPathImg)"] {
+                    filter: brightness(80%);
+                    -webkit-filter: brightness(80%);
+                }
                 &[fill="#ffffff"], &[fill="#FFFFFF"], &[fill="white"], &[fill="rgb(255, 255, 255)"] {
                     fill: rgb(228, 228, 228);
                 }
