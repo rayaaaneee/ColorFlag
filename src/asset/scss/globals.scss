@@ -2,6 +2,8 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@import "_vars.scss";
+
 :root {
   width: 100vw;
   height: 100vh;
@@ -48,5 +50,27 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+  }
+
+  .main-bg {
+    background-color: $main-bg-color;
+    .hoverable {      
+      &:hover, &.focused {
+      background-color: $scnd-bg-color;
+      }
+    }
+  }
+
+  .scnd-bg {
+    background-color: $scnd-bg-color;
   }
 }

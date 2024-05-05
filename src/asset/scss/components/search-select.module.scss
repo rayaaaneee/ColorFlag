@@ -1,0 +1,19 @@
+#ulWrapper {
+    pointer-events: none;
+    .dropDownMenu {
+        transition: transform 0.15s ease-in-out;
+        transform: translateY(-110%);
+    }
+    &.opened {
+        pointer-events: all;
+        .dropDownMenu {
+            transform: translateY(0);
+        }
+    }
+
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+}

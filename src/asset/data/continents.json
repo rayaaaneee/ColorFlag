@@ -3,7 +3,7 @@
     { "code": "an", "name": "antarctica" },
     { "code": "as", "name": "asia" },
     { "code": "eu", "name": "europe" },
-    { "code": "na", "name": "north america" },
+    { "code": "na", "name": "north-america" },
     { "code": "oc", "name": "oceania" },
-    { "code": "sa", "name": "south and central america" }
+    { "code": "sa", "name": "south-and-central-america" }
 ]

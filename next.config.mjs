@@ -7,7 +7,10 @@ const __dirname = import.meta.dirname;
 const nextConfig = {
     sassOptions : {
         includePaths: [path.join(__dirname, "asset", "scss")],
-    }
+    },
+    experimental: {
+        swcTraceProfiling: true,
+    },
 };
 
 export default nextConfig;

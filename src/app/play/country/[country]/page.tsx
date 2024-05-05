@@ -11,12 +11,11 @@ import countriesArray from "@/asset/data/countries.json";
 import Country from "@/useful/interfaces/country";
 
 import hexToRgb from "@/useful/hexToRgb";
+import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
 
 import PaintbrushMouse from "@/components/svg/paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
 import Position from "@/useful/interfaces/position";
-
-const uppercaseFirstWordLetters = (string: string) => (string.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
 
 const PlayCountry = () => {
 
@@ -37,9 +36,10 @@ const PlayCountry = () => {
 
     const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country));
 
-    const countryName: string = countryElement !== undefined ? uppercaseFirstWordLetters(countryElement.name) : 'Unknown';
+    const countryName: string = countryElement !== undefined ? uppercaseFirstWordsLetters(countryElement.name) : 'Unknown';
 
     const loadCountrySVG = async () => {
+        if (countryElement === undefined) return;
         try {
             fetch(`/api/svg/${country}`)
                 .then((response) => response.json())
@@ -162,7 +162,7 @@ const PlayCountry = () => {
         <>
             <h1 className="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-grey">Guess the flag of { countryName }</h1>
             { svgColors.length > 0 && 
-                (<ul className="flex flex-row flex-wrap items-center justify-center w-fill h-fill gap-5">
+                (<ul className="flex flex-row flex-wrap items-center justify-center w-fill max-w-[65vw] h-fill gap-5">
                     { svgColors.map((color: string) => {
                         return (
                             <li onClick={selectColor} className={ `${styles.colorItem} ${ selectedColor === color && (styles.selected) } ${ selectedColor === null && 'cursor-pointer' }` } key={color} style={{ backgroundColor: color }}>
