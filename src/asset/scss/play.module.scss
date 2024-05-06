@@ -19,14 +19,22 @@
 .svgContainer {
     width: 400px;
     height: 300px;
-    margin: 0 auto;
     $border-radius: 20px;
     border-radius: $border-radius;
+    position: relative;
 
     svg {
+        z-index: 1;
+    }
+    img {
+        z-index: 0;
+    }
+    svg, img {
+        position: absolute;
         width: 100%;
         border: 3px solid black;
         border-radius: $border-radius;
+        transition: transform 0.2s ease-in-out;
         *.svgContent {
             &[fill="none"] {
                 overflow: hidden;
@@ -51,6 +59,17 @@
                 filter: rgba(128, 128, 128, 0.4);
                 filter: grayscale(40%);
                 -webkit-filter: grayscale(40%);
+            }
+        }
+    }
+
+    &.validated {
+        & > * {
+            &.left {
+                transform: translateX(-75%);
+            }
+            &.right {
+                transform: translateX(75%);
             }
         }
     }

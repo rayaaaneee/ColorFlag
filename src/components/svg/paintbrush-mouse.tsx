@@ -3,10 +3,11 @@ import Position from "@/useful/interfaces/position";
 
 interface PaintbrushInterface {
     color: string,
-    initialPosition: Position
+    initialPosition: Position,
+    heightClass?: string
 }
 
-const PaintbrushMouse = ({ color, initialPosition }: PaintbrushInterface) => {
+const PaintbrushMouse = ({ color, initialPosition, heightClass = "h-16" }: PaintbrushInterface) => {
 
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -50,7 +51,7 @@ const PaintbrushMouse = ({ color, initialPosition }: PaintbrushInterface) => {
           x="0px"
           y="0px"
           viewBox="0 0 64 64"
-          className="h-20"
+          className={heightClass}
           xmlSpace="preserve"
         >
             <style>{`.st0{fill:#E0E0D1;} .st1{fill:#4F5D73;} .st2{opacity:0.2;fill:#231F20;} .st3{fill:#E0995E;} .st4{fill:#FFFFFF;} .st5{fill:${color};}`}</style>

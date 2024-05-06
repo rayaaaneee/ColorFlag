@@ -8,7 +8,7 @@ import replaceAccents from "@/useful/replaceAccents";
 import getPluralWord from "@/useful/getPluralWord";
 import addAnBeforeVowel from "@/useful/addAnBeforeVowel";
 
-export type ElementValue = string | number | boolean | undefined;
+export type ElementValue = string | number | boolean | null | undefined;
 
 export interface SelectDataSourceInterface {
     name: string,
@@ -39,6 +39,16 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
     const searchInput = useRef<HTMLInputElement>(null);
     itemName = itemName.toLowerCase();
 
+    const boldSearchedTokens = (text: string): string => {
+        text = uppercaseFirstWordsLetters(text);
+        let searchedTokens: string[] = [];
+        if (searchInput.current && searchInput.current.value.trim().length > 0) {
+            searchedTokens = replaceAccents(searchInput.current?.value.trim().toLowerCase()).split(' ');
+        }
+        if (!searchedTokens || searchedTokens.length === 0) return text;
+        return text.replace(new RegExp(`(${searchedTokens.join('|')})`, 'gi'), '<b>$1</b>');
+    }
+
     const initDefaultValue = (): string => {
         const vowels = ['a', 'e', 'i', 'o', 'u'];
 
@@ -65,10 +75,11 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
 
     const onSearchInput = () => {
         if (searchInput.current) {
-            const searchTerm = replaceAccents(searchInput.current.value.toLowerCase());
+            const searchTerm: string = replaceAccents(searchInput.current.value.toLowerCase());
+            const searchedWord: string[] = searchTerm.split(' ');
 
             setFilteredDataSources(dataSources.filter((item: SelectDataSourceInterface) => {
-                return item.name.toLowerCase().includes(searchTerm);
+                return item.name.toLowerCase().split(' ').some((word: string) => searchedWord.every((searched: string) => word.includes(searched)));
             }));
 
             setFocusedItem(-1);
@@ -207,11 +218,11 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
             }
         } else {
             if (searchInput.current) searchInput.current.value = '';
-            onSearchInput();
             setFocusedItem(-1);
             const timeout = setTimeout(() => {
                 if (dropdownButton.current) {
                     dropdownButton.current.classList.replace('rounded-t-md', 'rounded-md');
+                    onSearchInput();
                     clearTimeout(timeout);
                 }
             }, 150);
@@ -236,9 +247,7 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
                         ((selectedValue as SelectDataSourceInterface[])
-                            .map(
-                                (value: SelectDataSourceInterface) => (value.name)
-                            ).join(', '))
+                            .map((value: SelectDataSourceInterface) => (value.name)).join(', '))
                             : 
                         ((selectedValue as SelectDataSourceInterface).name
                     )}
@@ -249,7 +258,7 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
             </button>
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
                 <ul ref={dropdownMenu} id="dropdown-menu" className={ `${styles.dropDownMenu} overflow-hidden w-full text-sm right-0 ${ dropdownIsOpen ? 'rounded-b-md' : 'rounded-md' } shadow-lg main-bg ring-1 ring-black ring-opacity-5 p-1 space-y-1`}>
-                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 scnd-bg border rounded-md border-gray-300 focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
+                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 scnd-bg rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
                         { filteredDataSources.map((item: SelectDataSourceInterface, index: number) => {
                             return (<li 
@@ -259,7 +268,8 @@ const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dat
                                         :
                                         ((selectedValue as SelectDataSourceInterface).value === item.value && 'selected')
                                     )
-                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}>{ uppercaseFirstWordsLetters(item.name) }
+                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}
+                                dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>
                             </li>);
                         }) }
                         { filteredDataSources.length === 0 && <li className="text-gray-400 px-4 py-2 text-sm">No results found</li>}

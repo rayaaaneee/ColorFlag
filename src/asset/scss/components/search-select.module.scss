@@ -1,7 +1,7 @@
 #ulWrapper {
     pointer-events: none;
     .dropDownMenu {
-        transition: transform 0.15s ease-in-out;
+        transition: transform 0.10s ease-in-out;
         transform: translateY(-110%);
     }
     &.opened {

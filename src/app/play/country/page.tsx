@@ -11,7 +11,7 @@ const Play = () => {
 
     const countries: Country[] = countriesArray as Country[];
 
-    const [selectedCountry, setSelectedCountry] = useState<ElementValue[]>([]);
+    const [selectedCountry, setSelectedCountry] = useState<ElementValue>();
     const router = useRouter();
 
     const goToPage: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -33,7 +33,6 @@ const Play = () => {
                     } as SelectDataSourceInterface)
                 ) }
                 itemName="country"
-                isMultiple={true}
                 isSearcheable={true}
                 setter={setSelectedCountry as Setter}
             />

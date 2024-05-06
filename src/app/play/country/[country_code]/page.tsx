@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEventHandler, useRef, useState, useEffect, useCallback, ReactNode } from "react";
+import { MouseEventHandler, useRef, useState, useEffect, useCallback, ReactNode, useMemo } from "react";
 import { useParams } from 'next/navigation';
 import { renderToString } from 'react-dom/server'
 import toast from "react-hot-toast";
@@ -16,6 +16,8 @@ import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
 import PaintbrushMouse from "@/components/svg/paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
 import Position from "@/useful/interfaces/position";
+import shuffle from "@/useful/array.shuffle";
+import Image from "next/image";
 
 const PlayCountry = () => {
 
@@ -23,7 +25,7 @@ const PlayCountry = () => {
 
     const svgContainer = useRef<HTMLDivElement>(null);
 
-    const { country } = useParams<{ country?: string }>() as any;
+    const { country_code } = useParams<{ country_code?: string }>() as any;
 
     const [colorableShapes, setColorableShapes] = useState<(SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[]>([]);
 
@@ -33,21 +35,25 @@ const PlayCountry = () => {
 
     const [initialPaintbrushPosition, setInitialPaintbrushPosition] = useState<Position | null>(null);
 
+    const isValidated: boolean = useMemo(() => (colorableShapes.length !== 0 && selectedColor === null && svgColors.length === 0), [colorableShapes, selectedColor, svgColors]);
 
-    const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country));
+    const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country_code));
 
     const countryName: string = countryElement !== undefined ? uppercaseFirstWordsLetters(countryElement.name) : 'Unknown';
+
+    let colorableSvgElement: SVGElement | null = null;
 
     const loadCountrySVG = async () => {
         if (countryElement === undefined) return;
         try {
-            fetch(`/api/svg/${country}`)
+            fetch(`/api/svg/${country_code}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    if (svgContainer.current) {
-                        svgContainer.current.innerHTML = data.svg;
-                        const svg: SVGElement | null = svgContainer.current.querySelector('svg');
-                        if (svg) {
+                    if (svgContainer.current && colorableSvgElement === null) {
+                        svgContainer.current.insertAdjacentHTML('afterbegin', data.svg as string);
+                        colorableSvgElement = svgContainer.current.querySelector('svg');
+                        if (colorableSvgElement !== null) {
+                            colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;
                             const svgDefs: ReactNode = (<SvgDefs
                                 x={0}
@@ -57,11 +63,11 @@ const PlayCountry = () => {
                                 imageWidth={svgWidth}
                                 imageHeight={svgWidth}
                             />);
-                            const svgDefsString = renderToString(svgDefs);
-                            svg.insertAdjacentHTML('afterbegin', svgDefsString);
+                            const svgDefsString: string = renderToString(svgDefs);
+                            colorableSvgElement.insertAdjacentHTML('afterbegin', svgDefsString);
                         }
+                        initShape(true);
                     }
-                    initShape(true);
                 });
         } catch (error) {
             console.error('Error loading country SVG:', error);
@@ -96,7 +102,7 @@ const PlayCountry = () => {
         if (firstCall) { 
             const colorableShapesTmp: (SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[] = [];
             if (allShapes != undefined) {
-                const flagColors: string[] = [];
+                let flagColors: string[] = [];
                 allShapes.forEach((shape: SVGElement, index: number) => {
                     if (!shape.classList.contains('keep')) {
                         const initialFill: string | null = shape.getAttribute('fill');
@@ -108,7 +114,6 @@ const PlayCountry = () => {
                             shape.style.stroke = 'black';
                             shape.classList.add(styles.svgContent);
 
-                            //appendImageDefs(shape, index);
                             colorableShapesTmp.push(shape);
 
                             if (!flagColors.some((color) => (rgbInitialFill === color))) {
@@ -117,6 +122,7 @@ const PlayCountry = () => {
                         }
                     }
                 });
+                flagColors = shuffle<string>(flagColors);
                 setSvgColors(flagColors);
                 setColorableShapes(colorableShapesTmp);
             }
@@ -138,13 +144,21 @@ const PlayCountry = () => {
         if (colorableShapes.length != 0) {
             setSelectedColor(null);
             setSvgColors([]);
+            console.log('colorableShapes:', colorableShapes);
             colorableShapes.forEach(shape => {
                 shape.classList.remove(styles.svgContent);
                 shape.removeAttribute("style");
                 shape.onclick = null;
             });
         }
-    }, [colorableShapes])
+    }, [colorableShapes]);
+
+    useEffect(() => {
+        if (isValidated === true) {
+            toast.success("Flag validated");
+            svgContainer.current?.classList.add(styles.validated);
+        }
+    }, [isValidated]);
 
     const selectColor: MouseEventHandler<HTMLLIElement> = (e) => {
         if (selectedColor === null) {
@@ -171,7 +185,8 @@ const PlayCountry = () => {
                     })}
                 </ul>)
             }
-            <div ref={svgContainer} className={ `${styles.svgContainer} bg-gray-50 dark:bg-gray-900` }>
+            <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "main-bg" } mx-auto my-16` }>
+                <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${country_code}.svg`) } />
             </div>
             <button type="button" onClick={validateFlag} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">OK</button>
             { (selectedColor && initialPaintbrushPosition) && 

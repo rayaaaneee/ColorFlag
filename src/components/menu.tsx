@@ -54,7 +54,9 @@ const Menu = () => {
  
     return (
         <div className={`${styles.menu} relative main-bg flex gap-5 flex-col items-center justify-center`}>
-            <Image draggable={false} alt="app-icon" src={logo} className="absolute top-0 right-0 m-3 w-14" />
+            <div className={`absolute top-0 left-0 w-full h-16 flex items-center justify-center`}>
+                <Image draggable={false} alt="app-icon" src={logo} className="w-3/5" />
+            </div>
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
                 const className: string = `p-2 main-bg hoverable rounded-lg ${active ? "selected" : ""}`;
