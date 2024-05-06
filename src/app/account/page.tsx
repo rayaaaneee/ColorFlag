@@ -1,8 +1,27 @@
+import Select, { SelectDataSourceInterface } from "@/components/select";
+
 const Account = () => {
+
+    const genders: SelectDataSourceInterface[] = [
+        {
+            name: "Man",
+            value: true
+        },
+        {
+            name: "Woman",
+            value: false
+        },
+        {
+            name: "Unspecified",
+            value: undefined
+        }
+    ]
+
     return (
-        <div>
-            <h1>Acount</h1>
-        </div>
+        <Select
+            dataSources={genders}
+            itemName="gender"
+        />
     );
 }
 

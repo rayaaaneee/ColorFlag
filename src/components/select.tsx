@@ -1,50 +1,54 @@
+"use client";
+
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
 
 import styles from "@/asset/scss/components/search-select.module.scss"
 import replaceAccents from "@/useful/replaceAccents";
+import getPluralWord from "@/useful/getPluralWord";
+import addAnBeforeVowel from "@/useful/addAnBeforeVowel";
 
-export type ElementValue = string | number | undefined;
+export type ElementValue = string | number | boolean | undefined;
 
-export interface SearchSelectDataSourceInterface {
-    name: string;
-    value: ElementValue;
-    isDefault?: boolean;
+export interface SelectDataSourceInterface {
+    name: string,
+    value: ElementValue,
+    isDefault?: boolean,
 }
 
-export type SetterValue = ElementValue | ElementValue[];
+type SetterValue = ElementValue | ElementValue[];
 
-type SelectedValueType = SearchSelectDataSourceInterface | SearchSelectDataSourceInterface[];
+type SelectedValueType = SelectDataSourceInterface | SelectDataSourceInterface[];
 
 export type Setter = React.Dispatch<React.SetStateAction<SetterValue>>;
 
-interface SearchSelectInterface {
-    dataSources: SearchSelectDataSourceInterface[];
-    isMultiple?: boolean;
-    itemName?: string;
-    isOpen?: boolean;
-    widthClass?: string;
-    setter?: Setter;
+interface SelectInterface {
+    dataSources: SelectDataSourceInterface[],
+    isMultiple?: boolean,
+    isSearcheable?: boolean,
+    itemName?: string,
+    isOpen?: boolean,
+    widthClass?: string,
+    setter?: Setter,
 }
 
-
-const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item"}: SearchSelectInterface) => {
+const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item", }: SelectInterface) => {
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);
     const searchInput = useRef<HTMLInputElement>(null);
     itemName = itemName.toLowerCase();
 
-    const getPluralWord = (word: string): string  => 
-        (word.endsWith('y') ? word.slice(0, -1) + 'ies' : word + 's');
-
     const initDefaultValue = (): string => {
         const vowels = ['a', 'e', 'i', 'o', 'u'];
-        const hasN = vowels.includes(itemName[0].toLowerCase());
-        return `Select ${isMultiple ? "some" : `a${ hasN ? "n" : "" }` } ${isMultiple ? getPluralWord(itemName) : itemName }`;
+
+        const prefix: string = (isMultiple ? "some" : addAnBeforeVowel(itemName));
+        const word: string = (isMultiple ? getPluralWord(itemName) : itemName);
+
+        return `Select ${prefix} ${word}`;
     }
 
-    const defaultSelectedValue: SearchSelectDataSourceInterface = { 
+    const defaultSelectedValue: SelectDataSourceInterface = { 
         name: initDefaultValue(), 
         value: undefined,
         isDefault: true
@@ -57,13 +61,13 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
 
     const [dropdownIsOpen, setDropdownIsOpen] = useState(isOpen);
 
-    const [filteredDataSources, setFilteredDataSources] = useState<SearchSelectDataSourceInterface[]>(dataSources);
+    const [filteredDataSources, setFilteredDataSources] = useState<SelectDataSourceInterface[]>(dataSources);
 
     const onSearchInput = () => {
         if (searchInput.current) {
             const searchTerm = replaceAccents(searchInput.current.value.toLowerCase());
 
-            setFilteredDataSources(dataSources.filter((item: SearchSelectDataSourceInterface) => {
+            setFilteredDataSources(dataSources.filter((item: SelectDataSourceInterface) => {
                 return item.name.toLowerCase().includes(searchTerm);
             }));
 
@@ -76,23 +80,24 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
         const value: ElementValue = element.getAttribute('value') as ElementValue;
         const isSelected: boolean = element.classList.contains('selected');
         if (setter !== undefined) setter(value);
-        const newValue: SearchSelectDataSourceInterface = { name: element.textContent || '', value: value};
+        const newValue: SelectDataSourceInterface = { name: element.textContent || '', value: value};
         if (isMultiple) { 
             if (!isSelected) {
                 setSelectedValue(
                     (value: SelectedValueType) => {
-                        return [...value as SearchSelectDataSourceInterface[], newValue]
+                        return [...value as SelectDataSourceInterface[], newValue]
                             .filter((item) => item.isDefault !== true);
                     }
                 );
             } else {
                 setSelectedValue(
                     (value: SelectedValueType) => {
-                        return (value as SearchSelectDataSourceInterface[])
+                        return (value as SelectDataSourceInterface[])
                             .filter((item) => item.value !== newValue.value);
                     }
                 );
             }
+
         } else {
             setDropdownIsOpen(false);
             if (!isSelected) setSelectedValue(newValue);
@@ -103,7 +108,7 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
     const closeSelectOnOutsideClick = (e: MouseEvent) => {
         if (dropdownMenu.current && dropdownButton.current) {
             if (!dropdownMenu.current.contains(e.target as Node) && !dropdownButton.current.contains(e.target as Node) && dropdownIsOpen) {
-                setDropdownIsOpen(bool => !bool);
+                setDropdownIsOpen(false);
             }
         }
     }
@@ -137,6 +142,14 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
                         elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
                     }
                 }
+            } else {
+                setFocusedItem(0);
+                if (dropdownMenu.current) {
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
+                    if (elementToScroll) {
+                        elementToScroll.scrollTop = 0;
+                    }
+                }
             }
         } else if (e.key === 'ArrowUp') {
             if (focusedItem > 0) {
@@ -149,10 +162,20 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
                         elementToScroll.scrollTop = (focusedItem - 1) * itemHeight;
                     }
                 }
+            } else {
+                setFocusedItem(filteredDataSources.length - 1);
+                if (dropdownMenu.current) {
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
+                    const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
+                    if (elementToScroll) {
+                        elementToScroll.scrollTop = (filteredDataSources.length - 1) * itemHeight;
+                    }
+                }
             }
         }
 
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            dropdownButton.current?.blur();
             e.preventDefault();
         }
     }
@@ -197,23 +220,27 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
 
     useEffect(() => {
         if (isMultiple) {
-            if ((selectedValue as SearchSelectDataSourceInterface[]).length === 0) {
+            if ((selectedValue as SelectDataSourceInterface[]).length === 0) {
                 setSelectedValue([defaultSelectedValue]);
             }
         }
     }, [selectedValue])
 
+    const onClickSelect: MouseEventHandler = (e) => {
+        e.currentTarget === dropdownButton.current && setDropdownIsOpen(bool => !bool);
+    }
+
     return (
         <div className={`relative group ${ widthClass }`}>
-            <button onClick={ e => setDropdownIsOpen(bool => !bool)} ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white main-bg border-gray-300 shadow-sm`}>
+            <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white main-bg border-gray-300 shadow-sm`}>
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
-                        ((selectedValue as SearchSelectDataSourceInterface[])
+                        ((selectedValue as SelectDataSourceInterface[])
                             .map(
-                                (value: SearchSelectDataSourceInterface) => (value.name)
+                                (value: SelectDataSourceInterface) => (value.name)
                             ).join(', '))
                             : 
-                        ((selectedValue as SearchSelectDataSourceInterface).name
+                        ((selectedValue as SelectDataSourceInterface).name
                     )}
                 </span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -222,15 +249,15 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
             </button>
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
                 <ul ref={dropdownMenu} id="dropdown-menu" className={ `${styles.dropDownMenu} overflow-hidden w-full text-sm right-0 ${ dropdownIsOpen ? 'rounded-b-md' : 'rounded-md' } shadow-lg main-bg ring-1 ring-black ring-opacity-5 p-1 space-y-1`}>
-                    <input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 scnd-bg border rounded-md border-gray-300 focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />
+                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 scnd-bg border rounded-md border-gray-300 focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
-                        { filteredDataSources.map((item: SearchSelectDataSourceInterface, index: number) => {
+                        { filteredDataSources.map((item: SelectDataSourceInterface, index: number) => {
                             return (<li 
-                                about={item.name} onClick={ onItemSelect } key={index} value={item.value} className={`${ focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden' } ${
+                                about={item.name} onClick={ onItemSelect } key={index} value={item.value?.toString()} className={`${ focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden' } ${
                                     (isMultiple ?
-                                        ((selectedValue as SearchSelectDataSourceInterface[]).map((value: SearchSelectDataSourceInterface) => value.value).includes(item.value) && 'selected')
+                                        ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.value).includes(item.value) && 'selected')
                                         :
-                                        ((selectedValue as SearchSelectDataSourceInterface).value === item.value && 'selected')
+                                        ((selectedValue as SelectDataSourceInterface).value === item.value && 'selected')
                                     )
                                 } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}>{ uppercaseFirstWordsLetters(item.name) }
                             </li>);
@@ -243,4 +270,4 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
     );
 };
 
-export default SearchSelect;
+export default Select;

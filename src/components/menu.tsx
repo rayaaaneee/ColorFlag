@@ -11,6 +11,9 @@ import { PiSignOutBold } from "react-icons/pi";
 import { PiSignInBold } from "react-icons/pi";
 import { IoSettingsSharp } from "react-icons/io5";
 
+import logo from "@/app/favicon.png";
+import Image from "next/image";
+
 interface MenuItem {
     icon: JSX.Element;
     visible?: boolean | undefined;
@@ -50,7 +53,8 @@ const Menu = () => {
     ];
  
     return (
-        <div className={`${styles.menu} main-bg flex gap-5 flex-col items-center justify-center`}>
+        <div className={`${styles.menu} relative main-bg flex gap-5 flex-col items-center justify-center`}>
+            <Image draggable={false} alt="app-icon" src={logo} className="absolute top-0 right-0 m-3 w-14" />
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
                 const className: string = `p-2 main-bg hoverable rounded-lg ${active ? "selected" : ""}`;
