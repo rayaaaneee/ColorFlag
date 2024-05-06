@@ -53,7 +53,7 @@ const Menu = () => {
         <div className={`${styles.menu} main-bg flex gap-5 flex-col items-center justify-center`}>
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
-                const className: string = `p-2 main-bg hoverable rounded-lg ${active ? "scnd-bg" : ""}`;
+                const className: string = `p-2 main-bg hoverable rounded-lg ${active ? "selected" : ""}`;
                 if (el.visible === false) return (null);
                 return el.href !== undefined ? (
                     <Link href={el.href} key={index} className={ className }>

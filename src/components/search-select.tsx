@@ -1,41 +1,57 @@
-import { MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
 
 import styles from "@/asset/scss/components/search-select.module.scss"
+import replaceAccents from "@/useful/replaceAccents";
 
 export type ElementValue = string | number | undefined;
 
 export interface SearchSelectDataSourceInterface {
     name: string;
     value: ElementValue;
+    isDefault?: boolean;
 }
+
+export type SetterValue = ElementValue | ElementValue[];
+
+type SelectedValueType = SearchSelectDataSourceInterface | SearchSelectDataSourceInterface[];
+
+export type Setter = React.Dispatch<React.SetStateAction<SetterValue>>;
 
 interface SearchSelectInterface {
     dataSources: SearchSelectDataSourceInterface[];
+    isMultiple?: boolean;
     itemName?: string;
     isOpen?: boolean;
     widthClass?: string;
-    setSelectedParentValue?: React.Dispatch<React.SetStateAction<ElementValue>>;
+    setter?: Setter;
 }
 
-const initDefaultValue = (itemName: string) => {
-    const vowels = ['a', 'e', 'i', 'o', 'u'];
-    const hasN = vowels.includes(itemName[0].toLowerCase());
 
-    return `Select a${ hasN ? "n" : "" } ${itemName}`;
-}
-
-const SearchSelect = ({ isOpen = false, dataSources, setSelectedParentValue, widthClass = "w-60", itemName = "item"}: SearchSelectInterface) => {
-
+const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item"}: SearchSelectInterface) => {
+    
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);
     const searchInput = useRef<HTMLInputElement>(null);
+    itemName = itemName.toLowerCase();
+
+    const getPluralWord = (word: string): string  => 
+        (word.endsWith('y') ? word.slice(0, -1) + 'ies' : word + 's');
+
+    const initDefaultValue = (): string => {
+        const vowels = ['a', 'e', 'i', 'o', 'u'];
+        const hasN = vowels.includes(itemName[0].toLowerCase());
+        return `Select ${isMultiple ? "some" : `a${ hasN ? "n" : "" }` } ${isMultiple ? getPluralWord(itemName) : itemName }`;
+    }
+
+    const defaultSelectedValue: SearchSelectDataSourceInterface = { 
+        name: initDefaultValue(), 
+        value: undefined,
+        isDefault: true
+    }
 
     const [selectedValue, setSelectedValue] = 
-        useState<SearchSelectDataSourceInterface>({ 
-            name: initDefaultValue(itemName), 
-            value: undefined 
-        });
+        useState<SelectedValueType>(isMultiple ? [defaultSelectedValue] : defaultSelectedValue);
 
     const [focusedItem, setFocusedItem] = useState<number>(-1);
 
@@ -45,8 +61,8 @@ const SearchSelect = ({ isOpen = false, dataSources, setSelectedParentValue, wid
 
     const onSearchInput = () => {
         if (searchInput.current) {
-            const searchTerm = searchInput.current.value.toLowerCase();
-            
+            const searchTerm = replaceAccents(searchInput.current.value.toLowerCase());
+
             setFilteredDataSources(dataSources.filter((item: SearchSelectDataSourceInterface) => {
                 return item.name.toLowerCase().includes(searchTerm);
             }));
@@ -58,9 +74,30 @@ const SearchSelect = ({ isOpen = false, dataSources, setSelectedParentValue, wid
     const onItemSelect: MouseEventHandler<HTMLLIElement> = (e) => {
         const element = e.currentTarget;
         const value: ElementValue = element.getAttribute('value') as ElementValue;
-        setSelectedValue({ name: element.textContent || '', value: value});
-        setDropdownIsOpen(false);
-        if (setSelectedParentValue !== undefined) setSelectedParentValue(value);
+        const isSelected: boolean = element.classList.contains('selected');
+        if (setter !== undefined) setter(value);
+        const newValue: SearchSelectDataSourceInterface = { name: element.textContent || '', value: value};
+        if (isMultiple) { 
+            if (!isSelected) {
+                setSelectedValue(
+                    (value: SelectedValueType) => {
+                        return [...value as SearchSelectDataSourceInterface[], newValue]
+                            .filter((item) => item.isDefault !== true);
+                    }
+                );
+            } else {
+                setSelectedValue(
+                    (value: SelectedValueType) => {
+                        return (value as SearchSelectDataSourceInterface[])
+                            .filter((item) => item.value !== newValue.value);
+                    }
+                );
+            }
+        } else {
+            setDropdownIsOpen(false);
+            if (!isSelected) setSelectedValue(newValue);
+            else setSelectedValue(defaultSelectedValue);
+        }
     }
 
     const closeSelectOnOutsideClick = (e: MouseEvent) => {
@@ -151,10 +188,27 @@ const SearchSelect = ({ isOpen = false, dataSources, setSelectedParentValue, wid
         }
     }, [dropdownIsOpen]);
 
+    useEffect(() => {
+        if (isMultiple) {
+            if ((selectedValue as SearchSelectDataSourceInterface[]).length === 0) {
+                setSelectedValue([defaultSelectedValue]);
+            }
+        }
+    }, [selectedValue])
+
     return (
         <div className={`relative group ${ widthClass }`}>
             <button onClick={ e => setDropdownIsOpen(bool => !bool)} ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white main-bg border-gray-300 shadow-sm`}>
-                <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">{ selectedValue.name }</span>
+                <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
+                    { isMultiple ? 
+                        ((selectedValue as SearchSelectDataSourceInterface[])
+                            .map(
+                                (value: SearchSelectDataSourceInterface) => (value.name)
+                            ).join(', '))
+                            : 
+                        ((selectedValue as SearchSelectDataSourceInterface).name
+                    )}
+                </span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -165,7 +219,13 @@ const SearchSelect = ({ isOpen = false, dataSources, setSelectedParentValue, wid
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
                         { filteredDataSources.map((item: SearchSelectDataSourceInterface, index: number) => {
                             return (<li 
-                                about={item.name} onClick={ onItemSelect } key={index} value={item.value} className={`${ focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden' } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}>{ uppercaseFirstWordsLetters(item.name) }
+                                about={item.name} onClick={ onItemSelect } key={index} value={item.value} className={`${ focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden' } ${
+                                    (isMultiple ?
+                                        ((selectedValue as SearchSelectDataSourceInterface[]).map((value: SearchSelectDataSourceInterface) => value.value).includes(item.value) && 'selected')
+                                        :
+                                        ((selectedValue as SearchSelectDataSourceInterface).value === item.value && 'selected')
+                                    )
+                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}>{ uppercaseFirstWordsLetters(item.name) }
                             </li>);
                         }) }
                         { filteredDataSources.length === 0 && <li className="text-gray-400 px-4 py-2 text-sm">No results found</li>}
