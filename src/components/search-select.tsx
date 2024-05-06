@@ -118,6 +118,13 @@ const SearchSelect = ({ isOpen = false, isMultiple = false, dataSources, setter,
                     const item = items[focusedItem];
                     item.click();
                 }
+            } else {
+                if (filteredDataSources.length === 1) {
+                    const item = dropdownMenu.current?.querySelector('li');
+                    if (item) {
+                        item.click();
+                    }
+                }
             }
         } else if (e.key === 'ArrowDown') {
             if (focusedItem < filteredDataSources.length - 1) {
