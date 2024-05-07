@@ -10,6 +10,7 @@ import { RiAccountPinCircleFill } from "react-icons/ri";
 import { PiSignOutBold } from "react-icons/pi";
 import { PiSignInBold } from "react-icons/pi";
 import { IoSettingsSharp } from "react-icons/io5";
+import { RiCodeView } from "react-icons/ri";
 
 import logo from "@/app/favicon.png";
 import Image from "next/image";
@@ -49,8 +50,16 @@ const Menu = () => {
         {
             icon: <IoSettingsSharp { ...iconAttr }/>,
             href: "/settings",
-        }
+        },
     ];
+
+    if (process.env.NODE_ENV === "development") {
+        const devItem: MenuItem = {
+            icon: <RiCodeView { ...iconAttr }/>,
+            href: "/dev",
+        }
+        menuItems.push(devItem);
+    }
  
     return (
         <div className={`${styles.menu} relative main-bg flex gap-5 flex-col items-center justify-center`}>

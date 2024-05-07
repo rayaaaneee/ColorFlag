@@ -30,7 +30,7 @@ const Play = () => {
                     (country:Country) => ({
                         name: country.name,
                         value: country.code
-                    })
+                    } as SelectDataSourceInterface)
                 ) }
                 itemName="country"
                 isSearcheable={true}
