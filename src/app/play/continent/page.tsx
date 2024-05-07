@@ -4,7 +4,7 @@ import { MouseEventHandler, ReactEventHandler, SyntheticEvent, useEffect, useRef
 import Continent from "@/useful/interfaces/continent";
 import continentsArray from "@/asset/data/continents.json";
 import { useRouter } from "next/navigation";
-import Select, { ElementValue, Setter } from "@/components/select";
+import Select, { ElementValue, Setter } from "@/components/inputs/select";
 
 const Play = () => {
 

@@ -1,4 +1,4 @@
-import Select, { SelectDataSourceInterface } from "@/components/select";
+import Select, { SelectDataSourceInterface } from "@/components/inputs/select";
 
 const Account = () => {
 

@@ -1,5 +1,6 @@
 import hexRgb, { RgbaObject } from 'hex-rgb';
 import getRgb from '@/useful/getRgb';
+import initRgbCssString from './initRgbCssString';
 
 const hexToRgb = (hexColor: string): string => {
     let rgbObject: RgbaObject;
@@ -10,7 +11,7 @@ const hexToRgb = (hexColor: string): string => {
         // Color is like "red" or "white"
         rgbObject = getRgb(hexColor);
     }
-    return `rgb(${rgbObject.red}, ${rgbObject.green}, ${rgbObject.blue})`;
+    return initRgbCssString(rgbObject);
 }
 
 export default hexToRgb;

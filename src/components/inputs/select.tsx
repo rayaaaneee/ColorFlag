@@ -22,8 +22,8 @@ type SelectedValueType = SelectDataSourceInterface | SelectDataSourceInterface[]
 
 export type Setter = React.Dispatch<React.SetStateAction<SetterValue>>;
 
-interface SelectInterface {
-    dataSources: SelectDataSourceInterface[],
+interface SelectInterface <T extends SelectDataSourceInterface> {
+    dataSources: T[],
     isMultiple?: boolean,
     isSearcheable?: boolean,
     itemName?: string,
@@ -32,7 +32,7 @@ interface SelectInterface {
     setter?: Setter,
 }
 
-const Select = ({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item", }: SelectInterface) => {
+const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item", }: SelectInterface<T>) => {
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);

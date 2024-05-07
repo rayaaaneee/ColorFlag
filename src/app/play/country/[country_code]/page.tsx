@@ -2,6 +2,8 @@
 
 import { MouseEventHandler, useRef, useState, useEffect, useCallback, ReactNode, useMemo } from "react";
 import { useParams } from 'next/navigation';
+import Image from "next/image";
+
 import { renderToString } from 'react-dom/server'
 import toast from "react-hot-toast";
 
@@ -17,7 +19,9 @@ import PaintbrushMouse from "@/components/svg/paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
 import Position from "@/useful/interfaces/position";
 import shuffle from "@/useful/array.shuffle";
-import Image from "next/image";
+import getRandomRgbColors from "@/useful/getRandomRgbColors";
+import ButtonGoBackOrNext, { Direction } from "@/components/inputs/button-go-back-or-next";
+import Button from "@/components/inputs/button";
 
 const PlayCountry = () => {
 
@@ -36,6 +40,42 @@ const PlayCountry = () => {
     const [initialPaintbrushPosition, setInitialPaintbrushPosition] = useState<Position | null>(null);
 
     const isValidated: boolean = useMemo(() => (colorableShapes.length !== 0 && selectedColor === null && svgColors.length === 0), [colorableShapes, selectedColor, svgColors]);
+
+    const score: number = useMemo(() => {
+
+        const totalShapes: number = colorableShapes.length;
+        const shapeColors: string[] = colorableShapes.map((shape) => (hexToRgb(shape.getAttribute('data-fill') as string)));
+
+        let correctShapes: number = 0;
+        let goodColors: number = 0;
+
+        colorableShapes.forEach((shape) => {
+            const initialFill: string = shape.getAttribute('data-fill') as string;
+            const currentFill: string = shape.getAttribute('fill') as string;
+            if (initialFill === currentFill) {
+                correctShapes++;
+            }
+            if (shapeColors.some((color) => (color === currentFill))) {
+                goodColors++;
+            }
+        });
+
+        const initialScore: number = Math.round((correctShapes / totalShapes) * 100);
+        const goodColorsPercentage: number = Math.round((goodColors / totalShapes) * 100);
+
+        if (initialScore === 100) return initialScore;
+
+        // According to good colors percentage, we can add some points to the score
+
+        return initialScore;
+
+    }, [isValidated]);
+
+    useEffect(() => {
+        if (isValidated) {
+            console.log("Score:", score);
+        }
+    }, [isValidated]);
 
     const countryElement: Country | undefined = countries.find((element: Country) => (element.code === country_code));
 
@@ -97,21 +137,42 @@ const PlayCountry = () => {
         }
     }, [selectedColor]);
 
+    const initColors = (colors: string[]) => {
+
+        let nbColorsToGenerate: number = 0;
+
+        if (colors.length <= 3) nbColorsToGenerate = 3;
+        else if (colors.length <= 5) nbColorsToGenerate = 2;
+        else if (colors.length <= 8) nbColorsToGenerate = 1;
+
+        const randomColors: string[] = getRandomRgbColors(nbColorsToGenerate, colors);
+
+        colors = shuffle<string>([...colors, ...randomColors]);
+
+        setSvgColors(colors);
+    }
+
     const initShape = (firstCall = false) => {
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll('path[fill], circle[fill]');
+        const selectors: string[] = ['path', 'circle', 'g'];
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(selectors.map((selector: string) => (`svg > ${selector}[fill]`)).join(', '));
         if (firstCall) { 
             const colorableShapesTmp: (SVGElement | SVGPathElement | SVGCircleElement | SVGGElement)[] = [];
             if (allShapes != undefined) {
                 let flagColors: string[] = [];
                 allShapes.forEach((shape: SVGElement, index: number) => {
-                    if (!shape.classList.contains('keep')) {
+                    if (shape.classList.contains('keep')) {
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                             const rgbInitialFill: string = hexToRgb(initialFill); 
                             shape.setAttribute('fill', 'url(#emptyPathImg)');
+                            shape.setAttribute('data-fill', rgbInitialFill);
 
-                            shape.style.strokeWidth = '2.5px';
                             shape.style.stroke = 'black';
+                            let strokeWidth: string = "1px";
+                            if (shape.tagName === 'g') {
+                                strokeWidth = "0.2px";
+                            }
+                            shape.style.strokeWidth = strokeWidth;
                             shape.classList.add(styles.svgContent);
 
                             colorableShapesTmp.push(shape);
@@ -122,8 +183,7 @@ const PlayCountry = () => {
                         }
                     }
                 });
-                flagColors = shuffle<string>(flagColors);
-                setSvgColors(flagColors);
+                initColors(flagColors);
                 setColorableShapes(colorableShapesTmp);
             }
 
@@ -144,7 +204,6 @@ const PlayCountry = () => {
         if (colorableShapes.length != 0) {
             setSelectedColor(null);
             setSvgColors([]);
-            console.log('colorableShapes:', colorableShapes);
             colorableShapes.forEach(shape => {
                 shape.classList.remove(styles.svgContent);
                 shape.removeAttribute("style");
@@ -171,7 +230,7 @@ const PlayCountry = () => {
         const color = target.style.backgroundColor;
         setSelectedColor(color);
     }
-
+    
     return (
         <>
             <h1 className="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-grey">Guess the flag of { countryName }</h1>
@@ -188,7 +247,11 @@ const PlayCountry = () => {
             <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "main-bg" } mx-auto my-16` }>
                 <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${country_code}.svg`) } />
             </div>
-            <button type="button" onClick={validateFlag} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">OK</button>
+            <Button onClick={validateFlag} />
+            <div className="flex flex-row justify-center gap-5">
+                <ButtonGoBackOrNext direction={ Direction.BACK } dataSource={countries.map((country: Country) => ({value: country.code}))} currentValue={ country_code } url={"/play/country"}/>
+                <ButtonGoBackOrNext dataSource={countries.map((country: Country) => ({value: country.code}))} currentValue={ country_code } url={"/play/country"}/>
+            </div>
             { (selectedColor && initialPaintbrushPosition) && 
                 (<PaintbrushMouse 
                     initialPosition={{
@@ -201,4 +264,5 @@ const PlayCountry = () => {
         </>
     );
 }
+
 export default PlayCountry;

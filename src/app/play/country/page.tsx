@@ -3,7 +3,7 @@
 import { MouseEventHandler, ReactEventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
 import Country from "@/useful/interfaces/country";
 import countriesArray from "@/asset/data/countries.json";
-import Select, { ElementValue, SelectDataSourceInterface, Setter } from "@/components/select";
+import Select, { ElementValue, SelectDataSourceInterface, Setter } from "@/components/inputs/select";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -30,7 +30,7 @@ const Play = () => {
                     (country:Country) => ({
                         name: country.name,
                         value: country.code
-                    } as SelectDataSourceInterface)
+                    })
                 ) }
                 itemName="country"
                 isSearcheable={true}
