@@ -5,6 +5,8 @@ import Country from '@/useful/interfaces/country';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import styles from "@/asset/scss/dev.module.scss";
+
 import ButtonGoBackOrNext, { Direction } from "@/components/inputs/button-go-back-or-next";
 
 import countriesArray from "@/asset/data/countries.json";
@@ -55,11 +57,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
       <>
           <div className='w-full h-full flex flex-col items-center justify-start gap-12'>
               <div className='w-full flex flex-row items-center justify-center mt-16 gap-12'>
-                  {/* <Button onClick={copyCode}>
-                      <FaCopy />
-                  </Button> */}
                   <CopyButton stringToCopy={exampleCode} />
-                  <div className='w-4/5'>
+                  <div id={styles.codeRenderer} className='w-4/5'>
                       <SyntaxHighlighter style={vs2015} showLineNumbers={true} language="xml">
                           {exampleCode}
                       </SyntaxHighlighter>
@@ -85,7 +84,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                   </div>
               </div>
               <ColorableFlag 
-                  className='absolute bottom-3 right-3'
+                  className='absolute bottom-16 right-16'
                   sourceElement={ countryElement } 
                   itemName='country' 
                   canValidate={ false } 

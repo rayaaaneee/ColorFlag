@@ -2,6 +2,7 @@ import { MdOutlineNavigateNext } from "react-icons/md";
 import Card from "@/useful/interfaces/card";
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/inputs/button";
 
 interface CardLinkInterface {
     element: Card
@@ -25,9 +26,13 @@ const CardLink = ({ element }: CardLinkInterface) => {
                 }) }
             </div>
             <div className="w-full flex items-end justify-end">
-                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 bg-white hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg">
-                    Play
-                    <MdOutlineNavigateNext className="text-2xl" />
+                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 text-gray-800 font-bold py-2 px-4 rounded-lg">
+                    <Button className="w-full h-full" custom={{ colorClass: "bg-white", hoverColorClass: "bg-gray-200" }}>
+                        <>
+                            Play
+                            <MdOutlineNavigateNext className="text-2xl" />
+                        </>
+                    </Button>
                 </Link>
             </div>
         </div>
