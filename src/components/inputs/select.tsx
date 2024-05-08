@@ -50,8 +50,6 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
     }
 
     const initDefaultValue = (): string => {
-        const vowels = ['a', 'e', 'i', 'o', 'u'];
-
         const prefix: string = (isMultiple ? "some" : addAnBeforeVowel(itemName));
         const word: string = (isMultiple ? getPluralWord(itemName) : itemName);
 

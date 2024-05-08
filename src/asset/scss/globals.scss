@@ -63,7 +63,7 @@ body {
 
   .main-bg {
     background-color: $main-bg-color;
-    .hoverable {      
+    &.hoverable {      
       &:hover, &.focused, &.selected {
       background-color: $scnd-bg-color;
       }
