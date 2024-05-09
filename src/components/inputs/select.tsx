@@ -32,7 +32,7 @@ interface SelectInterface <T extends SelectDataSourceInterface> {
     setter?: Setter,
 }
 
-const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item", }: SelectInterface<T>) => {
+const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item" }: SelectInterface<T>) => {
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);

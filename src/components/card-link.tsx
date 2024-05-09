@@ -26,10 +26,19 @@ const CardLink = ({ element }: CardLinkInterface) => {
                 }) }
             </div>
             <div className="w-full flex items-end justify-end">
-                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 text-gray-800 font-bold py-2 px-4 rounded-lg">
-                    <Button className="w-full h-full" custom={{ colorClass: "bg-white", hoverColorClass: "bg-gray-200" }}>
+                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 font-bold py-2 px-4 rounded-lg">
+                    <Button 
+                        className="w-full h-full" 
+                        customs={{ 
+                            colorClass: "bg-white", 
+                            hoverColorClass: "hover:bg-gray-200", 
+                            textColor: "text-gray-800", 
+                            paddingClass: "py-2 px-3",
+                            hasShadow: false,
+                        }
+                    }>
                         <>
-                            Play
+                            <p>Play</p>
                             <MdOutlineNavigateNext className="text-2xl" />
                         </>
                     </Button>

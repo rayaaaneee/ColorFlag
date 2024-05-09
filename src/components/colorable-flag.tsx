@@ -2,7 +2,7 @@ import { MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, 
 import { renderToString } from "react-dom/server";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import styles from "@/asset/scss/play.module.scss"; // Import the styles module
+import styles from "@/asset/scss/play.module.scss";
 import Position from "@/useful/interfaces/position";
 import hexToRgb from "@/useful/hexToRgb";
 import PaintbrushMouse from "./svg/paintbrush-mouse";
@@ -11,6 +11,8 @@ import getRandomRgbColors from "@/useful/getRandomRgbColors";
 import shuffle from "@/useful/array.shuffle";
 import NotFound from "@/components/not-found";
 import Button from "@/components/inputs/button";
+import SelectableColorCircle from "./selectable-color-circle";
+import { SvgPatternInterface } from "./svg/svg-pattern";
 
 export interface sourceElementInterface {
     name: string;
@@ -61,18 +63,31 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                         if (colorableSvgElement !== null) {
                             colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;
+
+                            const basePattern: SvgPatternInterface = {
+                                x: 0,
+                                y: 0,
+                                patternWidth: svgWidth,
+                                patternHeight: svgWidth,
+                                imageWidth: svgWidth,
+                                imageHeight: svgWidth
+                            };
+                            const patterns: SvgPatternInterface[] = [
+                                { ...basePattern }
+                            ]
+
+                            if (!canColor) {
+                                patterns.push({ ...basePattern, customPatternId: 'selectedPathImg', customImageSrc: 'selected-background.jpg'})
+                            }
+
                             const svgDefs: ReactNode = (<SvgDefs
-                                x={0}
-                                y={0}
-                                patternWidth={svgWidth}
-                                patternHeight={svgWidth}
-                                imageWidth={svgWidth}
-                                imageHeight={svgWidth}
+                                patterns={patterns}
                             />);
 
                             const svgDefsString: string = renderToString(svgDefs);
                             colorableSvgElement.insertAdjacentHTML('afterbegin', svgDefsString);
                         }
+
                         initShapes(true);
                     }
                 });
@@ -126,13 +141,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
     }, []);
 
     useEffect(() => {
-        if (selectedColor !== null) {
-            initShapes();
-            document.body.style.cursor = "none";
-        }
-        return () => {
-            document.body.removeAttribute("style");
-        }
+        selectedColor !== null && initShapes();
     }, [selectedColor]);
 
     const initColors = (colors: string[]) => {
@@ -238,11 +247,10 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                 :
                 (<>
                     { (svgColors.length > 0 && canColor) && 
-                        (<ul className="flex flex-row flex-wrap items-center justify-center w-fill max-w-[65vw] h-fill gap-5">
+                        (<ul className="list-none flex flex-row flex-wrap items-center justify-center w-fill max-w-[65vw] h-fill gap-5">
                             { svgColors.map((color: string) => {
                                 return (
-                                    <li onClick={selectColor} className={ `${styles.colorItem} ${ selectedColor === color && (styles.selected) } ${ selectedColor === null && 'cursor-pointer' }` } key={color} style={{ backgroundColor: color }}>
-                                    </li>
+                                    <SelectableColorCircle className={selectedColor === null ? 'cursor-pointer' : '' } onClick={selectColor} color={color} selected={selectedColor === color} key={color} />
                                 );
                             })}
                         </ul>)

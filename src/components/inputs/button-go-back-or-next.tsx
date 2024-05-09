@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "./button";
+import Button, { ButtonProps } from "@/components/inputs/button"
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import React from "react";
@@ -9,14 +9,14 @@ export enum Direction {
     NEXT = 2
 }
 
-export interface ButtonGoPlayNextProps<T extends {value:string}> {
+export interface ButtonGoPlayNextProps<T extends {value:string}> extends ButtonProps {
     dataSource: T[],
     currentValue: string,
     url: string,
-    direction?: Direction
+    direction?: Direction,
 }
 
-const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValue, url, direction = Direction.NEXT }: ButtonGoPlayNextProps<T>) => {
+const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValue, url, direction = Direction.NEXT, customs = undefined, className = "", children = undefined, onClick = undefined, disabled = false, title = undefined }: ButtonGoPlayNextProps<T>) => {
 
     const text: string = `Go ${direction === Direction.NEXT ? "next" : "back"}`;
     
@@ -31,15 +31,14 @@ const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValu
     const nextElement: T = dataSource[nextElementIndex] || (direction === Direction.NEXT ? dataSource[0] :  dataSource[dataSource.length - 1]);
 
     return (
-        <div>
-            <Button>
-                <Link href={`${url}/${nextElement?.value}`} className="flex flex-row items-center justify-center gap-2">
-                    {direction === Direction.BACK && (<IoMdArrowRoundBack />)}
-                    {text}
-                    {direction === Direction.NEXT && (<IoMdArrowRoundForward />)}
-                </Link>
-            </Button>
-        </div>
+        <Button title={title} disabled={disabled} customs={customs} className={className} onClick={onClick}>
+            <Link href={`${url}/${nextElement?.value}`} className="flex flex-row items-center justify-center gap-2">
+                {direction === Direction.BACK && (<IoMdArrowRoundBack />)}
+                {text}
+                {direction === Direction.NEXT && (<IoMdArrowRoundForward />)}
+                {children}
+            </Link>
+        </Button>
     )
 }
 

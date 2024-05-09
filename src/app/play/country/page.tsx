@@ -19,7 +19,7 @@ const Play = () => {
         if (selectedCountry) {
             router.push(`/play/country/${selectedCountry}`);
         } else {
-            toast.error("Please select")
+            toast.error("Please select a country");
         }
     }
 
@@ -37,7 +37,7 @@ const Play = () => {
                 isSearcheable={true}
                 setter={setSelectedCountry as Setter}
             />
-            <Button onClick={goToPage} >OK</Button>
+            <Button onClick={goToPage} customs={{ zIndex: 0 }} >OK</Button>
         </>
     );
 }
