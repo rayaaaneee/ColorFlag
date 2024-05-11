@@ -63,16 +63,16 @@ body {
       scrollbar-width: none;  /* Firefox */
   }
 
-  .main-bg {
-    background-color: $main-bg-color;
+  .bg-main {
+    background-color: $bg-main-color;
     &.hoverable {      
       &:hover, &.focused, &.selected {
-      background-color: $scnd-bg-color;
+      background-color: $bg-scnd-color;
       }
     }
   }
 
-  .scnd-bg {
-    background-color: $scnd-bg-color;
+  .bg-scnd {
+    background-color: $bg-scnd-color;
   }
 }

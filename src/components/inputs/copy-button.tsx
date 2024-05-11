@@ -3,7 +3,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import { FaCopy } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa6";
 import Button from "@/components/inputs/button";
-import Tooltip from "../tooltip";
+import Tooltip from "@/components/usefuls/tooltip";
 
 export interface CopyButtonProps {
     stringToCopy: string;

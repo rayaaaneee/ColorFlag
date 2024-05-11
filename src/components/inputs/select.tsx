@@ -241,7 +241,7 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
 
     return (
         <div className={`relative group ${ widthClass }`}>
-            <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white main-bg border-gray-300 shadow-sm`}>
+            <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white bg-main border-gray-300 shadow-sm`}>
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
                         ((selectedValue as SelectDataSourceInterface[])
@@ -255,8 +255,8 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
                 </svg>
             </button>
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
-                <ul ref={dropdownMenu} id="dropdown-menu" className={ `${styles.dropDownMenu} overflow-hidden w-full text-sm right-0 ${ dropdownIsOpen ? 'rounded-b-md' : 'rounded-md' } shadow-lg main-bg ring-1 ring-black ring-opacity-5 p-1 space-y-1`}>
-                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 scnd-bg rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
+                <ul ref={dropdownMenu} id="dropdown-menu" className={ `${styles.dropDownMenu} overflow-hidden w-full text-sm right-0 ${ dropdownIsOpen ? 'rounded-b-md' : 'rounded-md' } shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1`}>
+                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
                         { filteredDataSources.map((item: SelectDataSourceInterface, index: number) => {
                             return (<li 
@@ -266,7 +266,7 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
                                         :
                                         ((selectedValue as SelectDataSourceInterface).value === item.value && 'selected')
                                     )
-                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white main-bg hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}
+                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}
                                 dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>
                             </li>);
                         }) }

@@ -13,6 +13,9 @@ import NotFound from "@/components/not-found";
 import Button from "@/components/inputs/button";
 import SelectableColorCircle from "./selectable-color-circle";
 import { SvgPatternInterface } from "./svg/svg-pattern";
+import ChildrenType from "@/useful/types/children-type";
+import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
+import transformSelfClosingToRegularTag from "@/useful/transform-self-closing-to-regular-tag";
 
 export interface sourceElementInterface {
     name: string;
@@ -22,25 +25,34 @@ export interface sourceElementInterface {
 
 export type ValidatorCallback = (score: number) => void;
 export type Shape = SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
-export type ShapeClickerCallback = (shape: Shape) => void;
+export type ShapeClickerCallback = (shape: Shape) => void | React.Dispatch<React.SetStateAction<Shape>>;
 
 export interface ColorableFlagInterface {
     sourceElement: sourceElementInterface | undefined;
     itemName: string;
     canValidate?: boolean;
-    canColor?: boolean;
+    devMode?: boolean;
+    toolSelected?: ToolButtonInterface | null;
     className?: string;
     onValidate?: ValidatorCallback;
-    onClickOnShape?: ShapeClickerCallback
+    onClickOnShape?: ShapeClickerCallback;
+    colorableShapesSetter?: React.Dispatch<React.SetStateAction<Shape[]>>;
+    onChangeSvg?: (svgCode: SvgCodeInterface) => void;
+    children?: ChildrenType;
 }
 
-const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canValidate = true, onClickOnShape = (_) => {}, canColor = true, className = "" }: ColorableFlagInterface) => {
+const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canValidate = true, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined }: ColorableFlagInterface) => {
 
     const [svgColors, setSvgColors] = useState<string[]>([]);
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     
     const [colorableShapes, setColorableShapes] = useState<Shape[]>([]);
+    useEffect(() => {
+        colorableShapes.forEach((shape) => {
+            shape.onclick = onColorShape;
+        });
+    }, [colorableShapes, selectedColor, toolSelected]);
 
     const svgContainer = useRef<HTMLDivElement>(null);
 
@@ -59,7 +71,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                     if (svgContainer.current && colorableSvgElement === null) {
                         svgContainer.current.insertAdjacentHTML('afterbegin', data.svg as string);
                         colorableSvgElement = svgContainer.current.querySelector('svg');
-
+                        onChangeSvg({ svg: transformSelfClosingToRegularTag(data.svg as string), firstAssignment: true });
                         if (colorableSvgElement !== null) {
                             colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;
@@ -76,7 +88,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                                 { ...basePattern }
                             ]
 
-                            if (!canColor) {
+                            if (devMode) {
                                 patterns.push({ ...basePattern, customPatternId: 'selectedPathImg', customImageSrc: 'selected-background.jpg'})
                             }
 
@@ -97,14 +109,15 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
     };
 
     const onColorShape = useCallback((e: MouseEvent) => {
-        const shape = e.currentTarget as Shape;
+        console.log("onColorShape");
+        const shape: Shape = e.currentTarget as Shape;
+        onClickOnShape(shape);
         if (selectedColor !== null) {
-            
             shape.setAttribute('fill', selectedColor);
-        } else if (canColor === true) {
+        } else if (!devMode) {
             toast.error("Please select a color");
         }
-    }, [selectedColor]);
+    }, [selectedColor, onClickOnShape, toolSelected]);
 
     const score: number = useMemo(() => {
 
@@ -168,10 +181,10 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
             if (allShapes != undefined) {
                 let flagColors: string[] = [];
                 allShapes.forEach((shape: SVGElement) => {
-                    if ((allShapesKeeped || shape.classList.contains('keep')) || !canColor) {
+                    if ((allShapesKeeped || shape.classList.contains('keep')) || devMode) {
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
-                            const rgbInitialFill: string = hexToRgb(initialFill); 
+                            const rgbInitialFill: string = hexToRgb(initialFill);
                             shape.setAttribute('fill', 'url(#emptyPathImg)');
                             shape.setAttribute('data-fill', rgbInitialFill);
 
@@ -193,17 +206,10 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                 });
                 initColors(flagColors);
                 setColorableShapes(colorableShapesTmp);
+                if (colorableShapesSetter !== undefined) {
+                    colorableShapesSetter(colorableShapesTmp);
+                }
             }
-
-            colorableShapesTmp.forEach((shape) => {
-                shape.onclick = onColorShape;
-            });
-
-        } else {
-
-            colorableShapes.forEach((shape) => {
-                shape.onclick = onColorShape;
-            });
 
         }
     };
@@ -246,7 +252,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
             { sourceElement === undefined ? (<NotFound />)
                 :
                 (<>
-                    { (svgColors.length > 0 && canColor) && 
+                    { (svgColors.length > 0 && !devMode) && 
                         (<ul className="list-none flex flex-row flex-wrap items-center justify-center w-fill max-w-[65vw] h-fill gap-5">
                             { svgColors.map((color: string) => {
                                 return (
@@ -255,7 +261,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                             })}
                         </ul>)
                     }
-                    <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "main-bg" } mx-auto ${ canColor && "my-5"}` }>
+                    <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-main" } mx-auto ${ !devMode && "my-5"}` }>
                         <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${sourceElement?.code}.svg`) } />
                     </div>
                     { (selectedColor && initialPaintbrushPosition) && 
@@ -272,6 +278,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                     </div>)}
                 </>) 
             }
+            {children}
         </div>
     )
 };

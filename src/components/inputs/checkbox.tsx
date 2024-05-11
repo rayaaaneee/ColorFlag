@@ -11,7 +11,7 @@ export interface CheckboxProps {
 
 const Checkbox = ({ label, checked = false, onChange = undefined, className = undefined }: CheckboxProps) => {
     return (
-        <div className={`${ className } flex items-center main-bg py-3 px-5 rounded-lg`}>
+        <div className={`${ className } flex items-center bg-main py-3 px-5 rounded-lg`}>
             <div className="relative inline-flex items-center">
                 <input type="checkbox"
                     onChange={onChange}

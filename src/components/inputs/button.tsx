@@ -1,3 +1,4 @@
+import ChildrenType from "@/useful/types/children-type";
 import { MouseEventHandler } from "react";
 
 
@@ -13,11 +14,11 @@ export interface Customs {
     zIndex?: number;
 }
 export interface ButtonProps {
-    className?: string;
-    onClick?: MouseEventHandler<HTMLButtonElement>;
-    onMouseEnter?: MouseEventHandler<HTMLButtonElement>;
-    onMouseLeave?: MouseEventHandler<HTMLButtonElement>;
-    children?: JSX.Element | string,
+    className?: string,
+    onClick?: MouseEventHandler<HTMLButtonElement>,
+    onMouseEnter?: MouseEventHandler<HTMLButtonElement>,
+    onMouseLeave?: MouseEventHandler<HTMLButtonElement>,
+    children?: ChildrenType,
     title?: string,
     customs?: Customs,
     disabled?: boolean
@@ -34,7 +35,7 @@ const Button = ({ onClick = undefined, children = "OK", className="", title = un
             disabled={ disabled }
             className={`
                 ${className} 
-                ${custom?.colorClass ? custom.colorClass : "main-bg"} 
+                ${custom?.colorClass ? custom.colorClass : "bg-main"} 
                 ${custom?.hoverColorClass ? custom.hoverColorClass : "hoverable"} 
                 ${custom?.textColor ? custom.textColor : "text-white"} 
                 ${custom?.activeColorClass && custom.activeColorClass } 

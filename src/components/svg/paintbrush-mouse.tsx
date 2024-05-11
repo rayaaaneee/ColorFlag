@@ -59,10 +59,10 @@ const PaintbrushMouse = ({ color, initialPosition }: PaintbrushInterface) => {
         >
             <defs>
                 <pattern xmlns="http://www.w3.org/2000/svg" id="emptyGreyPathImg" patternUnits="userSpaceOnUse" width="70" height="70">
-                    <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="/png-background-grey.jpg" x="0" y="0" width="70" height="70"></image>
+                    <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="/eraser.png" x="0" y="0" width="70" height="70"></image>
                 </pattern>
                 <pattern xmlns="http://www.w3.org/2000/svg" id="selectedPathImg" patternUnits="userSpaceOnUse" width="70" height="70">
-                    <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="/selected-background.jpg" x="0" y="0" width="70" height="70"></image>
+                    <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="/selector.png" x="0" y="0" width="70" height="70"></image>
                 </pattern>
             </defs>
             <style>{`.st0{fill:#E0E0D1;} .st1{fill:#4F5D73;} .st2{opacity:0.2;fill:#231F20;} .st3{fill:#E0995E;} .st4{fill:#FFFFFF;} .st5{fill:${color};}`}</style>
