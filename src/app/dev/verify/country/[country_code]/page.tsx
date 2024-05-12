@@ -99,7 +99,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     const svgCodeContainer = useRef<HTMLDivElement>(null);
 
     const hasSelectedShapes: boolean = useMemo(() => {
-        return allShapesKeeped || svgCodeContainer.current?.querySelector(".keep") !== null;
+        if (svgCode === null) return false;
+        return allShapesKeeped || svgCode?.svg.includes('class="keep"');
     }, [svgCode, allShapesKeeped]);
 
     const [alreadyTreated, setAlreadyTreated] = useState<boolean>(false);
@@ -114,6 +115,21 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     selectAllShapes();
                 } else if (alreadyKeepedOnes) {
                     // TODO: Select the shapes that are already keeped
+                    svgCodeContainer.current?.querySelectorAll('.keep').forEach((element: Element) => {
+                        const colorableShape: Shape | undefined = colorableShapes.find((shape) => {
+                            console.log("finding colorable shape ", shape);
+                            if (
+                                (shape.getAttribute('d') === element.getAttribute('d')) && 
+                                (rgbToHex(shape.getAttribute('data-fill') as string) === element.getAttribute('fill'))) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        console.log("finded colorable shape ", colorableShape);
+                        if (colorableShape !== undefined) {
+                            colorableShape.setAttribute('fill', `url(#selectedPathImg)`);
+                        }
+                    })
                 }
                 setAlreadyTreated(alreadyKeepedAll || alreadyKeepedOnes);
             }
@@ -355,8 +371,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                             <IoMdInformation className='text-4xl'/>
                         </Button>
                     </Tooltip>
-                    <Tooltip disabled={hasSelectedShapes} text='Select at least one shape before sending' type='error' hasIcon={true} position='left'>
-                        <Button disabled={!hasSelectedShapes} className='gap-2' onClick={validateSvg}>
+                    <Tooltip disabled={(hasSelectedShapes)} text='Select at least one shape before sending' type='error' hasIcon={true} position='left'>
+                        <Button disabled={(!hasSelectedShapes)} className='gap-2' onClick={validateSvg}>
                             <p>Send</p>
                             <IoSendSharp />
                         </Button>
@@ -364,7 +380,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     <Link target='_blank' href={`/play/country/${country_code}`}>
                         <Button className='gap-2'>
                             <p>Try</p>
-                            <IoMdLink className='text-lg' />
+                            <IoMdLink className='text-lg mt-[1px]' />
                         </Button>
                     </Link>
                 </ColorableFlag>

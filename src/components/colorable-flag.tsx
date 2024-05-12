@@ -16,6 +16,7 @@ import { SvgPatternInterface } from "./svg/svg-pattern";
 import ChildrenType from "@/useful/types/children-type";
 import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
 import transformSelfClosingToRegularTag from "@/useful/transform-self-closing-to-regular-tag";
+import { replaceColorWithShorterHex } from "@/useful/rgbToHex";
 
 export interface sourceElementInterface {
     name: string;
@@ -72,7 +73,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                     if (svgContainer.current && colorableSvgElement === null) {
                         svgContainer.current.insertAdjacentHTML('afterbegin', data.svg as string);
                         colorableSvgElement = svgContainer.current.querySelector('svg');
-                        onChangeSvg({ svg: transformSelfClosingToRegularTag(data.svg as string).trim(), firstAssignment: true });
+                        onChangeSvg({ svg: replaceColorWithShorterHex(transformSelfClosingToRegularTag(data.svg as string).trim()), firstAssignment: true });
                         if (colorableSvgElement !== null) {
                             colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;

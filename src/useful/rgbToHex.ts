@@ -13,6 +13,16 @@ export const hexCanBecomeShorter = (hex: string): boolean => {
     return hexWithoutHash.split('').every((char, i) => i % 2 === 0 ? char === hexWithoutHash[i + 1] : true);
 }
 
+// replaceColorWithShorterHex('red') => '#f00'
+// replaceColorWithShorterHex('green') => '#0f0'
+export const replaceColorWithShorterHex = (color: string): string => {
+    const colors: { [key: string]: string } = { black: '#000', white: '#fff', red: '#f00', green: '#0f0', blue: '#00f' };
+    for (const key in colors) {
+        color = color.replaceAll(key, colors[key]);
+    }
+    return color;
+}
+
 const rgbToHex = (rgbColor: string): string => {
     rgbColor = rgbColor.replace("rgb(", '').replace(")", '');
     const [r, g, b]: number[] = rgbColor.split(',').map(Number);
@@ -32,7 +42,11 @@ const rgbToHex = (rgbColor: string): string => {
                 return rgbColor;
         }
     } else {
-        return `#${rgbHex(r, g, b)}`;
+        const longHex = rgbHex(r, g, b);
+        if (hexCanBecomeShorter(longHex)) {
+            return shortenHexColor(longHex);
+        }
+        return `#${longHex}`;
     }
 }
 
