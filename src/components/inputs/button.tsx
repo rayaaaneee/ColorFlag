@@ -12,6 +12,7 @@ export interface Customs {
     paddingClass?: string;
     hasShadow?: boolean;
     zIndex?: number;
+    borderRadiusClass?: string;
 }
 export interface ButtonProps {
     className?: string,
@@ -44,7 +45,8 @@ const Button = ({ onClick = undefined, children = "OK", className="", title = un
                 ${custom?.paddingClass ? custom.paddingClass : "px-5 py-3"} 
                 ${(custom === undefined || custom.hasShadow) && `shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:shadow-none active:shadow-none disabled:shadow-none`}
                 ${disabled ? `cursor-not-allowed` : `cursor-pointer`}
-                relative flex flex-row items-center justify-center gap-1 select-none rounded-lg text-center align-middle font-sans text-sm font-medium uppercase  transition-all focus:opacity-[0.85] active:opacity-[0.85]  disabled:pointer-events-none disabled:opacity-50`}
+                ${custom?.borderRadiusClass ? custom.borderRadiusClass : "rounded-lg"}
+                relative flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans text-sm font-medium uppercase  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
             type="button" 
             >
             { children }

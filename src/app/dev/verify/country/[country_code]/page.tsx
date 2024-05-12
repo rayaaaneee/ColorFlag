@@ -27,6 +27,10 @@ import toast from 'react-hot-toast';
 
 import Alert from '@/components/usefuls/alert';
 import rgbToHex, { hexCanBecomeShorter, shortenHexColor } from '@/useful/rgbToHex';
+import Image from 'next/image';
+import { IoMdInformation, IoMdLink } from 'react-icons/io';
+import { FaLink } from "react-icons/fa";
+import Link from 'next/link';
 
 export interface VerifyCountriesProps {
 
@@ -52,6 +56,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     const [cleared, setCleared] = useState<boolean>(false);
     const [allShapesKeeped, setAllShapesKeeped] = useState<boolean>(false);
     const [colorableShapes, setColorableShapes] = useState<Shape[]>([]);
+    const [originalFlagOpened, setOriginalFlagOpened] = useState<boolean>(false);
 
     const deselectAllShapes = () => {
         colorableShapes.forEach((shape) => {
@@ -120,6 +125,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         setAllShapesKeeped(false);
         setToolSelected(null);
         setInitialPaintbrushPosition(null);
+        manageShapesClasses(true, true);
+        deselectAllShapes();
     }
 
     const updateSvgCode = () => {
@@ -133,26 +140,39 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         toast.error('Cannot update the svg code');
     }
 
+
+    const manageShapesClasses = (removeKeep: boolean = false, removeKeepAll: boolean = false): void => {
+        if (svgCodeContainer.current !== null) {
+            const svgElement: SVGElement | null = svgCodeContainer.current?.querySelector('svg');
+            if (svgElement !== null) {
+                if (removeKeepAll) {
+                    svgElement.removeAttribute('class');
+                } else {
+                    svgElement.classList.add('keep-all');
+                }
+
+                svgElement.querySelectorAll('.keep').forEach((element: Element) => {
+                    if (removeKeep) {
+                        element.removeAttribute('class');
+                    } else {
+                        element.classList.add('keep');
+                    }
+                });
+                updateSvgCode();
+                selectAllShapes();
+            }
+        }
+    }
+
     useEffect(() => {
         if (allShapesKeeped) {
             setToolSelected(null);
             setInitialPaintbrushPosition(null);
-            if (svgCodeContainer.current !== null) {
-                const svgElement: SVGElement | null = svgCodeContainer.current?.querySelector('svg');
-                if (svgElement !== null) {
-                    svgElement.classList.add('keep-all');
-                    svgElement.querySelectorAll('.keep').forEach((element: Element) => {
-                        element.removeAttribute('class');
-                    });
-                    updateSvgCode();
-                    selectAllShapes();
-                }
-            }
+            manageShapesClasses(true, false);
         } else {
             if (svgCodeContainer.current !== null) {
-                const svgElement: SVGElement | null = svgCodeContainer.current?.querySelector('svg');
-                if (svgElement !== null) {
-                    svgElement.removeAttribute('class');
+                if (svgCodeContainer.current.querySelector("svg") !== null) {
+                    manageShapesClasses(false, true);
                     updateSvgCode();
                     deselectAllShapes();
                 }
@@ -170,7 +190,6 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             const middleX = rect.x + (rect.width / 2);
             const middleY = rect.y + (rect.height / 2);
             setInitialPaintbrushPosition({ x: middleX, y: middleY });
-        
             setToolSelected(button);
         }
     }
@@ -266,6 +285,11 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     <p>This flag seems to be already treated.</p>
                 </Alert>
             ) }
+            { originalFlagOpened && (
+                <Alert position='top-right' type='info' onClose={e => setOriginalFlagOpened(false)}>
+                    <Image src={require(`@/asset/img/flags/1x1/${country_code}.svg`)} draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} />
+                </Alert>
+            ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>
             <h1 className='absolute top-3 text-3xl text-slate-600 font-bold'>{countryName}</h1>
             <div className='w-full h-full flex flex-col items-center justify-start gap-12'>
@@ -293,7 +317,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                             onChange={(e) => setAllShapesKeeped(e.currentTarget.checked)}
                         />
                         <Tooltip text={ cleared ? 'Cleared' : 'Clear all'}>
-                            <Button onMouseLeave={(e) => (setCleared(false))} onClick={clearAll} customs={{paddingClass: "p-2"}}>
+                            <Button onMouseLeave={e => setCleared(false)} onClick={clearAll} customs={{paddingClass: "p-2"}}>
                                 <CiEraser className='w-6 h-6' />
                             </Button>
                         </Tooltip>
@@ -324,13 +348,25 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     onClickOnShape={onClickOnShape}
                     colorableShapesSetter={setColorableShapes}
                     toolSelected={toolSelected}
+                    childrenContainerClassName='gap-3'
                 >
-                    <Tooltip disabled={hasSelectedShapes} text='Select at least one shape before sending' type='error' hasIcon={true} position='left' className='mt-2'>
+                    <Tooltip text='See original' hasIcon={true} position='top'>
+                        <Button onClick={e => setOriginalFlagOpened(bool => !bool)} customs={{ borderRadiusClass: "rounded-full", paddingClass: "p-1" }}>
+                            <IoMdInformation className='text-4xl'/>
+                        </Button>
+                    </Tooltip>
+                    <Tooltip disabled={hasSelectedShapes} text='Select at least one shape before sending' type='error' hasIcon={true} position='left'>
                         <Button disabled={!hasSelectedShapes} className='gap-2' onClick={validateSvg}>
                             <p>Send</p>
                             <IoSendSharp />
                         </Button>
                     </Tooltip>
+                    <Link target='_blank' href={`/play/country/${country_code}`}>
+                        <Button className='gap-2'>
+                            <p>Try</p>
+                            <IoMdLink className='text-lg' />
+                        </Button>
+                    </Link>
                 </ColorableFlag>
                 { initialPaintbrushPosition !== null && <PaintbrushMouse initialPosition={initialPaintbrushPosition} color={`url(#${toolSelected?.mouseBackground})`} /> }
             </div>

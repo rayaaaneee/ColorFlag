@@ -10,7 +10,7 @@ export type AlertPositionType = "top-left" | "top-right" | "bottom-left" | "bott
 
 export interface AlertInterface {
     children: ChildrenType;
-    type?: "success" | "error" | "warning" | "default";
+    type?: "success" | "error" | "warning" | "info" | "default";
     position?: AlertPositionType;
     hasIcon?: boolean;
     disabled?: boolean;
@@ -34,6 +34,9 @@ const Alert = ({ children = undefined, position = "top-right", type = "default",
                 break;
             case "error":
                 classes = "bg-red-500";
+                break;
+            case "info":
+                classes = "bg-blue-900";
                 break;
         }
         return classes;
@@ -68,6 +71,8 @@ const Alert = ({ children = undefined, position = "top-right", type = "default",
             case 'error':
                 icon = <RiErrorWarningFill {...attr} />;
                 break;
+            case 'info':
+                break;
         }
         return icon;
     }
@@ -85,6 +90,7 @@ const Alert = ({ children = undefined, position = "top-right", type = "default",
             if (closeButton.current) {
                 closeButton.current.click();
             }
+            clearTimeout(timeout);
         }, duration);
     }
 

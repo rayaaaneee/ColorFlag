@@ -155,7 +155,6 @@
     { "code": "nr", "name": "nauru", "continent": "oc" },
     { "code": "np", "name": "nepal", "continent": "as" },
     { "code": "nl", "name": "netherlands", "continent": "eu" },
-    { "code": "an", "name": "netherlands-antilles", "continent": "na" },
     { "code": "nc", "name": "new-caledonia", "continent": "oc" },
     { "code": "nz", "name": "new-zealand", "continent": "oc" },
     { "code": "ni", "name": "nicaragua", "continent": "na" },

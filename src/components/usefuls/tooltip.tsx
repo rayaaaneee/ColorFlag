@@ -11,7 +11,7 @@ export type TooltipType = 'default' | 'success' | 'warning' | 'error';
 
 export interface TooltipInterface {
     children: ChildrenType
-    text: string;
+    text: ChildrenType;
     position?: TooltipPosition;
     forceShow?: boolean;
     disabled?: boolean;

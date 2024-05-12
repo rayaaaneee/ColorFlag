@@ -39,9 +39,10 @@ export interface ColorableFlagInterface {
     colorableShapesSetter?: React.Dispatch<React.SetStateAction<Shape[]>>;
     onChangeSvg?: (svgCode: SvgCodeInterface) => void;
     children?: ChildrenType;
+    childrenContainerClassName?: string;
 }
 
-const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canValidate = true, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined }: ColorableFlagInterface) => {
+const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canValidate = true, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined, childrenContainerClassName = "" }: ColorableFlagInterface) => {
 
     const [svgColors, setSvgColors] = useState<string[]>([]);
 
@@ -66,12 +67,12 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
         if (sourceElement === undefined) return;
         try {
             fetch(`/api/flag/${itemName}/${sourceElement.code}`)
-                .then((response) => response.json())
-                .then((data) => {
+                .then((response: any) => response.json())
+                .then((data: any) => {
                     if (svgContainer.current && colorableSvgElement === null) {
                         svgContainer.current.insertAdjacentHTML('afterbegin', data.svg as string);
                         colorableSvgElement = svgContainer.current.querySelector('svg');
-                        onChangeSvg({ svg: transformSelfClosingToRegularTag(data.svg as string), firstAssignment: true });
+                        onChangeSvg({ svg: transformSelfClosingToRegularTag(data.svg as string).trim(), firstAssignment: true });
                         if (colorableSvgElement !== null) {
                             colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;
@@ -173,7 +174,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
     }
 
     const initShapes = (firstCall = false) => {
-        const selectors: string[] = ['path', 'circle', 'g'];
+        const selectors: string[] = ['path', 'circle', 'g', 'rect'];
         const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(selectors.map((selector: string) => (`svg ${selector}[fill]`)).join(', '));
         const allShapesKeeped: boolean = colorableSvgElement?.classList.contains('keep-all') || false;
         if (firstCall) { 
@@ -278,7 +279,11 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, canVal
                     </div>)}
                 </>) 
             }
-            {children}
+            {children && (
+                <div className={`${childrenContainerClassName} w-fit h-fit flex flex-row items-center justify-center mt-2`}>
+                {children}
+                </div>
+            ) }
         </div>
     )
 };
