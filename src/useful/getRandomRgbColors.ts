@@ -1,5 +1,5 @@
 import { RgbaObject } from "hex-rgb";
-import initRgbCssString from "./initRgbCssString";
+import initRgbCssString from "./string-treatment/initRgbCssString";
 import getRgbaObject from "./getRgbaObject";
 
 const getRandomRgbColors = (num: number, forbiddenColors: string[] = [], minDifference: number = 100): string[] => {

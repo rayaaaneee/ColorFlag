@@ -4,7 +4,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import styles from "@/asset/scss/play.module.scss";
 import Position from "@/useful/interfaces/position";
-import hexToRgb from "@/useful/hexToRgb";
+import hexToRgb from "@/useful/string-treatment/hexToRgb";
 import PaintbrushMouse from "./svg/paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
 import getRandomRgbColors from "@/useful/getRandomRgbColors";
@@ -15,19 +15,25 @@ import SelectableColorCircle from "./selectable-color-circle";
 import { SvgPatternInterface } from "./svg/svg-pattern";
 import ChildrenType from "@/useful/types/children-type";
 import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
-import transformSelfClosingToRegularTag from "@/useful/transform-self-closing-to-regular-tag";
-import { replaceColorWithShorterHex } from "@/useful/rgbToHex";
+import transformSelfClosingToRegularTag from "@/useful/string-treatment/transformSelfClosingToRegularTag";
+import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
 import ButtonGoBackOrNext, { Direction } from "./inputs/button-go-back-or-next";
 import countriesArray from "@/asset/data/countries.json";
 import Country from "@/useful/interfaces/country";
+import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
 
 export interface sourceElementInterface {
     name: string;
     code: string;
 }
 
+export interface ScoreInterface {
+    score: number;
+    bonusScore: number;
+}
 
-export type ValidatorCallback = (score: number) => void;
+
+export type ValidatorCallback = (score: ScoreInterface) => void;
 export type Shape = SVGElement | SVGPathElement | SVGCircleElement | SVGGElement;
 export type ShapeClickerCallback = (shape: Shape) => void | React.Dispatch<React.SetStateAction<Shape>>;
 
@@ -61,7 +67,8 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     }, [colorableShapes, selectedColor, toolSelected]);
 
     const svgContainer = useRef<HTMLDivElement>(null);
-    const coloredShapes: Shape[] = [];
+
+    const [coloredShapes, setColoredShapes] = useState<Shape[]>([]);
 
     let colorableSvgElement: SVGElement | null = null;
 
@@ -76,9 +83,10 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                 .then((response: any) => response.json())
                 .then((data: any) => {
                     if (svgContainer.current && colorableSvgElement === null) {
-                        svgContainer.current.insertAdjacentHTML('afterbegin', data.svg as string);
+                        const svgWithShorterHex: string = replaceColorWithShorterHex(transformSelfClosingToRegularTag(replaceFillAttribute(data.svg as string)).trim());
+                        svgContainer.current.insertAdjacentHTML('afterbegin', svgWithShorterHex);
                         colorableSvgElement = svgContainer.current.querySelector('svg');
-                        onChangeSvg({ svg: replaceColorWithShorterHex(transformSelfClosingToRegularTag(data.svg as string).trim()), firstAssignment: true });
+                        onChangeSvg({ svg: svgWithShorterHex, firstAssignment: true });
                         if (colorableSvgElement !== null) {
                             colorableSvgElement.classList.add(styles.left);
                             const svgWidth: number = svgContainer.current.clientWidth;
@@ -120,7 +128,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         onClickOnShape(shape);
         if (selectedColor !== null) {
             if (!coloredShapes.includes(shape)) {
-                coloredShapes.push(shape);
+                setColoredShapes(prev => [...prev, shape]);
             }
             shape.setAttribute('fill', selectedColor);
         } else if (!devMode) {
@@ -128,7 +136,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         }
     }, [selectedColor, onClickOnShape, toolSelected]);
 
-    const score: number = useMemo(() => {
+    const score: ScoreInterface = useMemo(() => {
 
         const totalShapes: number = colorableShapes.length;
         const shapeColors: string[] = colorableShapes.map((shape) => (hexToRgb(shape.getAttribute('data-fill') as string)));
@@ -148,13 +156,27 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         });
 
         const initialScore: number = Math.round((correctShapes / totalShapes) * 100);
+        
         const goodColorsPercentage: number = Math.round((goodColors / totalShapes) * 100);
+        let bonusScore: number = 0;
+        if (goodColorsPercentage >= 90) {
+            bonusScore = 30;
+        } else if (goodColorsPercentage >= 80) {
+            bonusScore = 20;
+        } else if (goodColorsPercentage >= 70) {
+            bonusScore = 10;
+        } else if (goodColorsPercentage >= 60) {
+            bonusScore = 5;
+        } else if (goodColorsPercentage >= 40) {
+            bonusScore = 3;
+        } else if (goodColorsPercentage >= 20) {
+            bonusScore = 1;
+        }
 
-        if (initialScore === 100) return initialScore;
-
-        // According to good colors percentage, we can add some points to the score
-
-        return initialScore;
+        return {
+            score: initialScore,
+            bonusScore: bonusScore,
+        };
 
     }, [isValidated]);
 
@@ -182,8 +204,8 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     }
 
     const initShapes = (firstCall = false) => {
-        const selectors: string[] = ['path', 'circle', 'g', 'rect'];
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(selectors.map((selector: string) => (`svg ${selector}[fill]`)).join(', '));
+        const acceptedTags: string[] = ['path', 'circle', 'g', 'rect'];
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg ${selector}[fill]`)).join(', '));
         const allShapesKeeped: boolean = colorableSvgElement?.classList.contains('keep-all') || false;
         if (firstCall) { 
             const colorableShapesTmp: Shape[] = [];
@@ -194,6 +216,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                             const rgbInitialFill: string = hexToRgb(initialFill);
+                            console.log(initialFill, rgbInitialFill);
                             shape.setAttribute('fill', 'url(#emptyPathImg)');
                             shape.setAttribute('data-fill', rgbInitialFill);
 
@@ -275,7 +298,13 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                         </ul>)
                     }
                     <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-main" } mx-auto ${ !devMode && "my-5"}` }>
+
+                        <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex items-center justify-center text-slate-800 text-8xl font-mono `}>
+                            { isValidated && (`${score.score}%`) }
+                        </div>
+                        
                         <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${sourceElement?.code}.svg`) } />
+
                     </div>
                     { (selectedColor && initialPaintbrushPosition) && 
                         (<PaintbrushMouse 

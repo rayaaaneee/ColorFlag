@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 
 import countriesArray from "@/asset/data/countries.json";
 import Country from "@/useful/interfaces/country";
-import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
+import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 import ColorableFlag, { sourceElementInterface } from "@/components/colorable-flag";
 
 const PlayCountry = () => {

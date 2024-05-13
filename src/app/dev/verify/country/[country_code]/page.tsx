@@ -10,7 +10,7 @@ import ButtonGoBackOrNext, { Direction } from "@/components/inputs/button-go-bac
 
 import countriesArray from "@/asset/data/countries.json";
 import { useParams } from 'next/navigation';
-import uppercaseFirstWordsLetters from '@/useful/uppercaseFirstWordsLetters';
+import uppercaseFirstWordsLetters from '@/useful/string-treatment/uppercaseFirstWordsLetters';
 import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import Checkbox from '@/components/inputs/checkbox';
 import CopyButton from '@/components/inputs/copy-button';
@@ -26,10 +26,9 @@ import { IoSendSharp } from "react-icons/io5";
 import toast from 'react-hot-toast';
 
 import Alert from '@/components/usefuls/alert';
-import rgbToHex, { hexCanBecomeShorter, shortenHexColor } from '@/useful/rgbToHex';
+import rgbToHex, { hexCanBecomeShorter, shortenHexColor } from '@/useful/string-treatment/rgbToHex';
 import Image from 'next/image';
 import { IoMdInformation, IoMdLink } from 'react-icons/io';
-import { FaLink } from "react-icons/fa";
 import Link from 'next/link';
 import getAttributes, { AttributeInterface } from '@/useful/getAttributes';
 import getCssSelector from '@/useful/getCssSelector';
@@ -119,7 +118,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                 } else if (alreadyKeepedOnes) {
                     svgCodeContainer.current?.querySelectorAll('.keep').forEach((element: Element) => {
                         console.log("finding colorable shape for ", element);
-                        const elementAttrs: AttributeInterface[] = getAttributes(element, ["class"]);
+                        const elementAttrs: AttributeInterface[] = getAttributes(element, ["class", "id"]);
                         const colorableShape: Shape | undefined = 
                             colorableShapes.find((colorableShape: Shape) => {
                                 let isFindingShape: boolean = true;
@@ -128,13 +127,11 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                                         if (elementAttr.value !== null) {
                                             const colorableShapeDataFill: string = colorableShape.getAttribute('data-fill') as string;
                                             if (rgbToHex(colorableShapeDataFill) !== elementAttr.value && colorableShapeDataFill !== elementAttr.value) {
-                                                console.log("colorableShapeDataFill", colorableShapeDataFill, "elementAttr.value", elementAttr.value);
                                                 isFindingShape = false;
                                             }
                                         }
                                     } else {
                                         if (colorableShape.getAttribute(elementAttr.name) !== elementAttr.value) {
-                                            console.log("colorableShape.getAttribute(elementAttr.name)", colorableShape.getAttribute(elementAttr.name), "elementAttr.value", elementAttr.value);
                                             isFindingShape = false;
                                         }
                                     }
@@ -247,15 +244,16 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             const canBeShortened: boolean = hexCanBecomeShorter(dataFill);
             const shortenDataFill: string | null = canBeShortened ? shortenHexColor(dataFill) : null;
 
-            shapeCopy.setAttribute('fill', canBeShortened ? shortenDataFill as string : dataFill);
+            shapeCopy.setAttribute('fill', canBeShortened ? (shortenDataFill as string) : dataFill);
             shapeCopy.removeAttribute('data-fill');
             shapeCopy.removeAttribute('style');
 
             if (svgCodeContainer.current !== null) {
 
                 const selector: string = getCssSelector(shapeCopy);
+                const findedElement: Shape | null = svgCodeContainer.current.querySelector(selector);
 
-                if (svgCodeContainer.current.querySelector(selector) !== null) {
+                if (findedElement !== null) {
 
                     if (toolSelected.key === 'selector') {
                         shapeCopy.classList.add('keep');

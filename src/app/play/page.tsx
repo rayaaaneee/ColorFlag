@@ -22,7 +22,7 @@ const Play = () => {
             imgClass: "w-full",
             description: "lorem sghvkcss  sccccccccccccc",
             href: "/play/continent",
-            background: "rgb(183 128 128 / 50%)",
+            //background: "rgb(183 128 128 / 50%)",
             hashtags: [
                 "worldwide"
             ]
@@ -33,7 +33,7 @@ const Play = () => {
             imgClass: "w-1/3 m-auto",
             description: "sxxxxxxxxxxxxxxxx",
             href: "/play/country",
-            background: "rgb(129 146 181 / 48%)",
+            //background: "rgb(129 146 181 / 48%)",
             hashtags: [
                 "local"
             ]
@@ -44,7 +44,7 @@ const Play = () => {
             imgClass: "w-1/3 m-auto",
             description: "sxxxxxxxxxxxxxxxx",
             href: "/play/sport",
-            background: "rgb(129 181 152 / 48%)",
+            //background: "rgb(129 181 152 / 48%)",
             hashtags: [
                 "culture"
             ]

@@ -5,18 +5,19 @@ import Link from "next/link";
 import Button from "@/components/inputs/button";
 
 interface CardLinkInterface {
+    className?: string,
     element: Card
 }
 
-const CardLink = ({ element }: CardLinkInterface) => {
+const CardLink = ({ className = "", element }: CardLinkInterface) => {
     return (
-        <div style={{ backgroundColor: element.background}} className={`min-h-95 text-white max-w-sm rounded min-h-fit overflow-hidden shadow-lg`}>
+        <div style={{ backgroundColor: undefined /*element.background*/}} className={`${className}min-h-95 text-white max-w-sm rounded min-h-fit overflow-hidden bg-main opacity-80 shadow-lg`}>
             <div className="overflow-hidden flex items-center justify-center bg-white object-cover" style={{ height: "10.5rem"}}>
                 <Image draggable={ false } className={ element.imgClass } src={ element.image } alt="Sunset in the mountains" />
             </div>
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{ element.title }</div>
-                <p className="text-gray-700 text-base">{ element.description }</p>
+                <p className="text-slate-300 text-base">{ element.description }</p>
             </div>
             <div className="px-6 pt-4 pb-2">
                 { element.hashtags.map((element: string, index: number) => {

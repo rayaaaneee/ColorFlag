@@ -1,12 +1,12 @@
 "use client";
 
 import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
-import uppercaseFirstWordsLetters from "@/useful/uppercaseFirstWordsLetters";
+import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 
 import styles from "@/asset/scss/components/search-select.module.scss"
-import replaceAccents from "@/useful/replaceAccents";
-import getPluralWord from "@/useful/getPluralWord";
-import addAnBeforeVowel from "@/useful/addAnBeforeVowel";
+import replaceAccents from "@/useful/string-treatment/replaceAccents";
+import getPluralWord from "@/useful/string-treatment/getPluralWord";
+import addAnBeforeVowel from "@/useful/string-treatment/addAnBeforeVowel";
 
 export type ElementValue = string | number | boolean | null | undefined;
 

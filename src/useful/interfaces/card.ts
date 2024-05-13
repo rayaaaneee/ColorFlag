@@ -7,7 +7,7 @@ interface Card {
     imgClass: string,
     description: string,
     href: Url,
-    background: string,
+    //background: string,
     hashtags: string[]
 }
 
