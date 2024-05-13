@@ -56,16 +56,17 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+    const [coloredShapes, setColoredShapes] = useState<Shape[]>([]);
+    
     const [colorableShapes, setColorableShapes] = useState<Shape[]>([]);
     useEffect(() => {
         colorableShapes.forEach((shape) => {
             shape.onclick = onColorShape;
         });
-    }, [colorableShapes, selectedColor, toolSelected]);
+    }, [colorableShapes, selectedColor, toolSelected, coloredShapes]);
 
     const svgContainer = useRef<HTMLDivElement>(null);
 
-    const [coloredShapes, setColoredShapes] = useState<Shape[]>([]);
 
     let colorableSvgElement: SVGElement | null = null;
 
@@ -123,13 +124,14 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         onClickOnShape(shape);
         if (selectedColor !== null) {
             if (!coloredShapes.includes(shape)) {
+                console.log("no included");
                 setColoredShapes(prev => [...prev, shape]);
             }
             shape.setAttribute('fill', selectedColor);
         } else if (!devMode) {
             toast.error("Please select a color");
         }
-    }, [selectedColor, onClickOnShape, toolSelected]);
+    }, [selectedColor, onClickOnShape, toolSelected, coloredShapes]);
 
     const score: ScoreInterface = useMemo(() => {
 
@@ -225,7 +227,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
     const initShapes = (firstCall = false) => {
         const acceptedTags: string[] = ['path', 'circle', 'g', 'rect'];
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${styles.loaderSvg}) ${selector}[fill]`)).join(', '));
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${styles.loaderSvg}) ${selector}[fill]:not(defs *)`)).join(', '));
         const allShapesKeeped: boolean = colorableSvgElement?.classList.contains('keep-all') || false;
         if (firstCall) { 
             const colorableShapesTmp: Shape[] = [];
