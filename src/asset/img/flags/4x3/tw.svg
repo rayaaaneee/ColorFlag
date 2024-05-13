@@ -29,6 +29,6 @@
       <path d="m173.1 94 6.9-6.9-12-12-4.5 16.4z"></path>
     </g>
     <circle cx="180" cy="120" r="51.1" fill="#000095"></circle>
-    <circle cx="180" cy="120" r="45.1" fill="#fff"></circle>
+    <circle cx="180" cy="120" r="45.1" fill="#fff" class="keep"></circle>
   </g>
 </svg>

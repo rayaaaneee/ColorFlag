@@ -4,7 +4,7 @@
   <path fill="#ce1126" d="M0 153.6h640v172.8H0z" class="keep"></path>
   <path fill="#fff" d="M0 163.2h640v153.6H0z" class="keep"></path>
   <circle cx="134.4" cy="76.8" r="57.6" fill="#fff"></circle>
-  <circle cx="153.6" cy="76.8" r="57.6" fill="#0099b5"></circle>
+  <circle cx="153.6" cy="76.8" r="57.6" fill="#0099b5" class="keep"></circle>
   <g fill="#fff" transform="translate(261.1 122.9)scale(1.92)">
     <g id="uz-e">
       <g id="uz-d">

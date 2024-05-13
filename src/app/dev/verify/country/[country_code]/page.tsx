@@ -31,6 +31,9 @@ import Image from 'next/image';
 import { IoMdInformation, IoMdLink } from 'react-icons/io';
 import { FaLink } from "react-icons/fa";
 import Link from 'next/link';
+import getAttributes, { AttributeInterface } from '@/useful/getAttributes';
+import getCssSelector from '@/useful/getCssSelector';
+import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
 
 export interface VerifyCountriesProps {
 
@@ -114,18 +117,31 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     setAllShapesKeeped(true);
                     selectAllShapes();
                 } else if (alreadyKeepedOnes) {
-                    // TODO: Select the shapes that are already keeped
                     svgCodeContainer.current?.querySelectorAll('.keep').forEach((element: Element) => {
-                        const colorableShape: Shape | undefined = colorableShapes.find((shape) => {
-                            console.log("finding colorable shape ", shape);
-                            if (
-                                (shape.getAttribute('d') === element.getAttribute('d')) && 
-                                (rgbToHex(shape.getAttribute('data-fill') as string) === element.getAttribute('fill'))) {
-                                return true;
-                            }
-                            return false;
-                        })
-                        console.log("finded colorable shape ", colorableShape);
+                        console.log("finding colorable shape for ", element);
+                        const elementAttrs: AttributeInterface[] = getAttributes(element, ["class"]);
+                        const colorableShape: Shape | undefined = 
+                            colorableShapes.find((colorableShape: Shape) => {
+                                let isFindingShape: boolean = true;
+                                elementAttrs.forEach((elementAttr: AttributeInterface) => {
+                                    if (elementAttr.name === "fill") {
+                                        if (elementAttr.value !== null) {
+                                            const colorableShapeDataFill: string = colorableShape.getAttribute('data-fill') as string;
+                                            if (rgbToHex(colorableShapeDataFill) !== elementAttr.value && colorableShapeDataFill !== elementAttr.value) {
+                                                console.log("colorableShapeDataFill", colorableShapeDataFill, "elementAttr.value", elementAttr.value);
+                                                isFindingShape = false;
+                                            }
+                                        }
+                                    } else {
+                                        if (colorableShape.getAttribute(elementAttr.name) !== elementAttr.value) {
+                                            console.log("colorableShape.getAttribute(elementAttr.name)", colorableShape.getAttribute(elementAttr.name), "elementAttr.value", elementAttr.value);
+                                            isFindingShape = false;
+                                        }
+                                    }
+                                });
+                                return isFindingShape;
+                            });
+                        console.log("founded shape is", colorableShape);
                         if (colorableShape !== undefined) {
                             colorableShape.setAttribute('fill', `url(#selectedPathImg)`);
                         }
@@ -235,19 +251,15 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             shapeCopy.removeAttribute('data-fill');
             shapeCopy.removeAttribute('style');
 
-            if (toolSelected.key === 'selector') {
-
-                shapeCopy.classList.add('keep');
-            }
-
             if (svgCodeContainer.current !== null) {
-                const fill: string | null = shapeCopy.getAttribute('fill');
-                const d: string | null = shapeCopy.getAttribute('d');
-                const tagName: string = shapeCopy.tagName.toLowerCase();
 
-                const selector: string = `${tagName}[d="${d}"][fill="${fill}"]`;
+                const selector: string = getCssSelector(shapeCopy);
 
                 if (svgCodeContainer.current.querySelector(selector) !== null) {
+
+                    if (toolSelected.key === 'selector') {
+                        shapeCopy.classList.add('keep');
+                    }
 
                     svgCodeContainer.current.querySelector(selector)!.replaceWith(shapeCopy);
 
@@ -338,33 +350,23 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                             </Button>
                         </Tooltip>
                     </div>
-                    <div className='flex flex-row gap-3'>
-                        <ButtonGoBackOrNext 
-                            dataSource={countries.map(country => ({ value: country.code}))} 
-                            currentValue={ country_code } 
-                            url={ `/dev/verify/country` }
-                            direction={Direction.BACK} 
-                            cannotLoop={true}
-                        />
-                        <ButtonGoBackOrNext 
-                            dataSource={countries.map(country => ({ value: country.code}))} 
-                            currentValue={ country_code } 
-                            url={ `/dev/verify/country` }
-                            cannotLoop={true}
-                        />
-                    </div>
+                    <ButtonsGoBackAndNext
+                        dataSource={countries.map(country => ({ value: country.code}))} 
+                        currentValue={ country_code } 
+                        url={ `/dev/verify/country` }
+                        cannotLoop={true}
+                    />
                 </div>
                 <ColorableFlag 
                     className='flex flex-col items-end justify-center absolute bottom-10 right-10'
                     sourceElement={ countryElement } 
-                    itemName='country' 
-                    canValidate={ false } 
-                    devMode={ true }
+                    itemName='country'  
                     onChangeSvg={setSvgCode}
                     onClickOnShape={onClickOnShape}
                     colorableShapesSetter={setColorableShapes}
                     toolSelected={toolSelected}
                     childrenContainerClassName='gap-3'
+                    devMode={ true }
                 >
                     <Tooltip text='See original' hasIcon={true} position='top'>
                         <Button onClick={e => setOriginalFlagOpened(bool => !bool)} customs={{ borderRadiusClass: "rounded-full", paddingClass: "p-1" }}>

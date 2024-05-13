@@ -14,7 +14,7 @@
       <path stroke="#fff" d="M0 17v10"></path>
       <path fill="#cd2e3a" d="M0-12a12 12 0 0 1 0 24Z" class="keep"></path>
       <path fill="#0047a0" d="M0-12a12 12 0 0 0 0 24A6 6 0 0 0 0 0Z" class="keep"></path>
-      <circle cy="-6" r="6" fill="#cd2e3a"></circle>
+      <circle cy="-6" r="6" fill="#cd2e3a" class="keep"></circle>
     </g>
     <g transform="rotate(-123.7 191.2 62.2)scale(10.66667)">
       <use xlink:href="#kr-c" width="100%" height="100%"></use>

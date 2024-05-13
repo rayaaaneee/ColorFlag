@@ -2,7 +2,7 @@ import { RgbaObject } from "hex-rgb";
 import initRgbCssString from "./initRgbCssString";
 import getRgbaObject from "./getRgbaObject";
 
-const getRandomRgbColors = (num: number, forbiddenColors: string[] = [], minDifference: number = 70): string[] => {
+const getRandomRgbColors = (num: number, forbiddenColors: string[] = [], minDifference: number = 100): string[] => {
     
     const colors: string[] = [];
 
