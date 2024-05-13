@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import styles from "@/asset/scss/play.module.scss";
 import Position from "@/useful/interfaces/position";
 import hexToRgb from "@/useful/string-treatment/hexToRgb";
-import PaintbrushMouse from "./svg/paintbrush-mouse";
+import PaintbrushMouse from "./paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
 import getRandomRgbColors from "@/useful/getRandomRgbColors";
 import shuffle from "@/useful/array.shuffle";
@@ -17,10 +17,9 @@ import ChildrenType from "@/useful/types/children-type";
 import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
 import transformSelfClosingToRegularTag from "@/useful/string-treatment/transformSelfClosingToRegularTag";
 import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
-import ButtonGoBackOrNext, { Direction } from "./inputs/button-go-back-or-next";
-import countriesArray from "@/asset/data/countries.json";
-import Country from "@/useful/interfaces/country";
 import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
+import Loading from "./usefuls/loading";
+import EraserButton from "./usefuls/eraser-button";
 
 export interface sourceElementInterface {
     name: string;
@@ -29,7 +28,7 @@ export interface sourceElementInterface {
 
 export interface ScoreInterface {
     score: number;
-    bonusScore: number;
+    bonus: number;
 }
 
 
@@ -53,8 +52,6 @@ export interface ColorableFlagInterface {
 
 const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined, childrenContainerClassName = "" }: ColorableFlagInterface) => {
 
-    const countries: Country[] = countriesArray as Country[];
-
     const [svgColors, setSvgColors] = useState<string[]>([]);
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -71,8 +68,6 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     const [coloredShapes, setColoredShapes] = useState<Shape[]>([]);
 
     let colorableSvgElement: SVGElement | null = null;
-
-    const [initialPaintbrushPosition, setInitialPaintbrushPosition] = useState<Position | null>(null);
 
     const isValidated: boolean = useMemo(() => (colorableShapes.length !== 0 && selectedColor === null && svgColors.length === 0), [colorableShapes, selectedColor, svgColors]);
 
@@ -158,27 +153,52 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         const initialScore: number = Math.round((correctShapes / totalShapes) * 100);
         
         const goodColorsPercentage: number = Math.round((goodColors / totalShapes) * 100);
-        let bonusScore: number = 0;
+        let bonus: number = 0;
         if (goodColorsPercentage >= 90) {
-            bonusScore = 30;
+            bonus = 30;
         } else if (goodColorsPercentage >= 80) {
-            bonusScore = 20;
+            bonus = 20;
         } else if (goodColorsPercentage >= 70) {
-            bonusScore = 10;
+            bonus = 10;
         } else if (goodColorsPercentage >= 60) {
-            bonusScore = 5;
+            bonus = 5;
         } else if (goodColorsPercentage >= 40) {
-            bonusScore = 3;
+            bonus = 3;
         } else if (goodColorsPercentage >= 20) {
-            bonusScore = 1;
+            bonus = 1;
         }
 
         return {
             score: initialScore,
-            bonusScore: bonusScore,
-        };
+            bonus: bonus,
+        } as ScoreInterface;
 
     }, [isValidated]);
+
+    useEffect(() => {
+        if (isValidated) {
+            if (svgContainer.current !== null) {
+                const scoreContainer: HTMLParagraphElement | null = svgContainer.current.querySelector('#score-container');
+
+                if (scoreContainer !== null) {
+                    if (score.score > 0) {
+                        let scoreValue: number = 0;
+                        scoreContainer.innerText = `${scoreValue}`;
+                        const interval: NodeJS.Timeout = setInterval(() => {
+                            if (scoreValue < score.score) {
+                                scoreValue += 1;
+                                scoreContainer.innerText = `${scoreValue}`;
+                            } else {
+                                clearInterval(interval);
+                            }
+                        }, 10);
+                    } else {
+                        scoreContainer.innerText = `${score.score}`;
+                    }
+                }
+            }
+        }
+    }, [score]);
 
     useEffect(() => {
         loadElementSVG();
@@ -205,7 +225,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
     const initShapes = (firstCall = false) => {
         const acceptedTags: string[] = ['path', 'circle', 'g', 'rect'];
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg ${selector}[fill]`)).join(', '));
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${styles.loaderSvg}) ${selector}[fill]`)).join(', '));
         const allShapesKeeped: boolean = colorableSvgElement?.classList.contains('keep-all') || false;
         if (firstCall) { 
             const colorableShapesTmp: Shape[] = [];
@@ -272,15 +292,17 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     }
 
     const selectColor: MouseEventHandler<HTMLLIElement> = (e) => {
-        if (selectedColor === null) {
-            const rect: DOMRect = e.currentTarget.getBoundingClientRect();
-            const middleX = rect.x + (rect.width / 2);
-            const middleY = rect.y + (rect.height / 2);
-            setInitialPaintbrushPosition({ x: middleX, y: middleY });
-        }
         const target = e.target as HTMLLIElement;
         const color = target.style.backgroundColor;
         setSelectedColor(color);
+    }
+
+    const onEraseAll: MouseEventHandler<HTMLButtonElement> = (e) => {
+        setSelectedColor(null);
+        setColoredShapes([]);
+        colorableShapes.forEach(shape => {
+            shape.setAttribute('fill', 'url(#emptyPathImg)');
+        });
     }
 
     return (
@@ -288,34 +310,46 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
             { sourceElement === undefined ? (<NotFound />)
                 :
                 (<>
-                    { (svgColors.length > 0 && !devMode) && 
-                        (<ul className="list-none flex flex-row flex-wrap items-center justify-center w-fill max-w-[65vw] h-fill gap-5">
-                            { svgColors.map((color: string) => {
-                                return (
-                                    <SelectableColorCircle className={selectedColor === null ? 'cursor-pointer' : '' } onClick={selectColor} color={color} selected={selectedColor === color} key={color} />
-                                );
-                            })}
-                        </ul>)
-                    }
-                    <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-main" } mx-auto ${ !devMode && "my-5"}` }>
+                    { (!devMode) && (
+                        <ul className={`list-none flex flex-row flex-wrap items-center justify-center ${ !devMode && 'h-12' } w-fill max-w-[65vw] h-fill gap-5 m-auto`}>
+                            { (svgColors.length > 0) && 
+                                (<>
+                                    { svgColors.map((color: string) => {
+                                        return (
+                                            <SelectableColorCircle className={selectedColor === null ? 'cursor-pointer' : '' } onClick={selectColor} color={color} selected={selectedColor === color} key={color} />
+                                        );
+                                    })}
+                                    <EraserButton onClick={onEraseAll} tooltipTexts={{hovered: "Erase all", clicked: "Erased"}} />
+                                </>)
+                            }
+                            {/* { (svgColors.length === 0 && !isValidated) && (<>
+                                    <li className="rounded-full h-7 w-7 bg-scnd animate-ping"></li>
+                                    <li className="rounded-full h-7 w-7 bg-scnd animate-ping"></li>
+                                    <li className="rounded-full h-7 w-7 bg-scnd animate-ping"></li>
+                                </>)
+                            } */}
+                        </ul>
+                    ) }
+                    <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-gray-700" } flex items-center justify-center mx-auto ${ !devMode && "my-5"}` }>
 
-                        <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex items-center justify-center text-slate-800 text-8xl font-mono `}>
-                            { isValidated && (`${score.score}%`) }
+                        { (svgColors.length === 0 && !isValidated) && (
+                            <Loading className={styles.loaderSvg} color="white" />
+                        ) }
+
+                        <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex gap-2 items-center justify-center text-slate-800 text-8xl font-mono`}>
+                            <p id="score-container"></p>
+                            <p>%</p>
                         </div>
                         
                         <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${sourceElement?.code}.svg`) } />
 
                     </div>
-                    { (selectedColor && initialPaintbrushPosition) && 
-                        (<PaintbrushMouse 
-                            initialPosition={{
-                                x: initialPaintbrushPosition.x, 
-                                y: initialPaintbrushPosition.y
-                            }} 
+                    { (selectedColor) && 
+                        (<PaintbrushMouse
                             color={ selectedColor }
                         />)
                     }
-                    { !devMode && (<div className="w-full flex items-center justify-center">
+                    { (!devMode && !isValidated) && (<div className="w-full flex items-center justify-center">
                         <Button onClick={validateFlag} />
                     </div>) }
                 </>) 

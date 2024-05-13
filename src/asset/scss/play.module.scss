@@ -23,13 +23,13 @@
     border-radius: $border-radius;
     position: relative;
 
-    svg {
+    svg:not(.loaderSvg) {
         z-index: 1;
     }
     img {
         z-index: 0;
     }
-    svg, img {
+    svg:not(.loaderSvg), img {
         position: absolute;
         width: 100%;
         border: 3px solid black;

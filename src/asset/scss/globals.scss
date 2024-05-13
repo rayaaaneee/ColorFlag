@@ -18,6 +18,14 @@ body {
   height: 100%;
   width: 100%;
   overflow: hidden;
+  &.paintbrush-cursor {
+    * {
+      cursor: unset;
+    }
+  }
+  *:not(.font-sans, .font-serif, .font-mono, .font-sans *, .font-serif *, .font-mono *) {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
   &::after {
     content: "";
     position: absolute;

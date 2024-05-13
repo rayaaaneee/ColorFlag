@@ -7,7 +7,7 @@ import ChildrenType from "@/useful/types/children-type";
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
-export type TooltipType = 'default' | 'success' | 'warning' | 'error';
+export type TooltipType = 'default' | "default-2" | 'success' | 'warning' | 'error';
 
 export interface TooltipInterface {
     children: ChildrenType
@@ -16,12 +16,13 @@ export interface TooltipInterface {
     forceShow?: boolean;
     disabled?: boolean;
     className?: string;
+    tooltipClassName?: string;
     type?: TooltipType;
     hasIcon?: boolean;
 }
 
 
-const Tooltip = ({ children, text, position = "top", forceShow = false, disabled = false, className = "", type = "default", hasIcon = false }: TooltipInterface) => {
+const Tooltip = ({ children, text, position = "top", forceShow = false, disabled = false, className = "", tooltipClassName = "", type = "default", hasIcon = false }: TooltipInterface) => {
 
     const getPositionClasses = (): string => {
         switch (position) {
@@ -48,6 +49,9 @@ const Tooltip = ({ children, text, position = "top", forceShow = false, disabled
             case 'error':
                 classes = 'bg-red-500';
                 break;
+            case 'default-2':
+                classes = 'bg-scnd';
+                break;
         }
         return classes;
     }
@@ -71,7 +75,7 @@ const Tooltip = ({ children, text, position = "top", forceShow = false, disabled
     return (
         <div className={`relative group ${className}`}>
             {children}
-            <div role="tooltip" className={`${getPositionClasses()} ${getTooltipTypeClasses()} absolute z-10 ${(forceShow && !disabled) ? "flex" : "hidden"} ${ !disabled && 'group-hover:flex' } px-3 py-2 flex-row items-center justify-center gap-2 whitespace-nowrap text-sm font-medium text-white rounded-lg shadow-sm tooltip pointer-events-none`}>
+            <div role="tooltip" className={`${getPositionClasses()} ${getTooltipTypeClasses()} absolute z-10 ${(forceShow && !disabled) ? "flex" : "hidden"} ${ !disabled && 'group-hover:flex' } ${tooltipClassName} px-3 py-2 flex-row items-center justify-center gap-2 whitespace-nowrap text-sm font-medium text-white rounded-lg shadow-sm tooltip pointer-events-none`}>
                 {hasIcon && getTooltipIcon()}
                 {text}
             </div>

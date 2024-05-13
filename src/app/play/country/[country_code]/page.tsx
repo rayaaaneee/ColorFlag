@@ -18,13 +18,14 @@ const PlayCountry = () => {
     const countryName: string = countryElement !== undefined ? uppercaseFirstWordsLetters(countryElement.name) : 'Unknown';
     
     return (
-        <>
-            <h1 className="text-center mb-4 text-5xl font-extrabold leading-none tracking-tight text-gray-900">Guess the flag of { countryName }</h1>
+        <div className='w-full h-full mt-20 flex flex-col gap-4'>
+            <h1 className="text-center mb-4 text-5xl font-bold leading-none tracking-tight text-gray-900">Guess the flag of { countryName }</h1>
             <ColorableFlag 
                 sourceElement={ countryElement as sourceElementInterface }
                 itemName="country" 
+                className='flex flex-col gap-3'
             />
-        </>
+        </div>
     );
 }
 

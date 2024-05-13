@@ -6,13 +6,11 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import styles from "@/asset/scss/dev.module.scss";
 
-import ButtonGoBackOrNext, { Direction } from "@/components/inputs/button-go-back-or-next";
-
 import countriesArray from "@/asset/data/countries.json";
 import { useParams } from 'next/navigation';
 import uppercaseFirstWordsLetters from '@/useful/string-treatment/uppercaseFirstWordsLetters';
 import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import Checkbox from '@/components/inputs/checkbox';
+import Checkbox from '@/components/usefuls/checkbox-container';
 import CopyButton from '@/components/inputs/copy-button';
 import SelectableColorCircle from '@/components/selectable-color-circle';
 import Tooltip from '@/components/usefuls/tooltip';
@@ -20,8 +18,7 @@ import Tooltip from '@/components/usefuls/tooltip';
 import { CiEraser } from "react-icons/ci";
 import Button from '@/components/inputs/button';
 import { MouseEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import PaintbrushMouse from '@/components/svg/paintbrush-mouse';
-import Position from '@/useful/interfaces/position';
+import PaintbrushMouse from '@/components/paintbrush-mouse';
 import { IoSendSharp } from "react-icons/io5";
 import toast from 'react-hot-toast';
 
@@ -33,6 +30,7 @@ import Link from 'next/link';
 import getAttributes, { AttributeInterface } from '@/useful/getAttributes';
 import getCssSelector from '@/useful/getCssSelector';
 import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
+import EraserButton from '@/components/usefuls/eraser-button';
 
 export interface VerifyCountriesProps {
 
@@ -55,7 +53,6 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
 
     const [svgCode, setSvgCode] = useState<SvgCodeInterface | null>(null);
 
-    const [cleared, setCleared] = useState<boolean>(false);
     const [allShapesKeeped, setAllShapesKeeped] = useState<boolean>(false);
     const [colorableShapes, setColorableShapes] = useState<Shape[]>([]);
     const [originalFlagOpened, setOriginalFlagOpened] = useState<boolean>(false);
@@ -76,19 +73,17 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         {
             texture: '/selector.png',
             key: 'selector',
-            mouseBackground: 'selectedPathImg',
+            mouseBackground: '#aeeaae',
             pathBackground: 'selectedPathImg'
         },
         {
             texture: '/eraser.png',
             key: 'eraser',
-            mouseBackground: 'emptyGreyPathImg',
+            mouseBackground: '#b2b2b2',
             pathBackground: 'emptyPathImg'
         }
     ];
     const [toolSelected, setToolSelected] = useState<ToolButtonInterface | null>(null);
-
-    const [initialPaintbrushPosition, setInitialPaintbrushPosition] = useState<Position | null>(null);
 
     const countries: Country[] = countriesArray as Country[];
 
@@ -150,10 +145,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     }, [svgCode]);
 
     const clearAll: MouseEventHandler<HTMLButtonElement> = (e) => {
-        setCleared(true);
         setAllShapesKeeped(false);
         setToolSelected(null);
-        setInitialPaintbrushPosition(null);
         manageShapesClasses(true, true);
         deselectAllShapes();
     }
@@ -196,7 +189,6 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     useEffect(() => {
         if (allShapesKeeped) {
             setToolSelected(null);
-            setInitialPaintbrushPosition(null);
             manageShapesClasses(true, false);
         } else {
             if (svgCodeContainer.current !== null) {
@@ -212,13 +204,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     const onSelect = (e: MouseEvent, button: ToolButtonInterface) => {
         if (toolSelected?.key === button.key) {
             setToolSelected(null);
-            setInitialPaintbrushPosition(null);
-
         } else {
-            const rect: DOMRect = e.currentTarget.getBoundingClientRect();
-            const middleX = rect.x + (rect.width / 2);
-            const middleY = rect.y + (rect.height / 2);
-            setInitialPaintbrushPosition({ x: middleX, y: middleY });
             setToolSelected(button);
         }
     }
@@ -342,11 +328,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                             label='Keep all shapes'
                             onChange={(e) => setAllShapesKeeped(e.currentTarget.checked)}
                         />
-                        <Tooltip text={ cleared ? 'Cleared' : 'Clear all'}>
-                            <Button onMouseLeave={e => setCleared(false)} onClick={clearAll} customs={{paddingClass: "p-2"}}>
-                                <CiEraser className='w-6 h-6' />
-                            </Button>
-                        </Tooltip>
+                        <EraserButton onClick={clearAll} tooltipTexts={{ hovered: 'Clear all', clicked: 'Cleared' }} />
                     </div>
                     <ButtonsGoBackAndNext
                         dataSource={countries.map(country => ({ value: country.code}))} 
@@ -366,7 +348,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     childrenContainerClassName='gap-3'
                     devMode={ true }
                 >
-                    <Tooltip text='See original' hasIcon={true} position='top'>
+                    <Tooltip text='See original' position='top'>
                         <Button onClick={e => setOriginalFlagOpened(bool => !bool)} customs={{ borderRadiusClass: "rounded-full", paddingClass: "p-1" }}>
                             <IoMdInformation className='text-4xl'/>
                         </Button>
@@ -384,7 +366,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                         </Button>
                     </Link>
                 </ColorableFlag>
-                { initialPaintbrushPosition !== null && <PaintbrushMouse initialPosition={initialPaintbrushPosition} color={`url(#${toolSelected?.mouseBackground})`} /> }
+                { (toolSelected !== null) && <PaintbrushMouse color={`${toolSelected?.mouseBackground}`} /> }
             </div>
         </>
     );

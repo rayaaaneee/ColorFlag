@@ -8,7 +8,7 @@ import countryImg from "@/asset/img/pages/play/countries.png";
 import sportsImg from "@/asset/img/pages/play/sports.png"
 
 import Card from "@/useful/interfaces/card";
-import CardLink from "@/components/card-link";
+import CardLink from "@/components/usefuls/card-link";
 
 const Play = () => {
 
@@ -20,10 +20,9 @@ const Play = () => {
             image: continentsImg,
             title: "Choose a continent",
             imgClass: "w-full",
-            description: "lorem sghvkcss  sccccccccccccc",
+            description: "Train your geography skills by guessing or coloring the flags of the countries in a continent",
             href: "/play/continent",
-            //background: "rgb(183 128 128 / 50%)",
-            hashtags: [
+            tags: [
                 "worldwide"
             ]
         },
@@ -31,10 +30,9 @@ const Play = () => {
             image: countryImg,
             title: "Choose a country",
             imgClass: "w-1/3 m-auto",
-            description: "sxxxxxxxxxxxxxxxx",
+            description: "Test your knowledge by guessing or coloring the flags of the countries in the world",
             href: "/play/country",
-            //background: "rgb(129 146 181 / 48%)",
-            hashtags: [
+            tags: [
                 "local"
             ]
         },
@@ -42,10 +40,9 @@ const Play = () => {
             image: sportsImg,
             title: "Choose a sport",
             imgClass: "w-1/3 m-auto",
-            description: "sxxxxxxxxxxxxxxxx",
+            description: "Guess flag colors of famous sports club in the world",
             href: "/play/sport",
-            //background: "rgb(129 181 152 / 48%)",
-            hashtags: [
+            tags: [
                 "culture"
             ]
         }

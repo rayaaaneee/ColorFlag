@@ -3,6 +3,7 @@ import Card from "@/useful/interfaces/card";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/inputs/button";
+import Tag from "./tag";
 
 interface CardLinkInterface {
     className?: string,
@@ -11,7 +12,7 @@ interface CardLinkInterface {
 
 const CardLink = ({ className = "", element }: CardLinkInterface) => {
     return (
-        <div style={{ backgroundColor: undefined /*element.background*/}} className={`${className}min-h-95 text-white max-w-sm rounded min-h-fit overflow-hidden bg-main opacity-80 shadow-lg`}>
+        <div className={`${className} min-h-[27rem] text-white max-w-sm rounded w-80 overflow-hidden bg-main opacity-80 shadow-lg`}>
             <div className="overflow-hidden flex items-center justify-center bg-white object-cover" style={{ height: "10.5rem"}}>
                 <Image draggable={ false } className={ element.imgClass } src={ element.image } alt="Sunset in the mountains" />
             </div>
@@ -20,9 +21,9 @@ const CardLink = ({ className = "", element }: CardLinkInterface) => {
                 <p className="text-slate-300 text-base">{ element.description }</p>
             </div>
             <div className="px-6 pt-4 pb-2">
-                { element.hashtags.map((element: string, index: number) => {
+                { element.tags.map((tag: string, index: number) => {
                     return (
-                        <span key={index} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#{ element }</span>
+                        <Tag key={index} text={tag} />
                     );
                 }) }
             </div>

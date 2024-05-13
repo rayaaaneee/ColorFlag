@@ -8,7 +8,7 @@ interface Card {
     description: string,
     href: Url,
     //background: string,
-    hashtags: string[]
+    tags: string[]
 }
 
 export default Card;

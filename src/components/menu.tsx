@@ -14,12 +14,14 @@ import { RiCodeView } from "react-icons/ri";
 
 import logo from "@/app/favicon.png";
 import Image from "next/image";
+import Tooltip from "./usefuls/tooltip";
 
 interface MenuItem {
     icon: JSX.Element;
+    text: string;
     visible?: boolean | undefined;
     href?: string | undefined;
-    onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const Menu = () => {
@@ -33,23 +35,28 @@ const Menu = () => {
         {
             icon: <FaPlay { ...iconAttr }/>,
             href: "/play",
+            text: "Play",
         },
         {
             icon: <RiAccountPinCircleFill { ...iconAttr }/>,
             href: "/account",
+            text: "My account",
         },
         {
             icon: <PiSignOutBold { ...iconAttr }/>,
             onClick: (e) => {},
             visible: false,
+            text: "Sign out",
         },
         {
             icon: <PiSignInBold { ...iconAttr }/>,
             href: "/signin",
+            text: "Sign in",
         },
         {
             icon: <IoSettingsSharp { ...iconAttr }/>,
             href: "/settings",
+            text: "Settings",
         },
     ];
 
@@ -57,6 +64,7 @@ const Menu = () => {
         const devItem: MenuItem = {
             icon: <RiCodeView { ...iconAttr }/>,
             href: "/dev",
+            text: "Dev pages",
         }
         menuItems.push(devItem);
     }
@@ -68,17 +76,21 @@ const Menu = () => {
             </div>
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
-                const className: string = `p-2 bg-main hoverable rounded-lg ${active ? "selected" : ""}`;
-                if (el.visible === false) return (null);
-                return el.href !== undefined ? (
-                    <Link href={el.href} key={index} className={ className }>
-                        {el.icon}
-                    </Link>
-                ) : (
-                    <a key={index} onClick={el.onClick} className={ className }>
-                        {el.icon}
-                    </a>
-                )
+                const className: string = `p-2 bg-main hoverable rounded-lg flex ${active ? "selected" : ""}`;
+                if (el.visible === false) return (<></>);
+                return (
+                    <Tooltip type="default-2" text={el.text} position="right">
+                        { el.href !== undefined ? (
+                            <Link href={el.href} key={index} className={className}>
+                                {el.icon}
+                            </Link>
+                        ) : (
+                            <div key={index} onClick={el.onClick} className={className}>
+                                {el.icon}
+                            </div>
+                        ) }
+                    </Tooltip>
+                );
             })}
         </div>
     );
