@@ -7,13 +7,9 @@ import continentsImg from "@/asset/img/pages/play/continents.webp";
 import countryImg from "@/asset/img/pages/play/countries.png";
 import sportsImg from "@/asset/img/pages/play/sports.png"
 
-import Card from "@/useful/interfaces/card";
-import CardLink from "@/components/usefuls/card-link";
+import CardLink, { Card } from "@/components/usefuls/card-link";
 
 const Play = () => {
-
-    const [selectedCountry, setSelectedCountry] = useState<string>();
-    const router = useRouter();
 
     const cardsContent: Card[] = [
         {

@@ -1,18 +1,29 @@
 import { MdOutlineNavigateNext } from "react-icons/md";
-import Card from "@/useful/interfaces/card";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/inputs/button";
 import Tag from "./tag";
+import { Url } from "next/dist/shared/lib/router/router";
+import { StaticImageData } from "next/image";
+
+export interface Card {
+    image: StaticImageData,
+    title: string,
+    href: Url,
+    imgClass?: string,
+    description?: string,
+    tags?: string[]
+}
 
 interface CardLinkInterface {
     className?: string,
-    element: Card
+    heightClass?: string,
+    element: Card,
 }
 
-const CardLink = ({ className = "", element }: CardLinkInterface) => {
+const CardLink = ({ className = "", element, heightClass = "min-h-[27rem]" }: CardLinkInterface) => {
     return (
-        <div className={`${className} min-h-[27rem] text-white max-w-sm rounded w-80 overflow-hidden bg-main opacity-80 shadow-lg`}>
+        <div className={`${className} ${heightClass} text-white max-w-sm rounded w-80 overflow-hidden bg-main opacity-80 shadow-lg`}>
             <div className="overflow-hidden flex items-center justify-center bg-white object-cover" style={{ height: "10.5rem"}}>
                 <Image draggable={ false } className={ element.imgClass } src={ element.image } alt="Sunset in the mountains" />
             </div>
@@ -21,7 +32,7 @@ const CardLink = ({ className = "", element }: CardLinkInterface) => {
                 <p className="text-slate-300 text-base">{ element.description }</p>
             </div>
             <div className="px-6 pt-4 pb-2">
-                { element.tags.map((tag: string, index: number) => {
+                { element.tags?.map((tag: string, index: number) => {
                     return (
                         <Tag key={index} text={tag} />
                     );

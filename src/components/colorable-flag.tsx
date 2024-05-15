@@ -20,6 +20,7 @@ import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
 import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
 import Loading from "./usefuls/loading";
 import EraserButton from "./usefuls/eraser-button";
+import ProgressBar from "./usefuls/progress-bar";
 
 export interface sourceElementInterface {
     name: string;
@@ -57,7 +58,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
     const [coloredShapes, setColoredShapes] = useState<Shape[]>([]);
-    
+
     const [colorableShapes, setColorableShapes] = useState<Shape[]>([]);
     useEffect(() => {
         colorableShapes.forEach((shape) => {
@@ -124,7 +125,6 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         onClickOnShape(shape);
         if (selectedColor !== null) {
             if (!coloredShapes.includes(shape)) {
-                console.log("no included");
                 setColoredShapes(prev => [...prev, shape]);
             }
             shape.setAttribute('fill', selectedColor);
@@ -153,13 +153,13 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
         });
 
         const initialScore: number = Math.round((correctShapes / totalShapes) * 100);
-        
+
         const goodColorsPercentage: number = Math.round((goodColors / totalShapes) * 100);
         let bonus: number = 0;
         if (goodColorsPercentage >= 90) {
-            bonus = 30;
-        } else if (goodColorsPercentage >= 80) {
             bonus = 20;
+        } else if (goodColorsPercentage >= 80) {
+            bonus = 15;
         } else if (goodColorsPercentage >= 70) {
             bonus = 10;
         } else if (goodColorsPercentage >= 60) {
@@ -172,10 +172,12 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
         return {
             score: initialScore,
-            bonus: bonus,
+            bonus: bonus
         } as ScoreInterface;
 
     }, [isValidated]);
+
+    /* const [displayedScore, setD] */
 
     useEffect(() => {
         if (isValidated) {
@@ -191,7 +193,12 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                                 scoreValue += 1;
                                 scoreContainer.innerText = `${scoreValue}`;
                             } else {
-                                clearInterval(interval);
+                                if (scoreValue === score.score + score.bonus) {
+                                    clearInterval(interval);
+                                } else {
+                                    scoreValue += 1;
+                                    scoreContainer.innerText = `${scoreValue}`;
+                                }
                             }
                         }, 10);
                     } else {
@@ -238,7 +245,6 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                             const rgbInitialFill: string = hexToRgb(initialFill);
-                            console.log(initialFill, rgbInitialFill);
                             shape.setAttribute('fill', 'url(#emptyPathImg)');
                             shape.setAttribute('data-fill', rgbInitialFill);
 
@@ -278,7 +284,6 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
     const validateFlag = () => {
         if (colorableShapes.length != 0) {
-            console.log(coloredShapes, colorableShapes);
             if (coloredShapes.length === colorableShapes.length) {
                 setSelectedColor(null);
                 setSvgColors([]);
@@ -335,14 +340,19 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                     <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-gray-700" } flex items-center justify-center mx-auto ${ !devMode && "my-5"}` }>
 
                         { (svgColors.length === 0 && !isValidated) && (
-                            <Loading className={styles.loaderSvg} color="white" />
+                            <Loading className={styles.loaderSvg} />
                         ) }
 
-                        <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex gap-2 items-center justify-center text-slate-800 text-8xl font-mono`}>
-                            <p id="score-container"></p>
-                            <p>%</p>
+                        <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex flex-col gap-2 items-center justify-center text-slate-800 text-8xl font-mono`}>
+                            <div className="flex flex-row items-center justify-center gap-2">
+                                <p id="score-container"></p>
+                                <p>%</p>
+                            </div>
+                            <div className="w-56">
+                                <ProgressBar value={score.score + score.bonus} colorSync={true} />
+                            </div>
                         </div>
-                        
+
                         <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${sourceElement?.code}.svg`) } />
 
                     </div>
