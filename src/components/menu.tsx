@@ -79,7 +79,7 @@ const Menu = () => {
                 const className: string = `p-2 bg-main hoverable rounded-lg flex ${active ? "selected" : ""}`;
                 if (el.visible === false) return (<></>);
                 return (
-                    <Tooltip type="default-2" text={el.text} position="right">
+                    <Tooltip key={`tooltip-${index}`} type="default-2" text={el.text} position="right">
                         { el.href !== undefined ? (
                             <Link href={el.href} key={index} className={className}>
                                 {el.icon}
