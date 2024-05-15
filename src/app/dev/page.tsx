@@ -2,9 +2,8 @@ import CardLink, { Card } from "@/components/usefuls/card-link";
 import verifyIcon from "@/asset/img/pages/dev/verify.png";
 import countriesArray from "@/asset/data/countries.json";
 import Country from "@/useful/interfaces/country";
-import Loading from "@/components/usefuls/loading";
 
-export const DevPage = () => {
+const DevPage = () => {
 
     let countries = countriesArray as Country[];
 
@@ -21,7 +20,7 @@ export const DevPage = () => {
         <>
             <div className="flex flex-row gap-5 items-center justify-center">
                 { cardsContent.map((el: Card, index: number) => {
-                    return (<CardLink heightClass="min-h-[20rem]" element={el} key={index} />);
+                    return (<CardLink heightClass="min-h-[20rem]" element={el} key={`cardlink-${index}`} />);
                 }) }
             </div>
         </>
