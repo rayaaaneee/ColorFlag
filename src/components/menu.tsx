@@ -77,15 +77,15 @@ const Menu = () => {
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
                 const className: string = `p-2 bg-main hoverable rounded-lg flex ${active ? "selected" : ""}`;
-                if (el.visible === false) return (<></>);
+                if (el.visible === false) return null;
                 return (
                     <Tooltip key={`tooltip-${index}`} type="default-2" text={el.text} position="right">
                         { el.href !== undefined ? (
-                            <Link href={el.href} key={index} className={className}>
+                            <Link href={el.href} className={className}>
                                 {el.icon}
                             </Link>
                         ) : (
-                            <div key={index} onClick={el.onClick} className={className}>
+                            <div onClick={el.onClick} className={className}>
                                 {el.icon}
                             </div>
                         ) }

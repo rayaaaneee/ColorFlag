@@ -1,4 +1,7 @@
+"use client";
+
 const Play = () => {
+
     return (<></>);
 }
 

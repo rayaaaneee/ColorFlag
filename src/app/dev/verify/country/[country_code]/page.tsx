@@ -220,6 +220,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         }
 
         if (shape.getAttribute("data-fill") !== null) {
+            console.log("shape clicked", shape);
             const pathBackground: string = toolSelected.pathBackground;
             shape.setAttribute('fill', `url(#${pathBackground})`);
     
@@ -244,7 +245,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     if (toolSelected.key === 'selector') {
                         shapeCopy.classList.add('keep');
                     }
-
+                    // TODO: Si l'élément cliqué possède des enfants cela engendre un bug
                     svgCodeContainer.current.querySelector(selector)!.replaceWith(shapeCopy);
 
                     updateSvgCode();
@@ -299,7 +300,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             ) }
             { originalFlagOpened && (
                 <Alert position='top-right' type='info' onClose={e => setOriginalFlagOpened(false)}>
-                    <Image src={require(`@/asset/img/flags/1x1/${country_code}.svg`)} draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} />
+                    <Image src={`/flags/1x1/${country_code}.svg`} draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
                 </Alert>
             ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>

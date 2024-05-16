@@ -2,12 +2,25 @@ import { RgbaObject } from "hex-rgb";
 import initRgbCssString from "./string-treatment/initRgbCssString";
 import getRgbaObject from "./getRgbaObject";
 
+export const getMaxColors = (minDifference: number): number => {
+    const rgbSpace: number = 256 * 256 * 256;
+    const volumePerColor: number = Math.pow(minDifference, 3);
+    return Math.floor(rgbSpace / volumePerColor);
+};
+
 const getRandomRgbColors = (num: number, forbiddenColors: string[] = [], minDifference: number = 100): string[] => {
-    
+
     const colors: string[] = [];
 
-    while (colors.length < num) {
+    const maxColors: number = getMaxColors(minDifference) - forbiddenColors.length;
 
+    if (num > maxColors) {
+        console.warn(`The maximum number of colors with a minimum difference of ${minDifference} is ${maxColors}.`);
+        num = maxColors;
+    }
+ 
+    while (colors.length < num) {
+        console.log("colors length", colors.length, "expected", num);
         const rgbObject: RgbaObject = {
             red: Math.floor(Math.random() * 256),
             green: Math.floor(Math.random() * 256),
