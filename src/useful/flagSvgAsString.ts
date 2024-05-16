@@ -12,6 +12,7 @@ const flagSvgAsString = (code: string): string | null => {
     if (!Svg) {
         return null;
     }
+    console.log(Svg);
     return renderToString(Svg);
 }
 

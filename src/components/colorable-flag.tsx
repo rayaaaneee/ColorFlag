@@ -238,13 +238,13 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
     const initShapes = (firstCall = false) => {
         const acceptedTags: string[] = ['path', 'circle', 'g', 'rect'];
         const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${styles.loaderSvg}) ${selector}[fill]:not(defs *)`)).join(', '));
-        const allShapesKeeped: boolean = colorableSvgElement?.classList.contains(styles["keep-all"]) || false;
+        const allShapesKeeped: boolean = colorableSvgElement?.classList.contains(`${sourceElement?.code}_svg__keep-all`) || false;
         if (firstCall) { 
             const colorableShapesTmp: Shape[] = [];
             if (allShapes != undefined) {
                 let flagColors: string[] = [];
                 allShapes.forEach((shape: SVGElement) => {
-                    if ((allShapesKeeped || shape.classList.contains(styles.keep)) || devMode) {
+                    if ((allShapesKeeped || shape.classList.contains(`${sourceElement?.code}_svg__keep`)) || devMode) {
                         const initialFill: string | null = shape.getAttribute('fill');
                         if (initialFill !== null && initialFill !== 'none' && !initialFill.startsWith("url")) {
                             const rgbInitialFill: string = hexToRgb(initialFill);
@@ -349,7 +349,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                                 <ProgressBar value={score.score + score.bonus} colorSync={true} />
                             </div>
                         </div>
-                        {/* <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={ require(`@/asset/img/flags/4x3/${sourceElement?.code}.svg`) } width={100} height={100} /> */}
+                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={""} width={100} height={100} />
                     </div>
                     { (selectedColor) && 
                         (<PaintbrushMouse
