@@ -1,0 +1,5 @@
+- WORLDTOUR mode: do for each country
+- Flag customizations: custom countries flags and share with other countries
+- Play with friends: share the same game with friends with a stopwatch
+- Account creation with profile picture (showing instead of account item in menu)
+- Use ServerComponents

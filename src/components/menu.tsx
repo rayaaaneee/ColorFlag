@@ -15,6 +15,7 @@ import { RiCodeView } from "react-icons/ri";
 import logo from "@/app/favicon.png";
 import Image from "next/image";
 import Tooltip from "./usefuls/tooltip";
+import DEV_MODE from "@/useful/dev-mode";
 
 interface MenuItem {
     icon: JSX.Element;
@@ -60,7 +61,7 @@ const Menu = () => {
         },
     ];
 
-    if (process.env.NODE_ENV === "development") {
+    if (DEV_MODE) {
         const devItem: MenuItem = {
             icon: <RiCodeView { ...iconAttr }/>,
             href: "/dev",

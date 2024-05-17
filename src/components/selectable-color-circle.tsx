@@ -11,7 +11,7 @@ export interface SelectableColorCircleProps {
 
 const SelectableColorCircle = ({ color, selected = undefined, onClick = (_) => {}, className = "", disabled = false }: SelectableColorCircleProps) => {
     return (
-        <li onClick={onClick} className={ `${className} ${styles.colorItem} ${ selected && (styles.selected) } ${ disabled && "pointer-events-none opacity-[0.5]" }` } style={{ background: color, backgroundSize: "cover" }}>
+        <li onClick={onClick} className={ `${className} ${styles.colorItem} ${ selected && (styles.selected) } ${ disabled && "pointer-events-none opacity-[0.5] min-w-fit" }` } style={{ background: color, backgroundSize: "cover" }}>
         </li>
     )
 }

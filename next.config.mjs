@@ -34,7 +34,8 @@ const nextConfig = {
               svgoConfig: {
                 plugins: [
                   { name: 'removeViewBox', active: false },
-                  { name: 'prefixIds', params: { prefixIds: false, prefixClassNames: false } },
+                  { name: 'prefixIds', params: { prefixIds: false, prefixClassNames: false, prefix: false } },
+                  { name: 'cleanupIds', params: { remove: false, minify: false, prefix: '' } },
                 ]
               },
             },
