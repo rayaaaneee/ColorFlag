@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ChangeEventHandler } from "react";
 
-import checkedImg from '@/asset/img/general/inputs/checked.svg';
+import checkedImg from '@/asset/img/general/inputs/checked.svg?url';
 
 interface CheckboxInterface {
     checked?: boolean;

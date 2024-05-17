@@ -31,6 +31,8 @@ import getAttributes, { AttributeInterface } from '@/useful/getAttributes';
 import getCssSelector from '@/useful/getCssSelector';
 import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
 import EraserButton from '@/components/usefuls/eraser-button';
+import DEV_MODE from '@/useful/dev-mode';
+import NotFound from '@/components/not-found';
 
 export interface VerifyCountriesProps {
 
@@ -289,6 +291,10 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         } else {
             toast.error('Please select at least one shape before sending');
         }
+    }
+
+    if (DEV_MODE) {
+        return <NotFound />;
     }
 
     return (

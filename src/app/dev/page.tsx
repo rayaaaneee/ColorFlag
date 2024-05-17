@@ -2,8 +2,14 @@ import CardLink, { Card } from "@/components/usefuls/card-link";
 import verifyIcon from "@/asset/img/pages/dev/verify.png";
 import countriesArray from "@/asset/data/countries.json";
 import Country from "@/useful/interfaces/country";
+import NotFound from "@/components/not-found";
+import DEV_MODE from "@/useful/dev-mode";
 
 const DevPage = () => {
+
+    if (!DEV_MODE) {
+        return (<NotFound />);
+    }
 
     let countries = countriesArray as Country[];
 
