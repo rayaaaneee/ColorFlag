@@ -3,4 +3,6 @@ je
 lk
 ht
 
-ma [i can work with strokes]
+ma, es-ct, gb-sct[i can work with strokes]
+
+eu [fix displaying but working]

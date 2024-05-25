@@ -281,7 +281,11 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                 })
                 .then((response: Response) => response.json())
                 .then((data: any) => {
-                    toast.success(data.message);
+                    if (data.success === true) {
+                        toast.success(data.message);
+                    } else {
+                        toast.error(data.message);
+                    }
                 })
                 .catch(error => {
                     toast.error('An error occured');
@@ -293,7 +297,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
         }
     }
 
-    if (DEV_MODE) {
+    if (!DEV_MODE) {
         return <NotFound />;
     }
 
@@ -305,8 +309,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                 </Alert>
             ) }
             { originalFlagOpened && (
-                <Alert position='top-right' type='info' onClose={e => setOriginalFlagOpened(false)}>
-                    <Image src={`/flags/1x1/${country_code}.svg`} draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
+                <Alert position='top-right' type='info' onClose={_ => setOriginalFlagOpened(false)}>
+                    <Image src={ require(`@/asset/img/flags/1x1/${country_code}.svg?url`) } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
                 </Alert>
             ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>
@@ -346,8 +350,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                 </div>
                 <ColorableFlag 
                     className='flex flex-col items-end justify-center absolute bottom-10 right-10'
-                    sourceElement={ countryElement } 
-                    itemName='country'  
+                    sourceElement={ countryElement }
                     onChangeSvg={setSvgCode}
                     onClickOnShape={onClickOnShape}
                     colorableShapesSetter={setColorableShapes}

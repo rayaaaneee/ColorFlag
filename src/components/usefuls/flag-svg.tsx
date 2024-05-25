@@ -6,20 +6,15 @@ export interface FlagSvgProps {
 }
 
 const FlagSvg = ({ code }: FlagSvgProps): JSX.Element | null => {
-    let Component: ComponentType | undefined;
+
+    let Component: ComponentType;
 
     try {
         Component = require(`@/asset/img/flags/4x3/${code}.svg`).default;
     } catch (e: any) {
         console.error(e.message);
-        Component = undefined;
-    }
-
-    if (!Component) {
         return null;
     }
-
-    console.log(Component);
 
     return <Component />;
 }

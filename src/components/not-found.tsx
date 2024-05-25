@@ -1,5 +1,11 @@
-const NotFound = () => {
-    return (<h1>404 - Not Found</h1>);
+import ErrorPage from 'next/error';
+
+interface NotFoundInterface {
+    statusCode?: number;
+}
+
+const NotFound = ({ statusCode = 404 }: NotFoundInterface) => {
+    return (<ErrorPage statusCode={statusCode} />);
 }
 
 export default NotFound;

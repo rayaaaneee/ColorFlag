@@ -10,16 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const DEV_MODE = process.env.NODE_ENV === 'development';
 
-    const filePath = DEV_MODE ? path.join("public", "flags", "4x3", svgFilename) : "";
+    const filePath = DEV_MODE ? path.join("src", "asset", "img", "flags", "4x3", svgFilename) : "";
 
     if (req.method === 'PUT') {
         const newSvgContent = req.body.svg;
         try {
             fs.writeFileSync(filePath, newSvgContent);
-            res.status(200).json({ message: 'SVG file updated' });
+            res.status(200).json({ success: true, message: 'SVG file updated' });
         } catch (error) {
             console.error('Error writing SVG file:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ success: false, message: 'An error occured while updating SVG File' });
         }
     } else {
         // Method Not Allowed

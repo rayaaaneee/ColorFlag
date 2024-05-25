@@ -1,5 +1,4 @@
 import FlagSvg from "@/components/usefuls/flag-svg";
-import { ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 
 export const decode = (xml: string): string => {
@@ -12,7 +11,7 @@ const flagSvgAsString = (code: string): string | null => {
     if (!Svg) {
         return null;
     }
-    console.log(Svg);
+
     return renderToString(Svg);
 }
 

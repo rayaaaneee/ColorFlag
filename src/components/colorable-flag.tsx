@@ -3,7 +3,6 @@ import { renderToString } from "react-dom/server";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import styles from "@/asset/scss/play.module.scss";
-import Position from "@/useful/interfaces/position";
 import hexToRgb from "@/useful/string-treatment/hexToRgb";
 import PaintbrushMouse from "./paintbrush-mouse";
 import SvgDefs from "@/components/svg/svg-defs";
@@ -39,7 +38,6 @@ export type ShapeClickerCallback = (shape: Shape) => void | React.Dispatch<React
 
 export interface ColorableFlagInterface {
     sourceElement: sourceElementInterface | undefined;
-    itemName: string;
     devMode?: boolean;
     toolSelected?: ToolButtonInterface | null;
     className?: string;
@@ -51,7 +49,7 @@ export interface ColorableFlagInterface {
     childrenContainerClassName?: string;
 }
 
-const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined, childrenContainerClassName = "" }: ColorableFlagInterface) => {
+const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape = (_) => {}, devMode = false, className = "", onChangeSvg = (_) => {}, children = undefined, toolSelected = undefined, colorableShapesSetter = undefined, childrenContainerClassName = "" }: ColorableFlagInterface) => {
 
     const [svgColors, setSvgColors] = useState<string[]>([]);
 

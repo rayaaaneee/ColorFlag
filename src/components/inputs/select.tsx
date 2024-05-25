@@ -88,27 +88,32 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
         const element = e.currentTarget;
         const value: ElementValue = element.getAttribute('value') as ElementValue;
         const isSelected: boolean = element.classList.contains('selected');
-        if (setter !== undefined) setter(value);
         const newValue: SelectDataSourceInterface = { name: element.textContent || '', value: value};
         if (isMultiple) { 
             if (!isSelected) {
-                setSelectedValue(
-                    (value: SelectedValueType) => {
-                        return [...value as SelectDataSourceInterface[], newValue]
-                            .filter((item) => item.isDefault !== true);
-                    }
-                );
+                setSelectedValue((value: SelectedValueType) => {
+                    const returnResult: SelectDataSourceInterface[] = [...value as SelectDataSourceInterface[], newValue]
+                        .filter((item) => item.isDefault !== true);
+
+                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.value));
+
+                    return returnResult;
+                });
             } else {
-                setSelectedValue(
-                    (value: SelectedValueType) => {
-                        return (value as SelectDataSourceInterface[])
-                            .filter((item) => item.value !== newValue.value);
-                    }
-                );
+                setSelectedValue((value: SelectedValueType) => {
+                    const returnResult: SelectDataSourceInterface[] = (value as SelectDataSourceInterface[])
+                        .filter((item) => item.value !== newValue.value && item.isDefault !== true);
+
+                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.value));
+
+                    if (returnResult.length === 0) return [defaultSelectedValue];
+                    else return returnResult;
+                });
             }
 
         } else {
             setDropdownIsOpen(false);
+            if (setter !== undefined) setter(value);
             if (!isSelected) setSelectedValue(newValue);
             else setSelectedValue(defaultSelectedValue);
         }
@@ -226,14 +231,6 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
             }, 150);
         }
     }, [dropdownIsOpen]);
-
-    useEffect(() => {
-        if (isMultiple) {
-            if ((selectedValue as SelectDataSourceInterface[]).length === 0) {
-                setSelectedValue([defaultSelectedValue]);
-            }
-        }
-    }, [selectedValue])
 
     const onClickSelect: MouseEventHandler = (e) => {
         e.currentTarget === dropdownButton.current && setDropdownIsOpen(bool => !bool);

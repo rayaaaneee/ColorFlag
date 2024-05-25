@@ -21,9 +21,9 @@ interface CardLinkInterface {
     element: Card,
 }
 
-const CardLink = ({ className = "", element, heightClass = "min-h-[27rem]" }: CardLinkInterface) => {
+const CardLink = ({ className = "", element, heightClass = "h-[27rem]" }: CardLinkInterface) => {
     return (
-        <div className={`${className} ${heightClass} text-white max-w-sm rounded w-80 overflow-hidden bg-main opacity-80 shadow-lg`}>
+        <div className={`${className} ${heightClass} min-h-fit grid grid-rows-[auto_1fr_auto_auto] text-white max-w-sm rounded w-80 overflow-hidden bg-main opacity-80 shadow-lg`}>
             <div className="overflow-hidden flex items-center justify-center bg-white object-cover" style={{ height: "10.5rem"}}>
                 <Image draggable={ false } className={ element.imgClass } src={ element.image } alt="Sunset in the mountains" />
             </div>

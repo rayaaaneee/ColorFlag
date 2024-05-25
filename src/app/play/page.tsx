@@ -14,17 +14,17 @@ const Play = () => {
     const cardsContent: Card[] = [
         {
             image: continentsImg,
-            title: "Choose a continent",
+            title: "Choose one or any continents",
             imgClass: "w-full",
             description: "Train your geography skills by guessing or coloring the flags of the countries in a continent",
-            href: "/play/continent",
+            href: "/play/continents",
             tags: [
                 "worldwide"
             ]
         },
         {
             image: countryImg,
-            title: "Choose a country",
+            title: "Choose one or any countries",
             imgClass: "w-1/3 m-auto",
             description: "Test your knowledge by guessing or coloring the flags of the countries in the world",
             href: "/play/country",
@@ -48,7 +48,7 @@ const Play = () => {
         <>
             <div className="flex flex-row gap-5 items-center justify-center">
                 { cardsContent.map((el: Card, index: number) => {
-                    return (<CardLink element={el} key={index} />);
+                    return (<CardLink heightClass="h-[30rem]" element={el} key={index} />);
                 }) }
             </div>
         </>
