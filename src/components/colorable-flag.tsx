@@ -224,10 +224,12 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
 
         let nbColorsToGenerate: number = 0;
 
-        if (colors.length <= 3) nbColorsToGenerate = 5;
+        if (colors.length <= 2) nbColorsToGenerate = 5;
+        else if (colors.length <= 3) nbColorsToGenerate = 4;
         else if (colors.length <= 5) nbColorsToGenerate = 3;
         else if (colors.length <= 8) nbColorsToGenerate = 2;
-        console.log("nbColorsToGenerate", nbColorsToGenerate);
+        else nbColorsToGenerate = 1;
+
         const randomColors: string[] = getRandomRgbColors(nbColorsToGenerate, colors);
 
         colors = shuffle<string>([...colors, ...randomColors]);
@@ -321,7 +323,7 @@ const ColorableFlag = ({ sourceElement, itemName, onValidate = (_) => {}, onClic
                 :
                 (<>
                     { (!devMode) && (
-                        <ul className={`list-none flex flex-row items-center justify-center w-fit max-w-[65vw] h-fit gap-5 m-auto`}>
+                        <ul className={`list-none flex flex-row items-center justify-center w-fit max-w-[65vw] flex-wrap min-h-[50px] h-fit gap-5 m-auto`}>
                             { (svgColors.length > 0) && 
                                 (<>
                                     { svgColors.map((color: string) => {

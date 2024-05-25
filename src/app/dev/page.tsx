@@ -7,7 +7,7 @@ import DEV_MODE from "@/useful/dev-mode";
 
 const DevPage = () => {
 
-    if (!DEV_MODE) {
+    if (DEV_MODE) {
         return (<NotFound />);
     }
 

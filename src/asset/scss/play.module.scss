@@ -30,12 +30,15 @@
         z-index: 0;
     }
     svg:not(.loaderSvg), img {
+
         position: absolute;
         width: 100%;
         border: 3px solid black;
         border-radius: $border-radius;
         transition: transform 0.2s ease-in-out;
+
         *.svgContent {
+
             &[fill="none"] {
                 overflow: hidden;
                 &::after {
@@ -48,8 +51,9 @@
                     background-color: white;
                 }
             }
+
             &:hover {
-                &[fill="url(#emptyPathImg)"] {
+                &[fill="url(#emptyPathImg)"], &:is(use) {
                     filter: brightness(80%);
                     -webkit-filter: brightness(80%);
                 }
@@ -60,6 +64,7 @@
                 filter: grayscale(40%);
                 -webkit-filter: grayscale(40%);
             }
+
         }
     }
 

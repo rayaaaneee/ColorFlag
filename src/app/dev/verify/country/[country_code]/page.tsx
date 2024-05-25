@@ -279,8 +279,8 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     },
                     body: JSON.stringify({ svg: svgCode.svg })
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then((response: Response) => response.json())
+                .then((data: any) => {
                     toast.success(data.message);
                 })
                 .catch(error => {
