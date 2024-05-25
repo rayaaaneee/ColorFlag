@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     flagImages: list[str] = []
     flagImagesPath: str = "src/asset/img/flags/4x3/"
-    for root, dirs, files in os.walk(flagImagesPath):
+    for _, _, files in os.walk(flagImagesPath):
         for file in files:
             flagImages.append(file.replace(".svg", "")) if file.endswith('.svg') else None
 
