@@ -1,10 +1,35 @@
 [
-    { "code": "af", "name": "africa" },
-    { "code": "an", "name": "antarctica" },
-    { "code": "as", "name": "asia" },
-    { "code": "eu", "name": "europe" },
-    { "code": "na", "name": "north-america" },
-    { "code": "oc", "name": "oceania" },
-    { "code": "sa", "name": "south-and-central-america" },
-    { "code": "n/a", "name": "not-available" }
+    {
+        "code": "af",
+        "name": "africa"
+    },
+    {
+        "code": "an",
+        "name": "antarctica"
+    },
+    {
+        "code": "as",
+        "name": "asia"
+    },
+    {
+        "code": "eu",
+        "name": "europe"
+    },
+    {
+        "code": "na",
+        "name": "north-america"
+    },
+    {
+        "code": "n/a",
+        "name": "not-available",
+        "non_continent": true
+    },
+    {
+        "code": "oc",
+        "name": "oceania"
+    },
+    {
+        "code": "sa",
+        "name": "south-and-central-america"
+    }
 ]

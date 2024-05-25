@@ -1,19 +1,20 @@
 import json
 
+def sort_and_write_json(file_path: str):
+    with open(file_path, "r") as f:
+        data = json.load(f)
+
+    data.sort(key=lambda x: x["name"])
+
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=4)
+
 if __name__ == "__main__":
-    
-    base_src: str = "src/asset/data";
-    
-    countries: list[object] = []
-    with open(f"{ base_src }/countries.json", "r") as f:
-        json.load(f),
 
-    us_states: list[object] = [];
-    with open(f"{ base_src }/us-states.json", "r") as f:
-        us_states += json.load(f)
-    
-    continents: list[object] = [];
-    with open(f"{ base_src }/continents.json", "r") as f:
-        continents += json.load(f)
+    base_src: str = "src/asset/data"
 
-    datas: list[list[object]] = [countries, us_states, continents];
+    sort_and_write_json(f"{ base_src }/countries.json")
+
+    sort_and_write_json(f"{ base_src }/us-states.json")
+
+    sort_and_write_json(f"{ base_src }/continents.json")
