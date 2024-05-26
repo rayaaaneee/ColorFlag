@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const DEV_MODE = process.env.NODE_ENV === 'development';
 
-    const filePath = DEV_MODE ? path.join("src", "asset", "img", "flags", "4x3", svgFilename) : "";
+    const filePath = DEV_MODE ? path.join("src", "asset", "img", "flags", "country", "4x3", svgFilename) : "";
 
     if (req.method === 'PUT') {
         const newSvgContent = req.body.svg;

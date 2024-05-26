@@ -27,7 +27,7 @@ const CardLink = ({ className = "", element, heightClass = "h-[27rem]" }: CardLi
             <div className="overflow-hidden flex items-center justify-center bg-white object-cover" style={{ height: "10.5rem"}}>
                 <Image draggable={ false } className={ element.imgClass } src={ element.image } alt="Sunset in the mountains" />
             </div>
-            <div className="px-6 py-4">
+            <div className="px-6 pt-4">
                 <div className="font-bold text-xl mb-2">{ element.title }</div>
                 <p className="text-slate-300 text-base">{ element.description }</p>
             </div>

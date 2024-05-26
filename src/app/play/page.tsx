@@ -48,7 +48,7 @@ const Play = () => {
         <>
             <div className="flex flex-row gap-5 items-center justify-center">
                 { cardsContent.map((el: Card, index: number) => {
-                    return (<CardLink heightClass="h-[30rem]" element={el} key={index} />);
+                    return (<CardLink heightClass="h-[28rem]" element={el} key={index} />);
                 }) }
             </div>
         </>

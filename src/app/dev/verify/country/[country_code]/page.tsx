@@ -15,7 +15,6 @@ import CopyButton from '@/components/inputs/copy-button';
 import SelectableColorCircle from '@/components/selectable-color-circle';
 import Tooltip from '@/components/usefuls/tooltip';
 
-import { CiEraser } from "react-icons/ci";
 import Button from '@/components/inputs/button';
 import { MouseEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PaintbrushMouse from '@/components/paintbrush-mouse';
@@ -35,7 +34,7 @@ import DEV_MODE from '@/useful/dev-mode';
 import NotFound from '@/components/not-found';
 
 export interface VerifyCountriesProps {
-
+    // empty
 }
 
 export interface SvgCodeInterface {
@@ -310,7 +309,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             ) }
             { originalFlagOpened && (
                 <Alert position='top-right' type='info' onClose={_ => setOriginalFlagOpened(false)}>
-                    <Image src={ require(`@/asset/img/flags/1x1/${country_code}.svg?url`) } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
+                    <Image src={ require(`@/asset/img/flags/country/1x1/${country_code}.svg?url`) } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
                 </Alert>
             ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>
