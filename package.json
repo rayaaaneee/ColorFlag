@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init": "npm i && npm i -g svgo@3.3.2 && npx prisma generate"
+    "init": "npm i && npm i -g svgo@3.3.2 && npx prisma generate",
+    "find-unused-flags": "python scripts/find_unused_flags.py",
+    "sort-data": "python scripts/sort_data.py"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.0.0",

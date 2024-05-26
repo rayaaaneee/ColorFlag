@@ -8,6 +8,10 @@
         "code": "ak"
     },
     {
+        "name": "american_samoa",
+        "code": "as"
+    },
+    {
         "name": "arizona",
         "code": "az"
     },
@@ -32,12 +36,20 @@
         "code": "de"
     },
     {
+        "name": "district_of_columbia",
+        "code": "dc"
+    },
+    {
         "name": "florida",
         "code": "fl"
     },
     {
         "name": "georgia",
         "code": "ga"
+    },
+    {
+        "name": "guan",
+        "code": "gu"
     },
     {
         "name": "hawaii",
@@ -70,6 +82,10 @@
     {
         "name": "louisiana",
         "code": "la"
+    },
+    {
+        "name": "lowa",
+        "code": "ia"
     },
     {
         "name": "maine",
@@ -136,6 +152,10 @@
         "code": "nd"
     },
     {
+        "name": "northern_mariana_islands",
+        "code": "mp"
+    },
+    {
         "name": "ohio",
         "code": "oh"
     },
@@ -152,7 +172,15 @@
         "code": "pa"
     },
     {
+        "name": "puerto_rico",
+        "code": "pr"
+    },
+    {
         "name": "rhode-island",
+        "code": "ri"
+    },
+    {
+        "name": "rhode_island",
         "code": "ri"
     },
     {
@@ -178,6 +206,10 @@
     {
         "name": "vermont",
         "code": "vt"
+    },
+    {
+        "name": "virgin_islands",
+        "code": "vi"
     },
     {
         "name": "virginia",

@@ -18,6 +18,9 @@ if __name__ == "__main__":
 
     print("\nSorting us-states.json...\n")
     sort_and_write_json(f"{ base_data_path }/us-states.json")
+    
+    print("\nSorting misc us-states.json...\n")
+    sort_and_write_json(f"{ base_data_path }/misc-us-states.json")
 
     print("\nSorting continents.json...\n")
     sort_and_write_json(f"{ base_data_path }/continents.json")
