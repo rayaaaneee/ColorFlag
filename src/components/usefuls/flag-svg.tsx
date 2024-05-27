@@ -19,7 +19,7 @@ const FlagSvg = ({ type = FlagType.COUNTRY, code }: FlagSvgProps): JSX.Element |
     let Component: ComponentType;
 
     try {
-        Component = require(/*webpackIgnore: true*/`@/asset/img/flags/country/${code}.svg`).default as ComponentType;
+        Component = require(/*webpackIgnore: true*/`@/asset/img/flags/${type}/${code}.svg`).default as ComponentType;
     } catch (e: any) {
         console.error(`No flag found for ${type} with code ${code}`);
         return null;
