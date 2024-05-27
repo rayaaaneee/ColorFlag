@@ -1308,7 +1308,7 @@
     },
     {
         "code": "xx",
-        "name": "unknown-or-unspecified-country",
+        "name": "unknown",
         "continent_code": "n/a",
         "non_country": true
     },
