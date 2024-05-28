@@ -14,18 +14,18 @@ export interface FlagSvgProps {
     type?: FlagType,
 }
 
-const FlagSvg = ({ type = FlagType.COUNTRY, code }: FlagSvgProps): JSX.Element | null => {
+const FlagSvg = async ({ type = FlagType.COUNTRY, code }: FlagSvgProps): Promise<string | null> => {
 
     let Component: ComponentType;
 
     try {
-        Component = require(/*webpackIgnore: true*/`@/asset/img/flags/${type}/${code}.svg`).default as ComponentType;
+        const res = await fetch(`/flags/${type}/${code}.svg`);
+        const svg: string = await res.text();
+        return svg;
     } catch (e: any) {
         console.error(`No flag found for ${type} with code ${code}`);
         return null;
     }
-
-    return <Component />;
 }
 
 export default FlagSvg;

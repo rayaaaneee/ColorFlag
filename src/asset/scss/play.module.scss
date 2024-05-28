@@ -52,8 +52,8 @@
                 }
             }
 
-            &:hover {
-                &[fill="url(#emptyPathImg)"], &:is(use) {
+            &:hover, &.hovered {
+                &[fill="url(#emptyPathImg)"] {
                     filter: brightness(80%);
                     -webkit-filter: brightness(80%);
                 }

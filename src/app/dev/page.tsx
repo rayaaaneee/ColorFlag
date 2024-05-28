@@ -1,3 +1,5 @@
+"use client";
+
 import CardLink, { Card } from "@/components/usefuls/card-link";
 import verifyIcon from "@/asset/img/pages/dev/verify.png";
 import countriesArray from "@/asset/data/countries.json";
@@ -6,10 +8,6 @@ import NotFound from "@/components/not-found";
 import DEV_MODE from "@/useful/dev-mode";
 
 const DevPage = () => {
-
-    if (DEV_MODE) {
-        return (<NotFound />);
-    }
 
     let countries = countriesArray as Country[];
 
@@ -22,6 +20,10 @@ const DevPage = () => {
             href: `/dev/verify/country/${countries.at(0)?.code}`,
         }
     ]
+    
+    if (!DEV_MODE) {
+        return (<NotFound />);
+    }
     return (
         <>
             <div className="flex flex-row gap-5 items-center justify-center">

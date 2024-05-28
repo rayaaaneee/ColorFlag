@@ -20,7 +20,7 @@ import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute
 import Loading from "./usefuls/loading";
 import EraserButton from "./usefuls/eraser-button";
 import ProgressBar from "./usefuls/progress-bar";
-import flagSvgAsString from "@/useful/flagSvgAsString";
+import FlagSvg, { FlagType } from "./usefuls/flag-svg";
 
 export interface sourceElementInterface {
     name: string;
@@ -72,13 +72,12 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
 
     const isValidated: boolean = useMemo(() => (colorableShapes.length !== 0 && selectedColor === null && svgColors.length === 0), [colorableShapes, selectedColor, svgColors]);
 
-    const loadElementSVG = () => {
+    const loadElementSVG = async () => {
         if (sourceElement === undefined) return;
 
-        const stringFlag: string | null = flagSvgAsString(sourceElement.code);
-        if (stringFlag !== null) {
+        const stringFlag: string | null = await FlagSvg({ code : sourceElement.code, type : FlagType.COUNTRY});
 
-            console.log("stringFlag", stringFlag);
+        if (stringFlag !== null) {
 
             if (svgContainer.current && colorableSvgElement === null) {
 
@@ -267,11 +266,21 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                         }
                     }
                 });
+                
+                const correspondingUses: NodeListOf<SVGUseElement> | undefined = svgContainer.current?.querySelectorAll('use');
+                correspondingUses?.forEach((use: SVGUseElement) => {
+                    const correspondingShape: Shape | undefined = Array.from(allShapes).find((shape: Shape) => (shape.id === use.href.baseVal.replace('#', '')));
+                    if (correspondingShape !== undefined) {
+                        use.addEventListener('mouseleave', (e) => {
+                            console.log("mouseleave");
+                            correspondingShape.classList.remove(styles.hovered);
+                        });
+                    }
+                });
+
                 initColors(flagColors);
                 setColorableShapes(colorableShapesTmp);
-                if (colorableShapesSetter !== undefined) {
-                    colorableShapesSetter(colorableShapesTmp);
-                }
+                if (colorableShapesSetter !== undefined) colorableShapesSetter(colorableShapesTmp);
             }
 
         }
@@ -349,7 +358,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                                 <ProgressBar value={score.score + score.bonus} colorSync={true} />
                             </div>
                         </div>
-                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={require(`@/asset/img/flags/country/${sourceElement.code}.svg?url`)} width={100} height={100} />
+                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/flags/country/${sourceElement.code}.svg`} width={100} height={100} />
                     </div>
                     { (selectedColor) && 
                         (<PaintbrushMouse
