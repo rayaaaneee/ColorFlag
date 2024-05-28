@@ -62,6 +62,25 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
     useEffect(() => {
         colorableShapes.forEach((shape) => {
             shape.onclick = onColorShape;
+
+            console.log("setShapes");
+            const allUses: NodeListOf<SVGUseElement> | undefined = svgContainer.current?.querySelectorAll('use');
+
+            if (allUses !== undefined) {
+
+                const correspondingUse: SVGUseElement | undefined = Array.from(allUses).find((use: SVGUseElement) => (use.href.baseVal.replace('#', '') === shape.id));
+                console.log("setting mousemove")
+                if (correspondingUse) {
+                    correspondingUse.onmouseenter = (e) => {
+                        console.log("mousemove");
+                        shape.classList.add(styles.hovered);
+                    };
+                    correspondingUse.onmouseleave = (e) => {
+                        console.log("mouseleave");
+                        shape.classList.remove(styles.hovered);
+                    };
+                }
+            }
         });
     }, [colorableShapes, selectedColor, toolSelected, coloredShapes]);
 
@@ -266,18 +285,6 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                         }
                     }
                 });
-                
-                const correspondingUses: NodeListOf<SVGUseElement> | undefined = svgContainer.current?.querySelectorAll('use');
-                correspondingUses?.forEach((use: SVGUseElement) => {
-                    const correspondingShape: Shape | undefined = Array.from(allShapes).find((shape: Shape) => (shape.id === use.href.baseVal.replace('#', '')));
-                    if (correspondingShape !== undefined) {
-                        use.addEventListener('mouseleave', (e) => {
-                            console.log("mouseleave");
-                            correspondingShape.classList.remove(styles.hovered);
-                        });
-                    }
-                });
-
                 initColors(flagColors);
                 setColorableShapes(colorableShapesTmp);
                 if (colorableShapesSetter !== undefined) colorableShapesSetter(colorableShapesTmp);
