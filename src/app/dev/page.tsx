@@ -24,6 +24,7 @@ const DevPage = () => {
     if (!DEV_MODE) {
         return (<NotFound />);
     }
+
     return (
         <>
             <div className="flex flex-row gap-5 items-center justify-center">
