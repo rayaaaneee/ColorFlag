@@ -3,6 +3,10 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "@/asset/scss/globals.scss";
 import Menu from "../components/menu";
+import { Suspense } from "react";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import LoadingFallback from "@/components/boundaries/loading-fallback";
+import CustomErrorBoundary from "@/components/boundaries/error-boundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +29,11 @@ const RootLayout = ({
         <Toaster position="top-right" containerStyle={{ textAlign: "end" }} />
         <Menu />
         <main className="relative flex flex-col gap-5 h-full w-full items-center justify-center overflow-hidden">
-          {children}
+          {/* <ErrorBoundary errorComponent={<CustomErrorBoundary />}> */}
+            <Suspense fallback={<LoadingFallback />}>
+              {children}
+            </Suspense>
+          {/* </ErrorBoundary> */}
         </main>
       </body>
     </html>
