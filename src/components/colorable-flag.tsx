@@ -365,7 +365,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                                 <ProgressBar value={score.score + score.bonus} colorSync={true} />
                             </div>
                         </div>
-                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/flags/country/${sourceElement.code}.svg`} width={100} height={100} />
+                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/images/flags/country/${sourceElement.code}.svg`} width={100} height={100} />
                     </div>
                     { (selectedColor) && 
                         (<PaintbrushMouse

@@ -16,15 +16,16 @@ export interface FlagSvgProps {
 
 const FlagSvg = async ({ type = FlagType.COUNTRY, code }: FlagSvgProps): Promise<string | null> => {
 
-    let Component: ComponentType;
+    let svg: string | null = null;
 
     try {
-        const res = await fetch(`/flags/${type}/${code}.svg`);
-        const svg: string = await res.text();
-        return svg;
+        const res = await fetch(`/images/flags/${type}/${code}.svg`);
+        svg = await res.text();
     } catch (e: any) {
         console.error(`No flag found for ${type} with code ${code}`);
-        return null;
+        svg = null;
+    } finally {
+        return svg;
     }
 }
 

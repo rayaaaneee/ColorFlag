@@ -72,13 +72,13 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     
     const tools: ToolButtonInterface[] = [
         {
-            texture: '/selector.png',
+            texture: '/images/selector.png',
             key: 'selector',
             mouseBackground: '#aeeaae',
             pathBackground: 'selectedPathImg'
         },
         {
-            texture: '/eraser.png',
+            texture: '/images/eraser.png',
             key: 'eraser',
             mouseBackground: '#b2b2b2',
             pathBackground: 'emptyPathImg'
@@ -309,7 +309,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
             ) }
             { originalFlagOpened && (
                 <Alert position='top-right' type='info' onClose={_ => setOriginalFlagOpened(false)}>
-                    <Image src={ `/flags/country/1x1/${country_code}.svg` } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
+                    <Image src={ `/images/flags/country/1x1/${country_code}.svg` } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
                 </Alert>
             ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>

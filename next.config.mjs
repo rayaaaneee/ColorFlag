@@ -1,9 +1,14 @@
 /** @type {import('next').NextConfig} */
 import path from 'path';
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+});
 
 const __dirname = path.resolve();
 
-const nextConfig = {
+const nextConfig = withPWA({
   sassOptions: {
     includePaths: [path.join(__dirname, 'asset', 'scss')],
   },
@@ -11,9 +16,8 @@ const nextConfig = {
     swcTraceProfiling: true,
   },
   webpack(config) {
-    /* config options here */
     return config;
   },
-};
+});
 
 export default nextConfig;
