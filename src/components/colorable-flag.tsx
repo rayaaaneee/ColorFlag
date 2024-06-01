@@ -63,20 +63,19 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
         colorableShapes.forEach((shape) => {
             shape.onclick = onColorShape;
 
-            console.log("setShapes");
             const allUses: NodeListOf<SVGUseElement> | undefined = svgContainer.current?.querySelectorAll('use');
 
             if (allUses !== undefined) {
 
                 const correspondingUse: SVGUseElement | undefined = Array.from(allUses).find((use: SVGUseElement) => (use.href.baseVal.replace('#', '') === shape.id));
-                console.log("setting mousemove")
+
                 if (correspondingUse) {
                     correspondingUse.onmouseenter = (e) => {
-                        console.log("mousemove");
-                        shape.classList.add(styles.hovered);
+                        if (shape.classList.contains(styles.hovered)) {
+                            shape.classList.add(styles.hovered);
+                        }
                     };
                     correspondingUse.onmouseleave = (e) => {
-                        console.log("mouseleave");
                         shape.classList.remove(styles.hovered);
                     };
                 }
