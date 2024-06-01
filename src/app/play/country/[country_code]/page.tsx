@@ -7,7 +7,7 @@ import Country from "@/useful/interfaces/country";
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 import ColorableFlag, { sourceElementInterface } from "@/components/colorable-flag";
 
-const PlayCountry = () => {
+const Page = () => {
 
     const countries: Country[] = countriesArray as Country[];
 
@@ -28,4 +28,4 @@ const PlayCountry = () => {
     );
 }
 
-export default PlayCountry;
+export default Page;

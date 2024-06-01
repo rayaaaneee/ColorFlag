@@ -1,5 +1,5 @@
-const PlaySport = () => {
+const Page = () => {
     return (<></>);
 }
 
-export default PlaySport;
+export default Page;

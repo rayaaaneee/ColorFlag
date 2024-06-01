@@ -1,5 +1,4 @@
-"use client";
-
+import type { Metadata } from 'next';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +7,12 @@ import countryImg from "@/asset/img/pages/play/countries.png";
 import sportsImg from "@/asset/img/pages/play/sports.png"
 
 import CardLink, { Card } from "@/components/usefuls/card-link";
+
+
+export const metadata: Metadata = {
+  title: 'Play',
+  description: 'Choose a game mode to play and test your knowledge of flags, countries and geography',
+};
 
 const Play = () => {
 

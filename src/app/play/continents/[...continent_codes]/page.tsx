@@ -10,7 +10,7 @@ import allCountriesInContinentImg from '@/asset/img/pages/play/all-countries-in-
 import choosingCountryImg from '@/asset/img/pages/play/countries.png';
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 
-const PlayContinent = () => {
+const Page = () => {
 
     const continents: Continent[] = continentArray as Continent[];
 
@@ -56,4 +56,4 @@ const PlayContinent = () => {
     );
 }
 
-export default PlayContinent;
+export default Page;

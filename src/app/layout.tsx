@@ -11,8 +11,8 @@ import CustomErrorBoundary from "@/components/boundaries/error-boundary";
 const inter = Inter({ subsets: ["latin"] });
 
 const APP_NAME = "WorldMaster";
-const APP_DEFAULT_TITLE = "WorldMaster by Rayane Merlin";
-const APP_TITLE_TEMPLATE = "%s - PWA App";
+const APP_DEFAULT_TITLE = "WorldMaster";
+const APP_TITLE_TEMPLATE = "%s - WorldMaster";
 const APP_DESCRIPTION = "WorldMaster is a Progressive Web Application (PWA) built with Next.js, Tailwind CSS, and TypeScript.";
 
 export const metadata: Metadata = {

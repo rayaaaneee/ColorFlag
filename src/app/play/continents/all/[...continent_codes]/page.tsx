@@ -10,7 +10,7 @@ import NotFound from "@/components/not-found";
 import Country from "@/useful/interfaces/country";
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 
-const PlayContinentAllCountries = () => {
+const Page = () => {
 
     const continents: Continent[] = continentArray as Continent[];
     const countries: Country[] = countriesArray as Country[];
@@ -31,4 +31,4 @@ const PlayContinentAllCountries = () => {
     );
 }
 
-export default PlayContinentAllCountries;
+export default Page;

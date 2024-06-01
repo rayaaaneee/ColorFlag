@@ -14,7 +14,7 @@ const nextConfig = withPWA({
     includePaths: [path.join(__dirname, 'asset', 'scss')],
   },
   experimental: {
-    swcTraceProfiling: true,
+    serverComponentsExternalPackages: ['@sentry/nextjs', '@sentry/node', '@sentry/react', '@sentry/core'],
   },
   webpack(config) {
     return config;

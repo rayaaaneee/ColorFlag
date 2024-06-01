@@ -8,7 +8,7 @@ import Select, { ElementValue, Setter } from "@/components/inputs/select";
 import Button from "@/components/inputs/button";
 import toast from "react-hot-toast";
 
-const Play = () => {
+const Page = () => {
 
     const continents: Continent[] = continentsArray as Continent[];
 
@@ -43,4 +43,4 @@ const Play = () => {
     );
 }
 
-export default Play;
+export default Page;
