@@ -1,4 +1,4 @@
-
+"use client";
 
 import CardLink, { Card } from "@/components/usefuls/card-link";
 import verifyIcon from "@/asset/img/pages/dev/verify.png";
@@ -8,9 +8,9 @@ import NotFound from "@/components/not-found";
 import DEV_MODE from "@/useful/dev-mode";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "Dev",
-}
+//export const metadata: Metadata = {
+//    title: "Dev",
+//}
 
 const DevPage = () => {
 
