@@ -71,12 +71,14 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
 
                 if (correspondingUse) {
                     correspondingUse.onmouseenter = (e) => {
-                        if (shape.classList.contains(styles.hovered)) {
+                        if (!shape.classList.contains(styles.hovered)) {
                             shape.classList.add(styles.hovered);
                         }
                     };
                     correspondingUse.onmouseleave = (e) => {
-                        shape.classList.remove(styles.hovered);
+                        if (shape.classList.contains(styles.hovered)) {
+                            shape.classList.remove(styles.hovered);
+                        }
                     };
                 }
             }

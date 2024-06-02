@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ChangeEventHandler } from "react";
 
-import checkedImg from '@/asset/img/general/inputs/checked.svg';
+import CheckedImg from '@/asset/img/general/inputs/checked.svg';
 
 interface CheckboxInterface {
     checked?: boolean;
@@ -18,7 +18,7 @@ const Checkbox = ({ checked = undefined, defaultChecked = undefined, onChange = 
                 id="default-checkbox" defaultChecked={defaultChecked} checked={checked} />
             <span
               className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-                <Image src={ checkedImg } alt="Check" className="w-3.5 h-3.5" />
+                <CheckedImg alt="Check" className="w-3.5 h-3.5" />
             </span>
         </div> 
     );
