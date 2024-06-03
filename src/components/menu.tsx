@@ -71,9 +71,9 @@ const Menu = () => {
  
     return (
         <div className={`${styles.menu} relative bg-main flex gap-5 flex-col items-center justify-center`}>
-            <div className={`absolute top-0 left-0 w-full h-16 flex items-center justify-center`}>
+            <Link href={'/'} className={`absolute top-0 left-0 w-full h-16 flex items-center justify-center`}>
                 <Image draggable={false} alt="app-icon" src={`/logo.png`} width={100} height={100} className="w-3/5" />
-            </div>
+            </Link>
             {menuItems.map((el: MenuItem, index: number) => {
                 const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
                 const className: string = `p-2 bg-main hoverable rounded-lg flex ${active ? "selected" : ""}`;
