@@ -13,10 +13,10 @@ const Page = () => {
 
     const continent_codes: string[] | null | undefined = useSearchParams()?.get("continent_code")?.split(",");
 
-    const continents: Continent[] = (continentsArray as Continent[]).filter((continent: Continent) => continent_codes ? continent_codes.includes(continent.code) : false);
+    const continents: Continent[] = (continentsArray satisfies Continent[] as Continent[]).filter((continent: Continent) => continent_codes ? continent_codes.includes(continent.code) : false);
 
 
-    const countries: Country[] = (countriesArray as Country[]).filter(country => continent_codes ? continent_codes.includes(country.continent_code) : true);
+    const countries: Country[] = (countriesArray satisfies Country[] as Country[]).filter(country => continent_codes ? continent_codes.includes(country.continent_code) : true);
 
     const allContinentsCodesExist = continent_codes ? continent_codes.every((code) => countries.some((country) => country.continent_code === code)) : true;
     if (!allContinentsCodesExist || continent_codes?.length === 0) {

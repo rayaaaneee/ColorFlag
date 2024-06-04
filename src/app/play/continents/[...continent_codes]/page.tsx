@@ -12,7 +12,7 @@ import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirst
 
 const Page = () => {
 
-    const continents: Continent[] = continentArray as Continent[];
+    const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
 
     const { continent_codes } = useParams<{ continent_codes?: string[] }>() as any;
     console.log(continent_codes);

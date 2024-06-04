@@ -12,8 +12,8 @@ import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirst
 
 const Page = () => {
 
-    const continents: Continent[] = continentArray as Continent[];
-    const countries: Country[] = countriesArray as Country[];
+    const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
+    const countries: Country[] = countriesArray satisfies Country[] as Country[];
 
     const { continent_codes } = useParams<{ continent_codes?: string[] }>() as any;
 

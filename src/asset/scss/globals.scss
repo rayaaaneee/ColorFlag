@@ -80,6 +80,14 @@ body {
     }
   }
 
+  .text-main {
+    color: $bg-main-color;
+  }
+
+  .text-scnd {
+    color: $bg-scnd-color;
+  }
+
   .bg-scnd {
     background-color: $bg-scnd-color;
   }

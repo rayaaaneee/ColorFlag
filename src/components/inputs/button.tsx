@@ -8,7 +8,7 @@ export interface Customs {
     activeColorClass?: string;
     focusColorClass?: string;
     disabledColorClass?: string;
-    textColor?: string;
+    textColorClass?: string;
     paddingClass?: string;
     hasShadow?: boolean;
     zIndex?: number;
@@ -38,7 +38,7 @@ const Button = ({ onClick = undefined, children = "OK", className="", title = un
                 ${className} 
                 ${custom?.colorClass ? custom.colorClass : "bg-main"} 
                 ${custom?.hoverColorClass ? custom.hoverColorClass : "hoverable"} 
-                ${custom?.textColor ? custom.textColor : "text-white"} 
+                ${custom?.textColorClass ? custom.textColorClass : "text-white"} 
                 ${custom?.activeColorClass && custom.activeColorClass } 
                 ${custom?.focusColorClass && custom.focusColorClass } 
                 ${custom?.disabledColorClass && custom.disabledColorClass } 

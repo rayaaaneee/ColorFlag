@@ -9,7 +9,7 @@ import ColorableFlag, { sourceElementInterface } from "@/components/colorable-fl
 
 const Page = () => {
 
-    const countries: Country[] = countriesArray as Country[];
+    const countries: Country[] = countriesArray satisfies Country[] as Country[];
 
     const { country_code } = useParams<{ country_code: string }>() as any;
 

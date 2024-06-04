@@ -45,7 +45,7 @@ const CardLink = ({ className = "", element, heightClass = "h-[27rem]" }: CardLi
                         customs={{ 
                             colorClass: "bg-white", 
                             hoverColorClass: "hover:bg-gray-200", 
-                            textColor: "text-gray-800", 
+                            textColorClass: "text-gray-800", 
                             paddingClass: "py-2 px-3",
                             hasShadow: false,
                         }

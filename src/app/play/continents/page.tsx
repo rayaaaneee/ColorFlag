@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 const Page = () => {
 
-    const continents: Continent[] = continentsArray as Continent[];
+    const continents: Continent[] = continentsArray satisfies Continent[] as Continent[];
 
     const [selectedContinents, setSelectedContinents] = useState<ElementValue[]>([]);
     const router = useRouter();
