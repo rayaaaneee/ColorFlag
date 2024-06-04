@@ -21,7 +21,7 @@ import Loading from "./usefuls/loading";
 import EraserButton from "./usefuls/eraser-button";
 import ProgressBar from "./usefuls/progress-bar";
 import FlagSvg, { FlagType } from "./usefuls/flag-svg";
-import AppLogo from "./usefuls/app-logo";
+import AppLogo from "./svg/app-logo";
 
 export interface sourceElementInterface {
     name: string;

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react"
-import FranceCustomFlag from "@/asset/img/general/custom-france-flag.svg";
+import { useEffect, useRef } from "react";
+
+import FranceCustomFlag from "@/asset/img/general/custom-french-flag.svg";
+import FranceCustomFlagLoader from "@/asset/img/general/custom-french-flag-loader.svg";
 
 export interface AppLogoInterface {
     className?: string;
@@ -49,19 +51,6 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         let isLoadingWayForward: boolean;
 
         if (asLoader) {
-            orderedPaths.forEach(path => { 
-                const fill: string | null = path.getAttribute('fill');
-                const dataFill: string | null = path.getAttribute('data-fill');
-
-                if (!fill || !dataFill) {
-                    return console.error('Fill or data-fill not found in path');
-                }
-
-                if (fill.startsWith('url')) return;
-                else {
-                    invertFill(path);
-                }
-            });
 
             let pathIndex: number = 0;
             let prevIndex: number | undefined;
@@ -85,11 +74,12 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                             if (interval !== null) clearInterval(interval);
                             break;
                     }
+
                     if (pathIndex === orderedPaths.length - 1 || pathIndex === 0) {
                         if (interval !== null) clearInterval(interval);
                         setTimeout(() => {
                             interval = setInterval(intervalFunction, loaderTransitionDuration);
-                        }, loaderTransitionDuration/2);
+                        }, loaderTransitionDuration);
                     }
 
                     prevIndex = pathIndex;
@@ -108,7 +98,7 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
             }
 
             interval = setInterval(intervalFunction, loaderTransitionDuration);
-        } else if (allowClick) unorderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
+        } else if (allowClick) orderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
 
         return () => {
             if (!asLoader) orderedPaths.forEach((path) => path.removeEventListener('click', fromLogotoggleFill));
@@ -116,11 +106,22 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         };
     }, []);
 
-    return (<FranceCustomFlag
-        style={{ cursor: !asLoader ? 'pointer' : 'default'}}
-        ref={logo}
-        className={`${ className } rounded-lg border-black border-2`} 
-    />);
+    return (
+        <>
+            { asLoader ? (
+                <FranceCustomFlagLoader
+                    style={{ cursor: !asLoader ? 'pointer' : 'default'}}
+                    ref={logo}
+                    className={`${ className } rounded-lg border-black border-2`} 
+                />) : (
+                <FranceCustomFlag
+                    style={{ cursor: !asLoader ? 'pointer' : 'default'}}
+                    ref={logo}
+                    className={`${ className } rounded-lg border-black border-2`} 
+                />
+            )}
+        </>
+    );
 }
 
 export default AppLogo;

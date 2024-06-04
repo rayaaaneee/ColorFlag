@@ -1,5 +1,5 @@
 import Button from "@/components/inputs/button";
-import AppLogo from "@/components/usefuls/app-logo";
+import AppLogo from "@/components/svg/app-logo";
 import { Metadata } from "next";
 import Link from "next/link";
 
