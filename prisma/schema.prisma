@@ -9,40 +9,40 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+  id                  String  @id @default(cuid())
+  user_id             String  @map("userId")
+  type                String
+  provider            String
+  provider_account_id String  @map("providerAccountId")
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
+  user                User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  @@unique([provider, provider_account_id])
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  session_token String   @unique @map("sessionToken")
+  userId        String
+  expires       DateTime
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id             String    @id @default(cuid())
+  name           String?   @unique
+  email          String?   @unique
+  email_verified DateTime? @map("emailVerified")
+  image          String?
+  accounts       Account[]
+  games          Game[]
+  sessions       Session[]
 }
 
 model VerificationToken {
@@ -51,4 +51,49 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Game {
+  id               String            @id @default(cuid())
+  date_time        DateTime          @default(now())
+  user_id          String
+  flagColoringGame FlagColoringGame?
+  user             User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  guessCapitalGame GuessCapitalGame?
+  guessFlagGame    GuessFlagGame?
+  guessMapGame     GuessMapGame?
+}
+
+model FlagColoringGame {
+  id      String @id @default(cuid())
+  item    String
+  code    String
+  score   Int
+  game_id String @unique
+  game    Game   @relation(fields: [game_id], references: [id], onDelete: Cascade)
+}
+
+model GuessMapGame {
+  id           String  @id @default(cuid())
+  country_code String
+  success      Boolean
+  game_id      String  @unique
+  game         Game    @relation(fields: [game_id], references: [id])
+}
+
+model GuessFlagGame {
+  id      String  @id @default(cuid())
+  item    String
+  code    String
+  success Boolean
+  game_id String  @unique
+  game    Game    @relation(fields: [game_id], references: [id])
+}
+
+model GuessCapitalGame {
+  id           String  @id @default(cuid())
+  country_code String
+  success      Boolean
+  game_id      String  @unique
+  game         Game    @relation(fields: [game_id], references: [id])
 }

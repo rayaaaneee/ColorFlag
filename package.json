@@ -1,5 +1,5 @@
 {
-  "name": "color-my-flag",
+  "name": "world-master",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init": "npm i && npm i -g svgo@3.3.2 && npx prisma generate",
+    "init": "npm i && npm i -g svgo@3.3.2 && npx prisma migrate dev && npx prisma generate", 
     "find-unused-flags": "python scripts/find_unused_flags.py",
     "sort-data": "python scripts/sort_data.py"
   },
