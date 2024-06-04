@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react"
-import FranceCustomFlag from "@/asset/img/pages/custom-france-flag.svg";
+import FranceCustomFlag from "@/asset/img/general/custom-france-flag.svg";
 
 export interface AppLogoInterface {
     className?: string;
