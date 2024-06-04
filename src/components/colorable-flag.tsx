@@ -21,6 +21,7 @@ import Loading from "./usefuls/loading";
 import EraserButton from "./usefuls/eraser-button";
 import ProgressBar from "./usefuls/progress-bar";
 import FlagSvg, { FlagType } from "./usefuls/flag-svg";
+import AppLogo from "./usefuls/app-logo";
 
 export interface sourceElementInterface {
     name: string;
@@ -354,8 +355,9 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                     <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-gray-700" } flex items-center justify-center mx-auto ${ !devMode && "my-5"}` }>
 
                         { (svgColors.length === 0 && !isValidated) && (
-                            <Loading className={styles.loaderSvg} />
+                            <AppLogo asLoader={true} loaderLoop={true} loaderTransitionDuration={80} className="w-full h-full" />
                         ) }
+                        {/* <Loading className={styles.loaderSvg} /> */}
 
                         <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex flex-col gap-2 items-center justify-center text-slate-800 text-8xl font-mono`}>
                             <div className="flex flex-row items-center justify-center gap-2">

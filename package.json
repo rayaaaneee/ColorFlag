@@ -14,7 +14,7 @@
     "find-unused-flags": "python scripts/find_unused_flags.py",
     "sort-data": "python scripts/sort_data.py"
   },
-  "prisma": {
+  "_comment_prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {

@@ -6,22 +6,27 @@ import FranceCustomFlag from "@/asset/img/pages/custom-france-flag.svg";
 export interface AppLogoInterface {
     className?: string;
     asLoader?: boolean;
+    loaderLoop?: boolean;
+    loaderTransitionDuration?: number;
     allowClick?: boolean;
 }
 
-const AppLogo = ({className, allowClick = true, asLoader = false}: AppLogoInterface) => {
+const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 200 }: AppLogoInterface) => {
 
     if (asLoader) allowClick = false;
 
     const logo = useRef<SVGElement | null>(null);
 
-
-    const fromLogotoggleFill = (e: Event) => {
-        const path = e.currentTarget as SVGPathElement;
+    const invertFill = (path: SVGPathElement) => {
         const fill: string | null = path.getAttribute('fill');
         const dataFill: string | null = path.getAttribute('data-fill');
         if (dataFill) path.setAttribute('fill', dataFill);
         if (fill) path.setAttribute('data-fill', fill);
+    }
+
+    const fromLogotoggleFill = (e: Event) => {
+        const path = e.currentTarget as SVGPathElement;
+        invertFill(path);
     }
 
     useEffect(() => {
@@ -41,6 +46,7 @@ const AppLogo = ({className, allowClick = true, asLoader = false}: AppLogoInterf
         });
 
         let interval: NodeJS.Timeout | null = null;
+        let isLoadingWayForward: boolean;
 
         if (asLoader) {
             orderedPaths.forEach(path => { 
@@ -53,25 +59,56 @@ const AppLogo = ({className, allowClick = true, asLoader = false}: AppLogoInterf
 
                 if (fill.startsWith('url')) return;
                 else {
-                    path.setAttribute('data-fill', fill);
-                    path.setAttribute('fill', dataFill);
+                    invertFill(path);
                 }
             });
 
             let pathIndex: number = 0;
-            interval = setInterval(() => {
-                if (pathIndex >= orderedPaths.length) pathIndex = 0;
+            let prevIndex: number | undefined;
+
+            const intervalFunction = () => {
+
+                if (prevIndex !== undefined && !loaderLoop) prevIndex = pathIndex === 0 ? orderedPaths.length - 1 : pathIndex - 1;
+
                 orderedPaths.forEach((path, index) => {
-                    if (index === pathIndex) {
-                        const fill: string | null = path.getAttribute('fill');
-                        const dataFill: string | null = path.getAttribute('data-fill');
-                        if (dataFill) path.setAttribute('fill', dataFill);
-                        if (fill) path.setAttribute('data-fill', fill);
-                    }
+                    if (index === pathIndex || (index === prevIndex && pathIndex !== -1)) invertFill(path);
                 });
-                pathIndex++;
-            }, 300);
-        } else unorderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
+
+                if (loaderLoop) {
+                    switch (pathIndex) {
+                        case 0:
+                            isLoadingWayForward = true;
+                            if (interval !== null) clearInterval(interval);
+                            break;
+                        case orderedPaths.length - 1:
+                            isLoadingWayForward = false;
+                            if (interval !== null) clearInterval(interval);
+                            break;
+                    }
+                    if (pathIndex === orderedPaths.length - 1 || pathIndex === 0) {
+                        if (interval !== null) clearInterval(interval);
+                        setTimeout(() => {
+                            interval = setInterval(intervalFunction, loaderTransitionDuration);
+                        }, loaderTransitionDuration/2);
+                    }
+
+                    prevIndex = pathIndex;
+                    if (isLoadingWayForward) pathIndex++;
+                    else pathIndex--;
+
+                } else {
+
+                    if (prevIndex === undefined) prevIndex = pathIndex;
+
+                    if (pathIndex === orderedPaths.length - 1) pathIndex = 0;
+                    else pathIndex++;
+
+                }
+
+            }
+
+            interval = setInterval(intervalFunction, loaderTransitionDuration);
+        } else if (allowClick) unorderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
 
         return () => {
             if (!asLoader) orderedPaths.forEach((path) => path.removeEventListener('click', fromLogotoggleFill));
