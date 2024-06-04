@@ -10,7 +10,6 @@ datasource db {
 
 model Account {
   id                  String  @id @default(cuid())
-  user_id             String  @map("userId")
   type                String
   provider            String
   provider_account_id String  @map("providerAccountId")
@@ -21,7 +20,9 @@ model Account {
   scope               String?
   id_token            String?
   session_state       String?
-  user                User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  user_id String @map("user_id")
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([provider, provider_account_id])
 }
@@ -29,20 +30,24 @@ model Account {
 model Session {
   id            String   @id @default(cuid())
   session_token String   @unique @map("sessionToken")
-  userId        String
   expires       DateTime
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model User {
   id             String    @id @default(cuid())
-  name           String?   @unique
+  createdAt      DateTime  @default(now())
+  name           String?
+  username       String    @unique
   email          String?   @unique
   email_verified DateTime? @map("emailVerified")
   image          String?
-  accounts       Account[]
-  games          Game[]
-  sessions       Session[]
+
+  accounts Account[]
+  games    Game[]
+  sessions Session[]
 }
 
 model VerificationToken {
@@ -54,21 +59,24 @@ model VerificationToken {
 }
 
 model Game {
-  id               String            @id @default(cuid())
-  date_time        DateTime          @default(now())
-  user_id          String
-  flagColoringGame FlagColoringGame?
-  user             User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  guessCapitalGame GuessCapitalGame?
-  guessFlagGame    GuessFlagGame?
-  guessMapGame     GuessMapGame?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  flag_coloring_game FlagColoringGame?
+  guess_capital_game GuessCapitalGame?
+  guess_flag_game    GuessFlagGame?
+  guess_map_game     GuessMapGame?
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model FlagColoringGame {
-  id      String @id @default(cuid())
-  item    String
-  code    String
-  score   Int
+  id    String @id @default(cuid())
+  item  String
+  code  String
+  score Int
+
   game_id String @unique
   game    Game   @relation(fields: [game_id], references: [id], onDelete: Cascade)
 }
@@ -77,8 +85,9 @@ model GuessMapGame {
   id           String  @id @default(cuid())
   country_code String
   success      Boolean
-  game_id      String  @unique
-  game         Game    @relation(fields: [game_id], references: [id])
+
+  game_id String @unique
+  game    Game   @relation(fields: [game_id], references: [id])
 }
 
 model GuessFlagGame {
@@ -86,14 +95,16 @@ model GuessFlagGame {
   item    String
   code    String
   success Boolean
-  game_id String  @unique
-  game    Game    @relation(fields: [game_id], references: [id])
+
+  game_id String @unique
+  game    Game   @relation(fields: [game_id], references: [id])
 }
 
 model GuessCapitalGame {
   id           String  @id @default(cuid())
   country_code String
   success      Boolean
-  game_id      String  @unique
-  game         Game    @relation(fields: [game_id], references: [id])
+
+  game_id String @unique
+  game    Game   @relation(fields: [game_id], references: [id])
 }

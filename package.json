@@ -8,9 +8,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init": "npm i && npm i -g svgo@3.3.2 && npx prisma migrate dev && npx prisma generate", 
+    "init-modules": "npm i && npm i -g svgo@3.3.2",
+    "init-prisma": "npx prisma db init && npx prisma db seed",
+    "init": "npm run init-modules && npm run init-prisma",
     "find-unused-flags": "python scripts/find_unused_flags.py",
     "sort-data": "python scripts/sort_data.py"
+  },
+  "prisma": {
+    "init": "npx prisma migrate dev && npx prisma generate",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.0.0",
@@ -33,9 +39,11 @@
     "rgb-hex": "^4.1.0",
     "sharp": "^0.33.4",
     "tailwind-scrollbar": "^3.1.0",
-    "usehooks-ts": "^3.1.0"
+    "usehooks-ts": "^3.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@svgr/webpack": "^8.1.0",
     "@types/autoprefixer": "^10.2.0",
     "@types/hex-rgb": "^4.1.1",
@@ -53,6 +61,7 @@
     "prisma": "^5.13.0",
     "sass": "^1.75.0",
     "tailwindcss": "^3.4.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "webpack": "^5.91.0"
   }
