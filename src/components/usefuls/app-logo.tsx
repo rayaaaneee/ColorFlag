@@ -117,6 +117,7 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
     }, []);
 
     return (<FranceCustomFlag
+        style={{ cursor: !asLoader ? 'pointer' : 'default'}}
         ref={logo}
         className={`${ className } rounded-lg border-black border-2`} 
     />);
