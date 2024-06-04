@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init-modules": "npm i && npm i -g svgo@3.3.2",
+    "preinstall": "npm i -g svgo@3.3.2",
     "init-prisma": "npx prisma migrate dev && npx prisma generate",
-    "init": "npm run init-modules && npm run init-prisma",
+    "init": "npm run preinstall && npm i && npm run init-prisma",
     "find-unused-flags": "python scripts/find_unused_flags.py",
     "sort-data": "python scripts/sort_data.py"
   },
