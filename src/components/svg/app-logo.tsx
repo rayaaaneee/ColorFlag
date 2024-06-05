@@ -22,9 +22,46 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
     const invertFill = (path: SVGPathElement) => {
         const fill: string | null = path.getAttribute('fill');
         const dataFill: string | null = path.getAttribute('data-fill');
+
+        if (!fill || !dataFill) throw new Error('No fill or data-fill attribute found');
+
         if (dataFill) path.setAttribute('fill', dataFill);
         if (fill) path.setAttribute('data-fill', fill);
     }
+
+   /*  const removeFill = (path: SVGPathElement) => {
+        const fill: string | null = path.getAttribute('fill');
+        const dataFill: string | null = path.getAttribute('data-fill');
+
+        if (fill && dataFill) {
+            if (fill?.startsWith('url')) {
+                path.setAttribute('fill', dataFill);
+            } else if (dataFill?.startsWith('url')) {
+                path.setAttribute('fill', fill);
+            } else {
+                throw new Error('No empty backgrounded fill founded');
+            }
+        } else {
+            throw new Error('No fill or data-fill attribute found');
+        }
+    }
+
+    const addFill = (path: SVGPathElement) => {
+        const fill: string | null = path.getAttribute('fill');
+        const dataFill: string | null = path.getAttribute('data-fill');
+
+        if (fill && dataFill) {
+            if (fill?.startsWith('url')) {
+                path.setAttribute('fill', dataFill || 'none');
+            } else if (dataFill?.startsWith('url')) {
+                path.setAttribute('fill', fill || 'none');
+            } else {
+                throw new Error('No empty backgrounded fill founded');
+            }
+        } else {
+            throw new Error('No fill or data-fill attribute found');
+        }
+    } */
 
     const fromLogotoggleFill = (e: Event) => {
         const path = e.currentTarget as SVGPathElement;
@@ -48,56 +85,63 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         });
 
         let interval: NodeJS.Timeout | null = null;
-        let isLoadingWayForward: boolean;
+        let isLoadingWayForward: boolean = true;
 
         if (asLoader) {
 
-            let pathIndex: number = 0;
-            let prevIndex: number | undefined;
+            let pathIndex: number | null = null;
+            let prevPathIndex: number | null = null;
 
             const intervalFunction = () => {
 
-                if (prevIndex !== undefined && !loaderLoop) prevIndex = pathIndex === 0 ? orderedPaths.length - 1 : pathIndex - 1;
-
-                orderedPaths.forEach((path, index) => {
-                    if (index === pathIndex || (index === prevIndex && pathIndex !== -1)) invertFill(path);
-                });
-
                 if (loaderLoop) {
-                    switch (pathIndex) {
-                        case 0:
-                            isLoadingWayForward = true;
-                            if (interval !== null) clearInterval(interval);
-                            break;
-                        case orderedPaths.length - 1:
-                            isLoadingWayForward = false;
-                            if (interval !== null) clearInterval(interval);
-                            break;
+                    if (pathIndex === null) {
+                        switch (isLoadingWayForward) {
+                            case true:
+                                pathIndex = 0;
+                                break;
+                            case false:
+                                pathIndex = orderedPaths.length - 1;
+                                break;
+                        }
+                        prevPathIndex = null;
+                    } else if (pathIndex === orderedPaths.length - 1 && isLoadingWayForward) {
+                        isLoadingWayForward = false;
+                        pathIndex = null;
+                        prevPathIndex = orderedPaths.length - 1;
+                    } else if (pathIndex === 0 && !isLoadingWayForward) {
+                        isLoadingWayForward = true;
+                        pathIndex = null;
+                        prevPathIndex = 0;
+                    } else {
+                        if (isLoadingWayForward) {
+                            pathIndex++;
+                            prevPathIndex = pathIndex === 0 ? orderedPaths.length - 1 : pathIndex - 1;
+                        } else { 
+                            pathIndex--;
+                            prevPathIndex = pathIndex === orderedPaths.length - 1 ? 0 : pathIndex + 1;
+                        }
                     }
-
-                    if (pathIndex === orderedPaths.length - 1 || pathIndex === 0) {
-                        if (interval !== null) clearInterval(interval);
-                        setTimeout(() => {
-                            interval = setInterval(intervalFunction, loaderTransitionDuration);
-                        }, loaderTransitionDuration);
-                    }
-
-                    prevIndex = pathIndex;
-                    if (isLoadingWayForward) pathIndex++;
-                    else pathIndex--;
-
                 } else {
-
-                    if (prevIndex === undefined) prevIndex = pathIndex;
-
-                    if (pathIndex === orderedPaths.length - 1) pathIndex = 0;
-                    else pathIndex++;
-
+                    if (pathIndex === null) {
+                        pathIndex = 0;
+                        prevPathIndex = null;
+                    } else if (pathIndex === orderedPaths.length - 1) {
+                        prevPathIndex = pathIndex;
+                        pathIndex = null;
+                    } else {
+                        prevPathIndex = pathIndex;
+                        pathIndex++;
+                    }
                 }
+
+                if (pathIndex !== null) invertFill(orderedPaths[pathIndex]);
+                if (prevPathIndex !== null) invertFill(orderedPaths[prevPathIndex]);
 
             }
 
             interval = setInterval(intervalFunction, loaderTransitionDuration);
+            
         } else if (allowClick) orderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
 
         return () => {
@@ -110,12 +154,11 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         <>
             { asLoader ? (
                 <FranceCustomFlagLoader
-                    style={{ cursor: !asLoader ? 'pointer' : 'default'}}
                     ref={logo}
                     className={`${ className } rounded-lg border-black border-2`} 
                 />) : (
                 <FranceCustomFlag
-                    style={{ cursor: !asLoader ? 'pointer' : 'default'}}
+                    style={{ cursor: 'pointer'}}
                     ref={logo}
                     className={`${ className } rounded-lg border-black border-2`} 
                 />

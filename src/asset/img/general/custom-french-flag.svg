@@ -3,7 +3,6 @@
         .custom-flag-path {
             stroke: #000;
             stroke-width: 10;
-            cursor: pointer;
         }
     </style>
     <defs>

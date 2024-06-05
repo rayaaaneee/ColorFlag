@@ -23,9 +23,10 @@ export interface ButtonProps {
     title?: string,
     customs?: Customs,
     disabled?: boolean
+    type?: "button" | "submit" | "reset"
 }
 
-const Button = ({ onClick = undefined, children = "OK", className="", title = undefined, customs: custom = undefined, disabled = false, onMouseEnter, onMouseLeave }: ButtonProps) => {
+const Button = ({ onClick = undefined, children = "OK", className="", title = undefined, customs: custom = undefined, disabled = false, onMouseEnter, onMouseLeave, type = "button" }: ButtonProps) => {
     return (
         <button
             title={ title }
@@ -47,7 +48,7 @@ const Button = ({ onClick = undefined, children = "OK", className="", title = un
                 ${disabled ? `cursor-not-allowed` : `cursor-pointer`}
                 ${custom?.borderRadiusClass ? custom.borderRadiusClass : "rounded-lg"}
                 relative tracking-wide flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans text-sm font-medium uppercase  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
-            type="button" 
+            type={ type }
             >
             { children }
         </button>
