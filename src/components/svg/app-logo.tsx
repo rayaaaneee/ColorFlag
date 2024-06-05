@@ -138,6 +138,14 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                 if (pathIndex !== null) invertFill(orderedPaths[pathIndex]);
                 if (prevPathIndex !== null) invertFill(orderedPaths[prevPathIndex]);
 
+                if (pathIndex === null) {
+                    (interval !== null) && clearInterval(interval);
+                    const timeout: NodeJS.Timeout = setTimeout(() => {
+                        interval = setInterval(intervalFunction, loaderTransitionDuration);
+                        clearTimeout(timeout);
+                    }, loaderTransitionDuration * 1.5);
+                }
+
             }
 
             interval = setInterval(intervalFunction, loaderTransitionDuration);
