@@ -11,7 +11,8 @@ export interface Customs {
     textColorClass?: string;
     paddingClass?: string;
     hasShadow?: boolean;
-    zIndex?: number;
+    hasTextUpperCase?: boolean;
+    zIndexClass?: number;
     borderRadiusClass?: string;
 }
 export interface ButtonProps {
@@ -26,28 +27,29 @@ export interface ButtonProps {
     type?: "button" | "submit" | "reset"
 }
 
-const Button = ({ onClick = undefined, children = "OK", className="", title = undefined, customs: custom = undefined, disabled = false, onMouseEnter, onMouseLeave, type = "button" }: ButtonProps) => {
+const Button = ({ onClick, children = "OK", className="", title = undefined, customs = undefined, disabled = false, onMouseEnter, onMouseLeave, type = "button" }: ButtonProps) => {
     return (
         <button
             title={ title }
             onClick={onClick} 
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            style={{ zIndex: custom?.zIndex ? custom.zIndex : 0 }}
+            style={{ zIndex: customs?.zIndexClass ? customs.zIndexClass : 0 }}
             disabled={ disabled }
             className={`
                 ${className} 
-                ${custom?.colorClass ? custom.colorClass : "bg-main"} 
-                ${custom?.hoverColorClass ? custom.hoverColorClass : "hoverable"} 
-                ${custom?.textColorClass ? custom.textColorClass : "text-white"} 
-                ${custom?.activeColorClass && custom.activeColorClass } 
-                ${custom?.focusColorClass && custom.focusColorClass } 
-                ${custom?.disabledColorClass && custom.disabledColorClass } 
-                ${custom?.paddingClass ? custom.paddingClass : "px-5 py-3"} 
-                ${(custom === undefined || custom.hasShadow) && `shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:shadow-none active:shadow-none disabled:shadow-none`}
+                ${customs?.colorClass ? customs.colorClass : "bg-main"} 
+                ${customs?.hoverColorClass ? customs.hoverColorClass : "hoverable"} 
+                ${customs?.textColorClass ? customs.textColorClass : "text-white"} 
+                ${customs?.activeColorClass && customs.activeColorClass } 
+                ${customs?.focusColorClass && customs.focusColorClass } 
+                ${customs?.disabledColorClass && customs.disabledColorClass } 
+                ${customs?.paddingClass ? customs.paddingClass : "px-5 py-3"} 
+                ${(customs === undefined || customs.hasShadow) && `shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:shadow-none active:shadow-none disabled:shadow-none`}
                 ${disabled ? `cursor-not-allowed` : `cursor-pointer`}
-                ${custom?.borderRadiusClass ? custom.borderRadiusClass : "rounded-lg"}
-                relative tracking-wide flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans text-sm font-medium uppercase  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
+                ${customs?.borderRadiusClass ? customs.borderRadiusClass : "rounded-lg"}
+                ${(customs === undefined || customs?.hasTextUpperCase === true || customs?.hasTextUpperCase === undefined) && `uppercase`}
+                overflow-hidden relative tracking-wide flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans text-sm font-medium  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
             type={ type }
             >
             { children }

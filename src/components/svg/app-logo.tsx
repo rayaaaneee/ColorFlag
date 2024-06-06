@@ -29,40 +29,6 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         if (fill) path.setAttribute('data-fill', fill);
     }
 
-   /*  const removeFill = (path: SVGPathElement) => {
-        const fill: string | null = path.getAttribute('fill');
-        const dataFill: string | null = path.getAttribute('data-fill');
-
-        if (fill && dataFill) {
-            if (fill?.startsWith('url')) {
-                path.setAttribute('fill', dataFill);
-            } else if (dataFill?.startsWith('url')) {
-                path.setAttribute('fill', fill);
-            } else {
-                throw new Error('No empty backgrounded fill founded');
-            }
-        } else {
-            throw new Error('No fill or data-fill attribute found');
-        }
-    }
-
-    const addFill = (path: SVGPathElement) => {
-        const fill: string | null = path.getAttribute('fill');
-        const dataFill: string | null = path.getAttribute('data-fill');
-
-        if (fill && dataFill) {
-            if (fill?.startsWith('url')) {
-                path.setAttribute('fill', dataFill || 'none');
-            } else if (dataFill?.startsWith('url')) {
-                path.setAttribute('fill', fill || 'none');
-            } else {
-                throw new Error('No empty backgrounded fill founded');
-            }
-        } else {
-            throw new Error('No fill or data-fill attribute found');
-        }
-    } */
-
     const fromLogotoggleFill = (e: Event) => {
         const path = e.currentTarget as SVGPathElement;
         invertFill(path);
