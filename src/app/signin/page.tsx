@@ -15,6 +15,7 @@ const SignIn = () => {
     return (
         <div className="w-full h-full grid grid-cols-[3fr_1fr]">
             <div className="bg-white bg-opacity-70 flex flex-col items-center justify-center">
+                <AppLogo className="w-44" asLoader loaderLoop />
                 <h1>Sign in to your account</h1>
                 <p>Login using social networks</p>
                 <div className="flex gap-4 p-3 w-fit h-fit">

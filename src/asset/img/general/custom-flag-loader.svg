@@ -12,9 +12,7 @@
                 width="400" height="400"></image>
         </pattern>
     </defs>
-    <path class="custom-flag-path logo-path-2" fill="url(#emptyPathImg)" data-fill="#fff" d="M0 0h640v480H0z"></path>
-    <path class="custom-flag-path logo-path-1" fill="url(#emptyPathImg)" data-fill="#000091" d="M0 0h213.3v480H0z">
-    </path>
-    <path class="custom-flag-path logo-path-3" fill="url(#emptyPathImg)" data-fill="#e1000f"
-        d="M426.7 0H640v480H426.7z"></path>
+    <path class="custom-flag-path logo-path-2" fill="url(#emptyPathImg)" d="M0 0h640v480H0z"></path>
+    <path class="custom-flag-path logo-path-1" fill="url(#emptyPathImg)" d="M0 0h213.3v480H0z"></path>
+    <path class="custom-flag-path logo-path-3" fill="url(#emptyPathImg)" d="M426.7 0H640v480H426.7z"></path>
 </svg>
