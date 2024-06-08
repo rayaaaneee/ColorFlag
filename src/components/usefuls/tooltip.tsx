@@ -10,7 +10,7 @@ export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type TooltipType = 'default' | "default-2" | 'success' | 'warning' | 'error';
 
 export interface TooltipInterface {
-    children: ChildrenType
+    children: ChildrenType;
     text: ChildrenType;
     position?: TooltipPosition;
     forceShow?: boolean;

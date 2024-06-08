@@ -6,6 +6,7 @@ import { FaGoogle } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa6";
 import { TbBrandGithubFilled } from "react-icons/tb";
 import ConnectionButton from "./connection-button";
+import Tooltip from "@/components/usefuls/tooltip";
 
 export const metadata: Metadata = {
     title: "Sign In",
@@ -15,13 +16,24 @@ const SignIn = () => {
     return (
         <div className="w-full h-full grid grid-cols-[3fr_1fr]">
             <div className="bg-white bg-opacity-70 flex flex-col items-center justify-center">
-                <AppLogo className="w-44" asLoader loaderLoop />
                 <h1>Sign in to your account</h1>
                 <p>Login using social networks</p>
                 <div className="flex gap-4 p-3 w-fit h-fit">
-                    <ConnectionButton colorClassName="bg-red-500" hoverColorClassName="hover:bg-red-600"><FaGoogle className="w-1/3 h-1/3" /></ConnectionButton>
-                    <ConnectionButton colorClassName="bg-blue-900" hoverColorClassName="hover:bg-blue-950"><FaFacebookF className="w-1/3 h-1/3" /></ConnectionButton>
-                    <ConnectionButton colorClassName="bg-main" hoverColorClassName="hover:bg-black"><TbBrandGithubFilled className="w-2/5 h-2/5" /></ConnectionButton>
+                    <Tooltip text={"Google"}>
+                        <ConnectionButton colorClassName="bg-red-500" hoverColorClassName="hover:bg-red-600">
+                            <FaGoogle className="w-1/3 h-1/3" />
+                        </ConnectionButton>
+                    </Tooltip>
+                    <Tooltip text={"Facebook"}>
+                        <ConnectionButton colorClassName="bg-blue-900" hoverColorClassName="hover:bg-blue-950">
+                            <FaFacebookF className="w-1/3 h-1/3" />
+                        </ConnectionButton>
+                    </Tooltip>
+                    <Tooltip text={"Github"}>
+                        <ConnectionButton colorClassName="bg-main" hoverColorClassName="hover:bg-black">
+                            <TbBrandGithubFilled className="w-2/5 h-2/5" />
+                        </ConnectionButton>
+                    </Tooltip>
                 </div>
                 <p>Or</p>
                 <form className="flex flex-col gap-4">

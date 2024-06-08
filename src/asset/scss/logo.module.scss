@@ -1,0 +1,33 @@
+#appLogoSvg {
+    path {
+        stroke: #000;
+        stroke-width: 10;
+
+        &:not(.loader) {
+            cursor: pointer;
+        }
+
+        &.hasHover[fill="url(#emptyPathImg)"]:hover {
+            filter: brightness(80%);
+            -webkit-filter: brightness(80%);
+        }
+        
+        &.hasHover {
+            &[fill="#ffffff"],
+            &[fill="#FFFFFF"],
+            &[fill="#FFF"],
+            &[fill="#fff"],
+            &[fill="white"],
+            &[fill="rgb(255, 255, 255)"] {
+                &:hover {
+                    fill: rgb(228, 228, 228);
+                }
+            }
+            &:hover {
+                filter: rgba(128, 128, 128, 0.4);
+                filter: grayscale(40%);
+                -webkit-filter: grayscale(40%);
+            }
+        }
+    }
+}

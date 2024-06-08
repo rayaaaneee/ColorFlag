@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 import FranceCustomFlag from "@/asset/img/general/custom-french-flag.svg";
 import FranceCustomFlagLoader from "@/asset/img/general/custom-flag-loader.svg";
 
+import styles from "@/asset/scss/logo.module.scss";
+
 const FlagColors: Array<FlagColor> = [
     {
         name: "france",
@@ -66,8 +68,7 @@ export interface AppLogoInterface {
     loaderLoop?: boolean;
     loaderTransitionDuration?: number;
     allowClick?: boolean;
-
-    // Not implemented yet
+    hasHoverEffect?: boolean;
     startsWith?: FlagColorCode | 'any';
     displayedCountries?: Array<FlagColorCode> | 'any';
 }
@@ -79,7 +80,7 @@ export type FlagColor = {
 };
 
 
-const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any" }: AppLogoInterface) => {
+const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any", hasHoverEffect = false }: AppLogoInterface) => {
 
     if (asLoader) allowClick = false;
     if (startsWith !== 'any' && !displayedCountries.includes(startsWith)) throw new Error('Starts with flag color not in displayed countries');
@@ -234,13 +235,14 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
         <>
             { asLoader ? (
                 <FranceCustomFlagLoader
+                    id={styles.appLogoSvg}
+                    className={`${ className } ${ (hasHoverEffect === true) && styles.hasHOver } ${styles.loader} rounded-lg border-black border-2`}
                     ref={logo}
-                    className={`${ className } rounded-lg border-black border-2`} 
                 />) : (
                 <FranceCustomFlag
-                    style={{ cursor: 'pointer'}}
+                    id={styles.appLogoSvg}
+                    className={`${ className } ${ (hasHoverEffect === true) && styles.hasHOver } rounded-lg border-black border-2`} 
                     ref={logo}
-                    className={`${ className } rounded-lg border-black border-2`} 
                 />
             )}
         </>
