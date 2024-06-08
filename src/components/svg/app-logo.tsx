@@ -2,12 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-import FranceCustomFlag from "@/asset/img/general/custom-french-flag.svg";
-import FranceCustomFlagLoader from "@/asset/img/general/custom-flag-loader.svg";
-
 import styles from "@/asset/scss/logo.module.scss";
 
-const FlagColors: Array<FlagColor> = [
+export const FlagColors: Array<FlagColor> = [
     {
         name: "france",
         code: "fr",
@@ -64,11 +61,15 @@ export type FlagColorCode = 'fr' | 'be' | 'ro' | 'it' | 'ie' | 'ci' | 'ng' | 'mx
 
 export interface AppLogoInterface {
     className?: string;
+
     asLoader?: boolean;
     loaderLoop?: boolean;
-    loaderTransitionDuration?: number;
     allowClick?: boolean;
+    loaderTransitionDuration?: number;
+
     hasHoverEffect?: boolean;
+    hasLightBackground?: boolean;
+
     startsWith?: FlagColorCode | 'any';
     displayedCountries?: Array<FlagColorCode> | 'any';
 }
@@ -79,13 +80,14 @@ export type FlagColor = {
     colors: Array<string>
 };
 
+// TODO : Insert has light background
 
-const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any", hasHoverEffect = false }: AppLogoInterface) => {
+const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any", hasHoverEffect = false, hasLightBackground = false }: AppLogoInterface) => {
 
     if (asLoader) allowClick = false;
     if (startsWith !== 'any' && !displayedCountries.includes(startsWith)) throw new Error('Starts with flag color not in displayed countries');
 
-    const logo = useRef<SVGElement | null>(null);
+    const orderedPaths = useRef<SVGPathElement[]>([]);
 
     const invertFill = (path: SVGPathElement) => {
         const fill: string | null = path.getAttribute('fill');
@@ -103,20 +105,7 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
     }
 
     useEffect(() => {
-        if (!logo.current) return console.error('SVG Element not found');
-
-        const unorderedPaths: NodeListOf<SVGPathElement> = logo.current?.querySelectorAll('path');
-        if (!unorderedPaths) return console.error('No paths found in logo');
-
-        const orderedPaths: SVGPathElement[] = Array.from(unorderedPaths).sort((a, b) => {
-            const aClass: string | null = a.getAttribute('class');
-            const bClass: string | null = b.getAttribute('class');
-            if (!aClass || !bClass) return 0;
-
-            const aClassIndex: number = parseInt(aClass.split('logo-path-')[1]);
-            const bClassIndex: number = parseInt(bClass.split('logo-path-')[1]);
-            return aClassIndex - bClassIndex;
-        });
+        if (orderedPaths.current.length === 0) return console.error('No path found');
 
         let interval: NodeJS.Timeout | null = null;
         let isLoadingWayForward: boolean = true;
@@ -164,14 +153,14 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                                 pathIndex = 0;
                                 break;
                             case false:
-                                pathIndex = orderedPaths.length - 1;
+                                pathIndex = orderedPaths.current.length - 1;
                                 break;
                         }
                         prevPathIndex = null;
-                    } else if (pathIndex === orderedPaths.length - 1 && isLoadingWayForward) {
+                    } else if (pathIndex === orderedPaths.current.length - 1 && isLoadingWayForward) {
                         isLoadingWayForward = false;
                         pathIndex = null;
-                        prevPathIndex = orderedPaths.length - 1;
+                        prevPathIndex = orderedPaths.current.length - 1;
                     } else if (pathIndex === 0 && !isLoadingWayForward) {
                         isLoadingWayForward = true;
                         pathIndex = null;
@@ -179,17 +168,17 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                     } else {
                         if (isLoadingWayForward) {
                             pathIndex++;
-                            prevPathIndex = pathIndex === 0 ? orderedPaths.length - 1 : pathIndex - 1;
+                            prevPathIndex = pathIndex === 0 ? orderedPaths.current.length - 1 : pathIndex - 1;
                         } else { 
                             pathIndex--;
-                            prevPathIndex = pathIndex === orderedPaths.length - 1 ? 0 : pathIndex + 1;
+                            prevPathIndex = pathIndex === orderedPaths.current.length - 1 ? 0 : pathIndex + 1;
                         }
                     }
                 } else {
                     if (pathIndex === null) {
                         pathIndex = 0;
                         prevPathIndex = null;
-                    } else if (pathIndex === orderedPaths.length - 1) {
+                    } else if (pathIndex === orderedPaths.current.length - 1) {
                         prevPathIndex = pathIndex;
                         pathIndex = null;
                     } else {
@@ -198,10 +187,10 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                     }
                 }
 
-                (pathIndex !== null) && orderedPaths[pathIndex]?.setAttribute('data-fill', currentFlagColor!.colors[pathIndex]);
+                (pathIndex !== null) && orderedPaths.current[pathIndex]?.setAttribute('data-fill', currentFlagColor!.colors[pathIndex]);
 
-                (pathIndex !== null) && invertFill(orderedPaths[pathIndex]);
-                (prevPathIndex !== null) && invertFill(orderedPaths[prevPathIndex]);
+                (pathIndex !== null) && invertFill(orderedPaths.current[pathIndex]);
+                (prevPathIndex !== null) && invertFill(orderedPaths.current[prevPathIndex]);
 
                 if (pathIndex === null) {
                     (interval !== null) && clearInterval(interval);
@@ -223,29 +212,59 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
 
             interval = setInterval(intervalFunction, loaderTransitionDuration);
             
-        } else if (allowClick) orderedPaths.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
+        } else if (allowClick) orderedPaths.current.forEach((path) => path.addEventListener('click', fromLogotoggleFill));
 
         return () => {
-            if (!asLoader) orderedPaths.forEach((path) => path.removeEventListener('click', fromLogotoggleFill));
+            if (!asLoader) orderedPaths.current.forEach((path) => path.removeEventListener('click', fromLogotoggleFill));
             if (interval) clearInterval(interval);
         };
     }, []);
 
     return (
-        <>
-            { asLoader ? (
-                <FranceCustomFlagLoader
-                    id={styles.appLogoSvg}
-                    className={`${ className } ${ (hasHoverEffect === true) && styles.hasHOver } ${styles.loader} rounded-lg border-black border-2`}
-                    ref={logo}
-                />) : (
-                <FranceCustomFlag
-                    id={styles.appLogoSvg}
-                    className={`${ className } ${ (hasHoverEffect === true) && styles.hasHOver } rounded-lg border-black border-2`} 
-                    ref={logo}
-                />
-            )}
-        </>
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            id={styles.appLogoSvg} 
+            viewBox="0 0 640 480" 
+            className={`${ className } ${ (hasHoverEffect === true) && styles.hasHover } ${asLoader && styles.loader} rounded-lg border-black border-2`}>
+            <defs>
+                <pattern 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    id="emptyPathImg" 
+                    patternUnits="userSpaceOnUse" 
+                    width="400"
+                    height="400">
+                    <image 
+                        xmlnsXlink="http://www.w3.org/1999/xlink" 
+                        xlinkHref={`/images/${hasLightBackground ? 
+                            `png-background` 
+                            : `png-background-grey`
+                        }.jpg`} 
+                        x="0" 
+                        y="0"
+                        width="400" 
+                        height="400">
+                    </image>
+                </pattern>
+            </defs>
+            <path 
+                fill={asLoader ? `url(#emptyPathImg)` : `#fff`} 
+                data-fill={asLoader ? undefined : `url(#emptyPathImg)`} 
+                d="M0 0h640v480H0z"
+                ref={path => { if (path !== null) orderedPaths.current[1] = path}}>
+            </path>
+            <path
+                fill={`url(#emptyPathImg)`}
+                data-fill={asLoader ? undefined : `#000091`} 
+                d="M0 0h213.3v480H0z"
+                ref={path => { if (path !== null) orderedPaths.current[0] = path}}>
+            </path>
+            <path 
+                fill={asLoader ? `url(#emptyPathImg)` : `#e1000f`} 
+                data-fill={asLoader ? undefined : `url(#emptyPathImg)`} 
+                d="M426.7 0H640v480H426.7z"
+                ref={path => { if (path !== null) orderedPaths.current[2] = path}}>
+            </path>
+        </svg>
     );
 }
 
