@@ -5,16 +5,17 @@
     }
 
     path {
+
         stroke: #000;
         stroke-width: 10;
 
-
-        &.hasHover[fill="url(#emptyPathImg)"]:hover {
-            filter: brightness(80%);
-            -webkit-filter: brightness(80%);
-        }
-        
         &.hasHover {
+
+            &[fill="url(#emptyPathImg)"]:hover {
+                filter: brightness(80%);
+                -webkit-filter: brightness(80%);
+            }
+
             &[fill="#ffffff"],
             &[fill="#FFFFFF"],
             &[fill="#FFF"],
@@ -25,11 +26,13 @@
                     fill: rgb(228, 228, 228);
                 }
             }
+
             &:hover {
                 filter: rgba(128, 128, 128, 0.4);
                 filter: grayscale(40%);
                 -webkit-filter: grayscale(40%);
             }
+
         }
     }
 }
