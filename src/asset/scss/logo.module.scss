@@ -1,11 +1,13 @@
 #appLogoSvg {
+
+    &:not(.loader) {
+        cursor: pointer;
+    }
+
     path {
         stroke: #000;
         stroke-width: 10;
 
-        &:not(.loader) {
-            cursor: pointer;
-        }
 
         &.hasHover[fill="url(#emptyPathImg)"]:hover {
             filter: brightness(80%);
