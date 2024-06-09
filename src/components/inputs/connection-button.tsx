@@ -1,5 +1,3 @@
-
-
 import Button from "@/components/inputs/button";
 import { MouseEventHandler } from "react";
 
