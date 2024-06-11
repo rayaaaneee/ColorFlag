@@ -4,6 +4,7 @@ import { ChangeEventHandler, useState } from "react";
 
 export interface InputTextProps {
     placeholder?: string;
+    className?: string;
     value?: string;
     id?: string;
     onChange?: ChangeEventHandler<HTMLInputElement>;
@@ -12,7 +13,7 @@ export interface InputTextProps {
     mainColor?: boolean;
 }
 
-const InputText = ({disabled = false, id = undefined, mainColor = false, type="text", value = undefined, placeholder = undefined, onChange = undefined}: InputTextProps) => {
+const InputText = ({disabled = false, className = "", id = undefined, mainColor = false, type="text", value = undefined, placeholder = undefined, onChange = undefined}: InputTextProps) => {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -27,7 +28,7 @@ const InputText = ({disabled = false, id = undefined, mainColor = false, type="t
                     </svg>);
                 break;
             case "email":
-                svg = (<svg className="w-4 h-4 text-gray-400" aria-hidden="true"     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                svg = (<svg className="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
                         <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
                         <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
                     </svg>);
@@ -44,9 +45,9 @@ const InputText = ({disabled = false, id = undefined, mainColor = false, type="t
                     { getIcon(type) }
                 </div>
             ) }
-            <input id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} className={`${ mainColor ? 'bg-main' : 'bg-scnd' } text-white text-sm rounded-lg block w-full ${ (type !== 'password') ? 'ps-10' : 'pe-10' } p-2.5`} placeholder={placeholder} />
+            <input id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} className={`${className} ${ mainColor ? 'bg-main' : 'bg-scnd' } focus:outline-none text-white text-sm rounded-lg block w-full ${ (type !== 'password') ? 'ps-10' : 'pe-10' } p-2.5`} placeholder={placeholder} />
             { (type === "password") &&  (
-                <button onClick={togglePasswordVisibility} type="button" className="absolute top-0 end-0 p-3.5 rounded-e-md">
+                <button onClick={togglePasswordVisibility} type="button" className="absolute top-0 h-full end-0 p-3.5 rounded-e-md">
                     <svg className="flex-shrink-0 size-3.5 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path className={`${isPasswordVisible && "hidden"}`} d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
                         <path className={`${isPasswordVisible && "hidden"}`} d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>

@@ -1,7 +1,4 @@
-import FacebookConnectionButton from '@/components/inputs/facebook-connection-button';
-import GithubConnectionButton from '@/components/inputs/github-connection-button';
-import GoogleConnectionButton from '@/components/inputs/google-connection-button';
-import React from 'react'
+import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
 
 const Page = () => {
     return (
