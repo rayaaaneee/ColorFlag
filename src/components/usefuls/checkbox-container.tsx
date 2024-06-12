@@ -37,7 +37,7 @@ const CheckboxContainer = ({ label, size = "md", hasBackground = false, defaultC
     
     return (
         <div className={`${ className } flex items-center ${ hasBackground && "bg-main py-3 px-5" } rounded-lg`}>
-            <Checkbox defaultChecked={defaultChecked} onChange={onChange} id={id} checked={checked} />
+            <Checkbox defaultChecked={defaultChecked} size={size} onChange={onChange} id={id} checked={checked} />
             <label htmlFor={id} className={`ms-2 ${getFontSize()} ${ hasBackground ? 'text-gray-300' : 'text-gray-900' }`}>{ label }</label>
         </div>
     );
