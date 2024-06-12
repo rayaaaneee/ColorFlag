@@ -162,4 +162,6 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
     )
 });
 
+InputText.displayName = "InputText";
+
 export default InputText;

@@ -18,4 +18,6 @@ const CustomLink = forwardRef(({ href, children = undefined, className = "", onC
     )
 });
 
+CustomLink.displayName = "CustomLink";
+
 export default CustomLink;

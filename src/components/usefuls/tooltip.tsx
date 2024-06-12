@@ -25,16 +25,22 @@ export interface TooltipInterface {
 const Tooltip = ({ children, text, position = "top", forceShow = false, disabled = false, className = "", tooltipClassName = "", type = "default", hasIcon = false }: TooltipInterface) => {
 
     const getPositionClasses = (): string => {
+        let classes = '';
         switch (position) {
             case 'top':
-                return 'top-[-4px] left-1/2 transform -translate-x-1/2 -translate-y-full';
+                classes = 'top-[-4px] left-1/2 transform -translate-x-1/2 -translate-y-full';
+                break;
             case 'bottom':
-                return 'bottom-[-4px] left-1/2 transform -translate-x-1/2 translate-y-full';
+                classes = 'bottom-[-4px] left-1/2 transform -translate-x-1/2 translate-y-full';
+                break;
             case 'left':
-                return 'left-[-4px] top-1/2 transform -translate-x-full -translate-y-1/2';
+                classes = 'left-[-4px] top-1/2 transform -translate-x-full -translate-y-1/2';
+                break;
             case 'right':
-                return 'right-[-4px] top-1/2 transform translate-x-full -translate-y-1/2';
+                classes = 'right-[-4px] top-1/2 transform translate-x-full -translate-y-1/2';
+                break;
         }
+        return classes;
     }
 
     const getTooltipTypeClasses = (): string => {
