@@ -7,9 +7,9 @@ import { FormEventHandler, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import AppLogo from "@/components/svg/app-logo";
 import HeadingOne from "@/components/usefuls/heading-one";
-import Checkbox from "@/components/inputs/checkbox";
 import CheckboxContainer from "@/components/usefuls/checkbox-container";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
+import CustomLink from "@/components/usefuls/custom-link";
 
 export interface SignInComponentProps {
 
@@ -17,18 +17,18 @@ export interface SignInComponentProps {
 
 const SignInComponent = ({}: SignInComponentProps) => {
 
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const usernameInput = useRef<HTMLInputElement>(null);
+    const passwordInput = useRef<HTMLInputElement>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-        if (!username) {
+        if (!usernameInput.current?.value) {
           toast.error("Please enter a valid username");
           return;
         }
-        if (!password) {
+        if (!passwordInput.current?.value) {
           toast.error("Please enter a valid password");
           return;
         }
@@ -42,7 +42,7 @@ const SignInComponent = ({}: SignInComponentProps) => {
                 <AppLogo loaderTransitionDuration={120} className="w-44" asLoader loaderLoop />
             ) : (
                 <>
-                    <HeadingOne>Sign in to your account</HeadingOne>
+                    <HeadingOne className={"text-center"}>Sign in to your account</HeadingOne>
                     <p>Login using social networks</p>
                     <div className="flex gap-4 p-3 w-fit h-fit">
                         <GoogleConnectionButton />
@@ -51,18 +51,17 @@ const SignInComponent = ({}: SignInComponentProps) => {
                     </div>
                     <p>Or</p>
                     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-                        <InputText onChange={(e) => setUsername(e.currentTarget.value)} placeholder="Username" type="username" />
-                        <InputText onChange={(e) => setPassword(e.currentTarget.value)} placeholder="Password" type="password" />
-                        {/* <div className="flex flex-row gap-2">
-                            <Checkbox id="remember-me"></Checkbox>
-                            <label htmlFor="remember-me">Remember me</label>
-                        </div> */}
-                        <CheckboxContainer label="Remember me" id="remember-me" />
-                        <Button type="submit" customs={{ colorClass: "bg-main", textColorClass: "text-white", hasTextUpperCase: false }}>Sign In</Button>
+                        <InputText size="xl" mainColor ref={usernameInput} placeholder="Username" type="username" />
+                        <InputText size="xl" mainColor ref={passwordInput} placeholder="Password" type="password" />
+                        <CheckboxContainer size="xl" label="Remember me" id="remember-me" />
+                        <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
+                        <CheckboxContainer size="md" label="Remember me" id="remember-me" />
+                        <CheckboxContainer size="sm" label="Remember me" id="remember-me" />
+                        <Button type="submit" customs={{ colorClass: "bg-main", textColorClass: "text-white", hasTextUpperCase: false, borderRadiusClass: "rounded-full", fontSizeClass: "text-md" }}>Sign In</Button>
+                        <CustomLink href="/forgot-password">
+                            Forgot password ?
+                        </CustomLink>
                     </form>
-                    <Link href="/forgot-password">
-                        Forgot password ?
-                    </Link>
                 </>
             ) }
         </div>

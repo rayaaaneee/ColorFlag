@@ -14,6 +14,7 @@ export interface Customs {
     hasTextUpperCase?: boolean;
     zIndexClass?: number;
     borderRadiusClass?: string;
+    fontSizeClass?: string;
 }
 export interface ButtonProps {
     className?: string,
@@ -49,7 +50,8 @@ const Button = ({ onClick, children = "OK", className="", title = undefined, cus
                 ${disabled ? `cursor-not-allowed` : `cursor-pointer`}
                 ${customs?.borderRadiusClass ? customs.borderRadiusClass : "rounded-lg"}
                 ${(customs === undefined || customs?.hasTextUpperCase === true || customs?.hasTextUpperCase === undefined) && `uppercase`}
-                overflow-hidden relative tracking-wide flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans text-sm font-medium  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
+                ${customs?.fontSizeClass ? customs.fontSizeClass : "text-sm"}
+                overflow-hidden relative tracking-wide flex flex-row items-center justify-center gap-1 select-none text-center align-middle font-sans font-medium  transition-all focus:opacity-[0.85] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50`}
             type={ type }
             >
             { children }

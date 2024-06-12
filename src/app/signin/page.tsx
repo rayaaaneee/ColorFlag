@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import SignUpComponent from "./signup-component";
-import SignInComponent from "./signin-component";
+import SignUpComponent from "./_components/signup-component";
+import SignInComponent from "./_components/signin-component";
 
 export const metadata: Metadata = {
     title: "Sign In",
