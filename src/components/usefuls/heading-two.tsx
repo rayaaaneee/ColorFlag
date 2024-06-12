@@ -7,7 +7,7 @@ export interface HeadingOneProps {
 
 const HeadingOne = ({ children = undefined, className = "" }: HeadingOneProps) => {
   return (
-    <h1 className={`${className} text-7xl font-bold mb-5`}>{ children }</h1>
+    <h2 className={`${className}`}>{ children }</h2>
   )
 }
 

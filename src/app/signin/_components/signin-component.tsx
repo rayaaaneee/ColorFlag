@@ -53,10 +53,7 @@ const SignInComponent = ({}: SignInComponentProps) => {
                     <form onSubmit={onSubmit} className="flex flex-col gap-4">
                         <InputText size="xl" mainColor ref={usernameInput} placeholder="Username" type="username" />
                         <InputText size="xl" mainColor ref={passwordInput} placeholder="Password" type="password" />
-                        <CheckboxContainer size="xl" label="Remember me" id="remember-me" />
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
-                        <CheckboxContainer size="md" label="Remember me" id="remember-me" />
-                        <CheckboxContainer size="sm" label="Remember me" id="remember-me" />
                         <Button type="submit" customs={{ colorClass: "bg-main", textColorClass: "text-white", hasTextUpperCase: false, borderRadiusClass: "rounded-full", fontSizeClass: "text-md" }}>Sign In</Button>
                         <CustomLink href="/forgot-password">
                             Forgot password ?

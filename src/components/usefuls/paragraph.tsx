@@ -1,12 +1,13 @@
 import ChildrenType from "@/useful/types/children-type";
 
 export interface ParagraphPropsInterface { 
-    children?: ChildrenType
+    children?: ChildrenType,
+    className?: string,
 }
 
-const Paragraph = ({ children = undefined }: ParagraphPropsInterface) => {
+const Paragraph = ({ children = undefined, className = "" }: ParagraphPropsInterface) => {
   return (
-    <p>{ children }</p>
+    <p className={ className }>{ children }</p>
   )
 }
 

@@ -43,10 +43,10 @@ const Checkbox = ({ checked = undefined, size = "md", id = undefined, defaultChe
                 className = "size-3.5";
                 break;
             case "lg":
-                className = "size-4.5";
+                className = "size-4";
                 break;
             case "xl":
-                className = "size-5.5";
+                className = "size-5";
                 break;
         }
         return className;
