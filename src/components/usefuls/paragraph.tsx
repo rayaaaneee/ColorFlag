@@ -7,7 +7,7 @@ export interface ParagraphPropsInterface {
 
 const Paragraph = ({ children = undefined, className = "" }: ParagraphPropsInterface) => {
   return (
-    <p className={ className }>{ children }</p>
+    <p className={ `${className} mb-3 text-gray-500` }>{ children }</p>
   )
 }
 

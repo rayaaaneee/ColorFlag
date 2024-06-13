@@ -2,6 +2,7 @@
 
 import SizeType from "@/useful/types/size-type";
 import { ChangeEventHandler, ForwardedRef, forwardRef, useState } from "react";
+import { MdKey } from "react-icons/md";
 
 export interface InputTextProps {
     placeholder?: string;
@@ -37,6 +38,8 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
                         <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
                     </svg>);
                 break;
+            case "password":
+                svg = (<MdKey className={defaultClassName} />);
         }
         return svg;
     }
@@ -67,8 +70,6 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
                 className = "size-4";
                 break;
             case "md":
-                className = "size-5";
-                break;
             case "lg":
                 className = "size-5";
                 break;
@@ -105,13 +106,11 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
                 className = "pl-2.5";
                 break;
             case "md":
-                className = "pl-3";
-                break;
             case "lg":
                 className = "pl-3";
                 break;
             case "xl":
-                className = "pl-3";
+                className = "pl-4";
                 break;
         }
         return className;
@@ -124,30 +123,44 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
                 className = "ps-8";
                 break;
             case "md":
-                className = "ps-10";
-                break;
             case "lg":
                 className = "ps-10";
                 break;
             case "xl":
-                className = "ps-11";
+                className = "ps-12";
                 break;
         }
         return className;
     }
 
+    const getInputPaddingRight = (): string => {
+        let className: string = "";
+        switch(size) {
+            case "sm":
+                className = "pe-10";
+                break;
+            case "md":
+            case "lg":
+                className = "pe-11";
+                break;
+            case "xl":
+                className = "pe-12";
+                break;
+        }
+        return className;
+    }
 
     return (
         <div className="relative">
-            { (!["password", "text"].includes(type)) && (
+            { (!["text"].includes(type)) && (
                 <div className={`${(mainColor === true) ? 'bg-main' : 'bg-sncd' } ${getIconPaddingLeft()} h-full absolute flex items-center justify-center pointer-events-none rounded-tl-full rounded-bl-full`}>
                     { getIcon(type) }
                 </div>
             ) }
             <input ref={ref} id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} 
-                className={`${className} ${ mainColor ? 'bg-main' : 'bg-scnd' } ${getSize()} ${getFontSize()} focus:outline-none text-white rounded-full block w-full ${ (type !== 'password') ? getInputPaddingStart() : 'pl-5 pe-14' } p-2.5`} placeholder={placeholder} />
+                className={`${className} ${ mainColor ? 'bg-main' : 'bg-scnd' } ${getSize()} ${getFontSize()} ${type === "password" && getInputPaddingRight() } focus:outline-none text-white rounded-full block w-full pl-5 ${getInputPaddingStart()} p-2.5`} placeholder={placeholder} />
             { (type === "password") &&  (
-                <button onClick={togglePasswordVisibility} type="button" className="absolute top-0 h-full end-0 p-3.5 rounded-e-full flex items-center justify-center">
+                <button onClick={togglePasswordVisibility} type="button" className={`absolute top-0 h-full end-0 px-3.5 rounded-e-full flex items-center justify-center`}>
                     <svg className={`flex-shrink-0 ${getIconSize()} text-white`} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path className={`${isPasswordVisible && "hidden"}`} d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
                         <path className={`${isPasswordVisible && "hidden"}`} d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
