@@ -4,13 +4,13 @@ import InputText from "@/components/inputs/input-text";
 import Button from "@/components/inputs/button";
 import { FormEventHandler, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import AppLogo from "@/components/svg/app-logo";
 import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
 import CheckboxContainer from "@/components/usefuls/checkbox-container";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
 import CustomLink from "@/components/usefuls/custom-link";
-import Paragraph from "@/components/usefuls/paragraph";
 import Bar from "@/components/usefuls/bar";
+import LeftSide from "../../_components/left-side";
+import SignLoader from "../../_components/sign-loader";
 
 export interface SignInComponentProps {
 
@@ -38,9 +38,9 @@ const SignInComponent = ({}: SignInComponentProps) => {
     }
 
     return (
-        <div className="bg-white bg-opacity-70 flex flex-col items-center justify-center">
+        <LeftSide>
             { isLoading ? (
-                <AppLogo loaderTransitionDuration={120} className="w-44" asLoader loaderLoop />
+                <SignLoader />
             ) : (
                 <>
                     <HeadingOne className={"text-center font-bold"}>Sign in to your account</HeadingOne>
@@ -50,19 +50,19 @@ const SignInComponent = ({}: SignInComponentProps) => {
                         <FacebookConnectionButton />
                         <GithubConnectionButton />
                     </div>
-                    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-72">
+                    <form onSubmit={onSubmit} className="flex flex-col gap-3 w-72">
                         <Bar barClassName="border-gray-400">
-                            <HeadingThree className="mb-0 font-semibold" colorClass="text-gray-400">Or</HeadingThree>
+                            <HeadingThree className="mb-0 font-semibold text-gray-400">Or</HeadingThree>
                         </Bar>
                         <InputText size="xl" mainColor ref={usernameInput} placeholder="Username" type="username" />
                         <InputText size="xl" mainColor ref={passwordInput} placeholder="Password" type="password" />
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
-                        <Button type="submit" customs={{ colorClass: "bg-main", textColorClass: "text-white", hasTextUpperCase: false, borderRadiusClass: "rounded-full", fontSizeClass: "text-md" }}>Sign In</Button>
+                        <Button type="submit" className="bg-main text-white rounded-full text-md">Sign In</Button>
                         <CustomLink href="/forgot-password">Forgot password ?</CustomLink>
                     </form>
                 </>
             ) }
-        </div>
+        </LeftSide>
     )
 }
 

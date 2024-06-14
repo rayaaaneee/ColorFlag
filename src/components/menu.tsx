@@ -21,6 +21,7 @@ interface MenuItem {
     text: string;
     visible?: boolean | undefined;
     href?: string | undefined;
+    aliases?: string[] | undefined;
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -51,6 +52,7 @@ const Menu = () => {
         {
             icon: <PiSignInBold { ...iconAttr }/>,
             href: "/signin",
+            aliases: ["/signup"],
             text: "Sign in",
         },
         {
@@ -75,7 +77,7 @@ const Menu = () => {
                 <Image draggable={false} alt="app-icon" src={`/logo.png`} width={100} height={100} className="w-3/5" />
             </Link>
             {menuItems.map((el: MenuItem, index: number) => {
-                const active: boolean = ((pathname !== null) && (el.href !== undefined) && (pathname.includes(el.href)))
+                const active: boolean = ((pathname !== null) && (el.href !== undefined) && ((pathname.includes(el.href)) || (el.aliases !== undefined && el.aliases.some((alias) => pathname.includes(alias))))); 
                 const className: string = `p-2 bg-main hoverable rounded-lg flex ${active ? "selected" : ""}`;
                 if (el.visible === false) return null;
                 return (

@@ -37,7 +37,7 @@ const SubPage = ({countries}: SubPagePropsInterface) => {
                 isSearcheable={true}
                 setter={setSelectedCountry as Setter}
             />
-            <Button onClick={goToPage} customs={{ zIndexClass: 0 }} >OK</Button>
+            <Button onClick={goToPage} className="z-0" >OK</Button>
         </>            
     );
 }

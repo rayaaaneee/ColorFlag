@@ -41,15 +41,9 @@ const CardLink = ({ className = "", element, heightClass = "h-[27rem]" }: CardLi
             <div className="w-full flex items-end justify-end">
                 <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 font-bold py-2 px-4 rounded-lg">
                     <Button 
-                        className="w-full h-full" 
-                        customs={{ 
-                            colorClass: "bg-white", 
-                            hoverColorClass: "hover:bg-gray-200", 
-                            textColorClass: "text-gray-800", 
-                            paddingClass: "py-2 px-3",
-                            hasShadow: false,
-                        }
-                    }>
+                        className="w-full h-full bg-white hover:bg-gray-200 text-gray-800 py-2 px-3"
+                        hasShadow={false}
+                    >
                         <>
                             <p>Play</p>
                             <MdOutlineNavigateNext className="text-2xl" />

@@ -5,6 +5,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { MdInfo } from "react-icons/md";
 import { TiWarning } from "react-icons/ti";
 import { RiErrorWarningFill } from "react-icons/ri";
+import cn from "@/lib/utils/cn";
 
 export type AlertPositionType = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -95,7 +96,7 @@ const Alert = ({ children = undefined, position = "top-right", type = "default",
     }
 
     return (
-        <div className={`${(disabled || !opened) ? "opacity-0 pointer-events-none" : "opacity-100" } flex  flex-row items-center fixed z-[101] ${getAlertPositionClasses()} ${getAlertTypeClasses()} block w-fit p-6 mb-4 text-base leading-5 text-white rounded-lg font-regular transition-opacity duration-300`}>
+        <div className={cn("flex flex-row items-center fixed z-[101] w-fit p-6 mb-4 text-base leading-5 text-white rounded-lg font-regular transition-opacity duration-300", getAlertPositionClasses(), getAlertTypeClasses(), (disabled || !opened) ? "opacity-0 pointer-events-none" : "opacity-100")}>
             { closeable && 
                 (<button ref={closeButton} onClick={closeAlert} className="w-[20px] h-[20px] absolute flex items-center justify-center top-2 right-2 p-1 rounded-full text-white hover:bg-white hover:text-black">&times;</button>) 
             }

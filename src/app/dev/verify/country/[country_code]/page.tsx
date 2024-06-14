@@ -358,7 +358,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
                     devMode={ true }
                 >
                     <Tooltip text='See original' position='top'>
-                        <Button onClick={e => setOriginalFlagOpened(bool => !bool)} customs={{ borderRadiusClass: "rounded-full", paddingClass: "p-1" }}>
+                        <Button onClick={e => setOriginalFlagOpened(bool => !bool)} className={"rounded-full p-1"}>
                             <IoMdInformation className='text-4xl'/>
                         </Button>
                     </Tooltip>

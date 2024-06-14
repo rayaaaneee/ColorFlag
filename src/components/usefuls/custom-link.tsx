@@ -1,3 +1,4 @@
+import cn from "@/lib/utils/cn";
 import ChildrenType from "@/useful/types/children-type";
 import { Url } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
@@ -12,7 +13,7 @@ export interface CustomLinkPropsInterface {
 
 const CustomLink = forwardRef(({ href, children = undefined, className = "", onClick = undefined  }: CustomLinkPropsInterface, ref: ForwardedRef<HTMLAnchorElement>) => {
     return (
-        <Link ref={ref} href={href} className={`${className} font-medium w-full text-gray-600 hover:text-gray-700 hover:underline`} onClick={onClick}>
+        <Link ref={ref} href={href} className={cn("font-medium w-full text-gray-600 hover:text-gray-700 hover:underline", className)} onClick={onClick}>
             { children }
         </Link>
     )

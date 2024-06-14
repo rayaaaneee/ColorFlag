@@ -1,3 +1,4 @@
+import cn from "@/lib/utils/cn";
 import ChildrenType from "@/useful/types/children-type"
 
 export interface BarPropsInterface {
@@ -8,10 +9,10 @@ export interface BarPropsInterface {
 
 const Bar = ({ children = undefined, className = "", barClassName = "" }: BarPropsInterface) => {
 
-    const defaultBarClassName = `${ barClassName } w-1/2 border-gray-300 border-[1.5px] rounded-full`;
+    const defaultBarClassName = cn("w-1/2 border-gray-300 border-[1.5px] rounded-full", barClassName);
 
     return (
-        <div className={`${ className } w-full flex flex-row items-center justify-center gap-2`}>
+        <div className={cn("w-full flex flex-row items-center justify-center gap-2 text-nowrap", className)}>
             <hr className={defaultBarClassName} />
             { children }
             <hr className={defaultBarClassName} />

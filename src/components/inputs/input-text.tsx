@@ -1,5 +1,6 @@
 "use client";
 
+import cn from "@/lib/utils/cn";
 import SizeType from "@/useful/types/size-type";
 import { ChangeEventHandler, ForwardedRef, forwardRef, useState } from "react";
 import { MdKey } from "react-icons/md";
@@ -7,6 +8,7 @@ import { MdKey } from "react-icons/md";
 export interface InputTextProps {
     placeholder?: string;
     className?: string;
+    inputClassName?: string;
     size?: SizeType;
     value?: string;
     id?: string;
@@ -16,7 +18,7 @@ export interface InputTextProps {
     mainColor?: boolean;
 }
 
-const InputText = forwardRef(({disabled = false, size = "md", className = "", id = undefined, mainColor = false, type="text", value = undefined, placeholder = undefined, onChange = undefined}: InputTextProps, ref: ForwardedRef<HTMLInputElement>) => {
+const InputText = forwardRef(({disabled = false, size = "md", className = "", inputClassName = "", id = undefined, mainColor = false, type="text", value = undefined, placeholder = undefined, onChange = undefined}: InputTextProps, ref: ForwardedRef<HTMLInputElement>) => {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -110,7 +112,7 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
                 className = "pl-3";
                 break;
             case "xl":
-                className = "pl-4";
+                className = "pl-3.5";
                 break;
         }
         return className;
@@ -151,17 +153,32 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", id
     }
 
     return (
-        <div className="relative">
+        <div className={cn("relative", className)}>
             { (!["text"].includes(type)) && (
-                <div className={`${(mainColor === true) ? 'bg-main' : 'bg-sncd' } ${getIconPaddingLeft()} h-full absolute flex items-center justify-center pointer-events-none rounded-tl-full rounded-bl-full`}>
+                <div className={cn(
+                    "h-full absolute flex items-center justify-center pointer-events-none rounded-tl-full rounded-bl-full",
+                    (mainColor === true) ? 'bg-main' : 'bg-sncd',
+                    getIconPaddingLeft(),
+                )}>
                     { getIcon(type) }
                 </div>
             ) }
             <input ref={ref} id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} 
-                className={`${className} ${ mainColor ? 'bg-main' : 'bg-scnd' } ${getSize()} ${getFontSize()} ${type === "password" && getInputPaddingRight() } focus:outline-none text-white rounded-full block w-full pl-5 ${getInputPaddingStart()} p-2.5`} placeholder={placeholder} />
+                className={cn(
+                    "focus:outline-none text-white rounded-full block w-full pl-5 p-2.5",
+                    mainColor ? 'bg-main' : 'bg-scnd',
+                    getSize(),
+                    getFontSize(),
+                    getInputPaddingStart(),
+                    type === "password" && getInputPaddingRight(),
+                    inputClassName,
+                )} placeholder={placeholder} />
             { (type === "password") &&  (
                 <button onClick={togglePasswordVisibility} type="button" className={`absolute top-0 h-full end-0 px-3.5 rounded-e-full flex items-center justify-center`}>
-                    <svg className={`flex-shrink-0 ${getIconSize()} text-white`} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg className={cn(
+                        "flex-shrink text-white",
+                        getIconSize(),
+                    )} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path className={`${isPasswordVisible && "hidden"}`} d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
                         <path className={`${isPasswordVisible && "hidden"}`} d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
                         <path className={`${isPasswordVisible && "hidden"}`} d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>

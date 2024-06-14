@@ -18,7 +18,7 @@ const EraserButton = ({onClick, tooltipTexts = { hovered: "Clear all", clicked: 
     const [cleared, setCleared] = useState<boolean>(false);
     return (
         <Tooltip className={`${className}`} text={ cleared ? tooltipTexts.clicked : tooltipTexts.hovered }>
-            <Button onMouseLeave={e => setCleared(false)} onClick={e => {setCleared(true);onClick(e)} } customs={{paddingClass: "p-2"}}>
+            <Button onMouseLeave={e => setCleared(false)} onClick={e => {setCleared(true);onClick(e)} } className="p-2">
                 <CiEraser className='w-6 h-6' />
             </Button>
         </Tooltip>

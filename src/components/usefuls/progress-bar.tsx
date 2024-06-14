@@ -1,3 +1,4 @@
+import cn from "@/lib/utils/cn";
 import { useEffect, useState } from "react";
 
 export interface ProgressBarInterface {
@@ -63,7 +64,7 @@ const ProgressBar = ({value, color = "bg-gray-900", colorSync = false, className
     }
 
     return (
-         <div className={`${className} flex-start flex h-2.5 w-full overflow-hidden rounded-full bg-blue-gray-50 font-sans text-xs font-medium bg-slate-900`}>
+         <div className={cn("flex-start flex h-2.5 w-full overflow-hidden rounded-full bg-blue-gray-50 font-sans text-xs font-medium bg-slate-900", className)}>
             <div style={{ width: `${valueState ||0}%` }} className={`transition-all duration-700 flex h-full items-center justify-center overflow-hidden break-all rounded-full ${!colorSync ? color : getSyncColor(valueState)} text-white`}></div>
         </div>
     );

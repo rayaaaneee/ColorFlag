@@ -15,10 +15,9 @@ export interface ButtonGoPlayNextProps<T extends {value:string}> extends ButtonP
     url: string,
     direction?: Direction,
     cannotLoop?: boolean,
-
 }
 
-const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValue, url, direction = Direction.NEXT, customs = undefined, className = "", onClick = undefined, disabled = false, title = undefined, cannotLoop = false }: ButtonGoPlayNextProps<T>) => {
+const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValue, url, direction = Direction.NEXT, className = "", onClick = undefined, disabled = false, title = undefined, cannotLoop = false }: ButtonGoPlayNextProps<T>) => {
 
     const text: string = `Go ${direction === Direction.NEXT ? "next" : "back"}`;
     
@@ -35,7 +34,7 @@ const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValu
     return (
         <>
             { nextElement !== undefined && (
-                <Button title={title} disabled={disabled} customs={customs} className={className} onClick={onClick}>
+                <Button title={title} disabled={disabled} className={className} onClick={onClick}>
                     <Link href={`${url}/${nextElement.value}`} className="flex flex-row items-center justify-center gap-2">
                         {direction === Direction.BACK && (<IoMdArrowRoundBack />)}
                         {text}

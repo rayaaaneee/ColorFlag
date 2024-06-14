@@ -5,18 +5,17 @@ import { MouseEventHandler } from "react";
 
 import Tooltip from '../usefuls/tooltip';
 import Button from "./button";
+import cn from "@/lib/utils/cn";
 
 interface ConnectionButtonProps {
     children?: JSX.Element;
-    colorClassName?: string;
-    hoverColorClassName?: string;
     className?: string;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const ConnectionButton = ({ children = undefined, colorClassName = "bg-main", className, onClick, hoverColorClassName }: ConnectionButtonProps) => {
+const ConnectionButton = ({ children = undefined, className, onClick }: ConnectionButtonProps) => {
     return (
-      <Button onClick={onClick} className={`size-20 ${className}`} customs={{ hoverColorClass: hoverColorClassName, paddingClass: "p-0", colorClass: colorClassName, textColorClass: "text-white", borderRadiusClass: "rounded-full" }}>
+      <Button onClick={onClick} className={cn("size-20 p-0 text-white rounded-full bg-main", className)}>
           { children }
       </Button>
     )
@@ -28,21 +27,21 @@ export interface CustomConnectionButtonProps {
 
 export const GoogleConnectionButton = ({}: CustomConnectionButtonProps) => 
     (<Tooltip text={"Google"}>
-        <ConnectionButton colorClassName="bg-red-500" hoverColorClassName="hover:bg-red-600">
+        <ConnectionButton className="bg-red-500 hover:bg-red-600">
             <FaGoogle className="w-1/3 h-1/3" />
         </ConnectionButton>
     </Tooltip>)
 
 export const GithubConnectionButton = ({}: CustomConnectionButtonProps) => 
     (<Tooltip text={"Github"}>
-        <ConnectionButton colorClassName="bg-main" hoverColorClassName="hover:bg-black">
+        <ConnectionButton className="bg-main hover:bg-black">
             <TbBrandGithubFilled className="w-2/5 h-2/5" />
         </ConnectionButton>
     </Tooltip>)
 
 export const FacebookConnectionButton = ({}: CustomConnectionButtonProps) => 
     (<Tooltip text={"Facebook"}>
-        <ConnectionButton colorClassName="bg-blue-900" hoverColorClassName="hover:bg-blue-950">
+        <ConnectionButton className="bg-blue-900 hover:bg-blue-950">
             <FaFacebookF className="w-1/3 h-1/3" />
         </ConnectionButton>
     </Tooltip>)

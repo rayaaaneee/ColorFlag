@@ -3,6 +3,7 @@ import { MdInfo } from "react-icons/md";
 import { TiWarning } from "react-icons/ti";
 import { RiErrorWarningFill } from "react-icons/ri";
 import ChildrenType from "@/useful/types/children-type";
+import cn from "@/lib/utils/cn";
 
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
@@ -81,9 +82,15 @@ const Tooltip = ({ children, text, position = "top", forceShow = false, disabled
     return (
         <div className={`relative group ${className}`}>
             {children}
-            <div role="tooltip" className={`${getPositionClasses()} ${getTooltipTypeClasses()} absolute z-10 ${(forceShow && !disabled) ? "flex" : "hidden"} ${ !disabled && 'group-hover:flex' } ${tooltipClassName} px-3 py-2 flex-row items-center justify-center gap-2 whitespace-nowrap text-sm font-medium text-white rounded-lg shadow-sm tooltip pointer-events-none`}>
-                {hasIcon && getTooltipIcon()}
-                {text}
+            <div role="tooltip" className={cn(
+                "absolute z-10 px-3 py-2 flex-row items-center justify-center gap-2 whitespace-nowrap text-sm font-medium text-white rounded-lg shadow-sm tooltip pointer-events-none",
+                getPositionClasses(), 
+                getTooltipTypeClasses(), 
+                (forceShow && !disabled) ? "flex" : "hidden", 
+                { "group-hover:flex": !disabled },
+                tooltipClassName)}>
+                    {hasIcon && getTooltipIcon()}
+                    {text}
             </div>
         </div>
     )

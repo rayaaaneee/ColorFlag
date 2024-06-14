@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 
 const SignIn = () => {
     return (
-        <div className="w-full h-full grid grid-cols-[3fr_1fr]">
+        <>
             <SignInComponent />
             <SignUpComponent />
-        </div>
+        </>
     );
 }
 

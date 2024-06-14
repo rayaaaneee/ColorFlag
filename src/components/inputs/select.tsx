@@ -1,12 +1,13 @@
 "use client";
 
-import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { ForwardedRef, MouseEventHandler, forwardRef, useEffect, useRef, useState } from "react";
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 
 import styles from "@/asset/scss/components/search-select.module.scss"
 import replaceAccents from "@/useful/string-treatment/replaceAccents";
 import getPluralWord from "@/useful/string-treatment/getPluralWord";
 import addAnBeforeVowel from "@/useful/string-treatment/addAnBeforeVowel";
+import cn from "@/lib/utils/cn";
 
 export type ElementValue = string | number | boolean | null | undefined;
 
@@ -26,13 +27,14 @@ interface SelectInterface <T extends SelectDataSourceInterface> {
     dataSources: T[],
     isMultiple?: boolean,
     isSearcheable?: boolean,
+    className?: string,
+    id?: string,
     itemName?: string,
     isOpen?: boolean,
-    widthClass?: string,
     setter?: Setter,
 }
 
-const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, widthClass = "w-60", itemName = "item" }: SelectInterface<T>) => {
+const Select = <T extends SelectDataSourceInterface>({ className = "", id = undefined, isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, itemName = "item" }: SelectInterface<T>, ref: ForwardedRef<HTMLDivElement>) => {
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);
@@ -237,7 +239,7 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
     }
 
     return (
-        <div className={`relative group ${ widthClass }`}>
+        <div className={cn("relative group w-60", className)} id={id} ref={ref}>
             <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white bg-main border-gray-300 shadow-sm`}>
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
@@ -252,18 +254,24 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
                 </svg>
             </button>
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
-                <ul ref={dropdownMenu} id="dropdown-menu" className={ `${styles.dropDownMenu} overflow-hidden w-full text-sm right-0 ${ dropdownIsOpen ? 'rounded-b-md' : 'rounded-md' } shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1`}>
+                <ul ref={dropdownMenu} className={cn("overflow-hidden w-full text-sm right-0 shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1", styles.dropDownMenu, dropdownIsOpen ? 'rounded-b-md' : 'rounded-md')}>
                     { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
                         { filteredDataSources.map((item: SelectDataSourceInterface, index: number) => {
                             return (<li 
-                                about={item.name} onClick={ onItemSelect } key={index} value={item.value?.toString()} className={`${ focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden' } ${
+                                about={item.name} 
+                                onClick={ onItemSelect } 
+                                key={index} 
+                                value={item.value?.toString()} 
+                                className={cn(
+                                    "min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible",
+                                    focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden',
                                     (isMultiple ?
                                         ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.value).includes(item.value) && 'selected')
                                         :
                                         ((selectedValue as SelectDataSourceInterface).value === item.value && 'selected')
                                     )
-                                } min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible`}
+                                )}
                                 dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>
                             </li>);
                         }) }
@@ -275,4 +283,4 @@ const Select = <T extends SelectDataSourceInterface>({ isOpen = false, isSearche
     );
 };
 
-export default Select;
+export default forwardRef(Select);

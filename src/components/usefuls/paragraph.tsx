@@ -1,3 +1,4 @@
+import cn from "@/lib/utils/cn";
 import ChildrenType from "@/useful/types/children-type";
 
 export interface ParagraphPropsInterface { 
@@ -7,7 +8,7 @@ export interface ParagraphPropsInterface {
 
 const Paragraph = ({ children = undefined, className = "" }: ParagraphPropsInterface) => {
   return (
-    <p className={ `${className} mb-3 text-gray-500` }>{ children }</p>
+    <p className={ cn("mb-3 text-gray-500", className) }>{ children }</p>
   )
 }
 
