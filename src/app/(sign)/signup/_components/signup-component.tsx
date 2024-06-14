@@ -10,6 +10,9 @@ import { FormEvent, FormEventHandler, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import LeftSide from "../../_components/left-side";
 import SignLoader from "../../_components/sign-loader";
+import { signIn } from "@/lib/auth";
+import SignUp from "@/components/server/sign-up";
+import User from "@/useful/interfaces/user";
 
 export interface SignUpComponentProps {
 
@@ -17,42 +20,50 @@ export interface SignUpComponentProps {
 
 const SignUpComponent = ({}: SignUpComponentProps) => {
 
-    const usernameInput = useRef<HTMLInputElement>(null);
-    const emailInput = useRef<HTMLInputElement>(null);
-    const passwordInput = useRef<HTMLInputElement>(null);
-    const confirmPasswordInput = useRef<HTMLInputElement>(null);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
     
-    const onSignUp: FormEventHandler<HTMLFormElement> = (e: FormEvent<HTMLFormElement>) => {
-
-        if (!usernameInput.current || !emailInput.current || !passwordInput.current || !confirmPasswordInput.current) {
-            toast.error("An unexpected error occurred, please try again later");
-            return;
-        }
+    const onSignUp: FormEventHandler<HTMLFormElement> = async (e: FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
-        if (!usernameInput.current.value) {
+
+        const form: HTMLFormElement = e.currentTarget;
+        const formData: FormData = new FormData(form);
+        
+        const username: string = formData.get("username") as string;
+        const email: string = formData.get("email") as string;
+        const password: string = formData.get("password") as string;
+        const confirmPassword: string = formData.get("confirm-password") as string;
+
+        if (!username) {
             toast.error("Please enter a valid username");
             return;
         }
-        if (!emailInput.current.value) {
+        if (!email) {
             toast.error("Please enter a valid email");
             return;
         }
-        if (!passwordInput.current.value) {
+        if (!password) {
             toast.error("Please enter a valid password");
             return;
         }
-        if (!confirmPasswordInput.current.value) {
+        if (!confirmPassword) {
             toast.error("Please confirm your password");
             return;
         }
-        if (passwordInput.current.value !== confirmPasswordInput.current.value) {
+        if (password !== confirmPassword) {
             toast.error("Passwords do not match");
             return;
         }
+
         setIsLoading(true);
+
+        try {
+            const user: User = await SignUp({username, email, password} as User);
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -65,10 +76,10 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
                     <HeadingTwo className="italic">Start your journey with us !</HeadingTwo>
                     <form onSubmit={onSignUp} className="flex flex-col gap-4 p-3 w-[600px] h-fit">
                         <div className="grid grid-flow-row-dense grid-cols-6 grid-rows-2 w-full gap-4">
-                            <InputText className="col-span-2" mainColor size="xl"  ref={usernameInput} placeholder="Username" type="username" />
-                            <InputText className="col-span-4" mainColor size="xl"  ref={emailInput} placeholder="Email" type="email" />
-                            <InputText className="col-span-3" mainColor size="xl" ref={passwordInput} placeholder="Password" type="password" />
-                            <InputText className="col-span-3" mainColor size="xl" ref={confirmPasswordInput} placeholder="Confirm password" type="password" />
+                            <InputText name="username" className="col-span-2" mainColor size="xl" placeholder="Username" type="username" />
+                            <InputText name="email" className="col-span-4" mainColor size="xl" placeholder="Email" type="email" />
+                            <InputText name="password" className="col-span-3" mainColor size="xl" placeholder="Password" type="password" />
+                            <InputText className="col-span-3" mainColor size="xl" placeholder="Confirm password" name="confirm-password" type="password" />
                         </div>
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
                         <Button type="submit" className="bg-main text-white rounded-full text-md my-2">Sign Up</Button>

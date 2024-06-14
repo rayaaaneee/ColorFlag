@@ -11,6 +11,8 @@ import CustomLink from "@/components/usefuls/custom-link";
 import Bar from "@/components/usefuls/bar";
 import LeftSide from "../../_components/left-side";
 import SignLoader from "../../_components/sign-loader";
+import SignIn from "@/components/server/sign-in";
+import User from "@/useful/interfaces/user";
 
 export interface SignInComponentProps {
 
@@ -18,23 +20,38 @@ export interface SignInComponentProps {
 
 const SignInComponent = ({}: SignInComponentProps) => {
 
-    const usernameInput = useRef<HTMLInputElement>(null);
-    const passwordInput = useRef<HTMLInputElement>(null);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+
         e.preventDefault();
-        if (!usernameInput.current?.value) {
+
+        const form: HTMLFormElement = e.currentTarget;
+        const formData: FormData = new FormData(form);
+
+        const username: string = formData.get("username") as string;
+        const password: string = formData.get("password") as string;
+
+        if (!username) {
           toast.error("Please enter a valid username");
           return;
         }
-        if (!passwordInput.current?.value) {
+        if (!password) {
           toast.error("Please enter a valid password");
           return;
         }
 
         setIsLoading(true);
+
+        try {
+            await SignIn({ username, password } as User);
+        } catch (error: any) {
+            toast.error(error.message);
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+
     }
 
     return (
@@ -54,8 +71,8 @@ const SignInComponent = ({}: SignInComponentProps) => {
                         <Bar barClassName="border-gray-400">
                             <HeadingThree className="mb-0 font-semibold text-gray-400">Or</HeadingThree>
                         </Bar>
-                        <InputText size="xl" mainColor ref={usernameInput} placeholder="Username" type="username" />
-                        <InputText size="xl" mainColor ref={passwordInput} placeholder="Password" type="password" />
+                        <InputText size="xl" mainColor name="username" placeholder="Username" type="username" />
+                        <InputText size="xl" mainColor name="password" placeholder="Password" type="password" />
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
                         <Button type="submit" className="bg-main text-white rounded-full text-md">Sign In</Button>
                         <CustomLink href="/forgot-password">Forgot password ?</CustomLink>

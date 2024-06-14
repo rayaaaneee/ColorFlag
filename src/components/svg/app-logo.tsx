@@ -126,7 +126,7 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
                         nextFlagColor = randomFlagColor;
                     }
                 } while (nextFlagColor === undefined);
-                console.log('Next flag color:', nextFlagColor);
+
                 return nextFlagColor;
             }
 

@@ -11,6 +11,7 @@ export interface InputTextProps {
     inputClassName?: string;
     size?: SizeType;
     value?: string;
+    name?: string;
     id?: string;
     onChange?: ChangeEventHandler<HTMLInputElement>;
     type?: "email" | "username" | "password" | "text";
@@ -18,7 +19,7 @@ export interface InputTextProps {
     mainColor?: boolean;
 }
 
-const InputText = forwardRef(({disabled = false, size = "md", className = "", inputClassName = "", id = undefined, mainColor = false, type="text", value = undefined, placeholder = undefined, onChange = undefined}: InputTextProps, ref: ForwardedRef<HTMLInputElement>) => {
+const InputText = forwardRef(({disabled = false, size = "md", className = "", inputClassName = "", id, mainColor = false, name, type="text", value, placeholder, onChange}: InputTextProps, ref: ForwardedRef<HTMLInputElement>) => {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -163,7 +164,7 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", in
                     { getIcon(type) }
                 </div>
             ) }
-            <input ref={ref} id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} 
+            <input name={name} ref={ref} id={id} onChange={onChange} disabled={disabled} type={(type === "password") ? (isPasswordVisible ? 'text' : 'password') : type} defaultValue={value} 
                 className={cn(
                     "focus:outline-none text-white rounded-full block w-full pl-5 p-2.5",
                     mainColor ? 'bg-main' : 'bg-scnd',
