@@ -68,4 +68,6 @@ const Checkbox = forwardRef(({ checked = undefined, size = "md", id = undefined,
     );
 });
 
+Checkbox.displayName = "Checkbox";
+
 export default Checkbox;
