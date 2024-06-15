@@ -4,7 +4,7 @@ interface User {
     email: string;
     password: string;
     createdAt: Date;
-    name?: string;
+
 
     [key: string]: any;
 }

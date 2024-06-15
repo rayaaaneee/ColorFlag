@@ -7,7 +7,6 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import styles from "@/asset/scss/dev.module.scss";
 
 import countriesArray from "@/asset/data/countries.json";
-import { useParams } from 'next/navigation';
 import uppercaseFirstWordsLetters from '@/useful/string-treatment/uppercaseFirstWordsLetters';
 import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import Checkbox from '@/components/usefuls/checkbox-container';
@@ -33,8 +32,10 @@ import EraserButton from '@/components/usefuls/eraser-button';
 import DEV_MODE from '@/useful/dev-mode';
 import NotFound from '@/components/not-found';
 
-export interface VerifyCountriesProps {
-    // empty
+export interface PageProps {
+    params: { 
+        country_code: string; 
+    };
 }
 
 export interface SvgCodeInterface {
@@ -50,7 +51,7 @@ export interface ToolButtonInterface {
     pathBackground: string 
 }
 
-const VerifyCountries = ({}: VerifyCountriesProps) => {
+const Page = ({ params }: PageProps) => {
 
     const [svgCode, setSvgCode] = useState<SvgCodeInterface | null>(null);
 
@@ -88,7 +89,7 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
 
     const countries: Country[] = countriesArray as Country[];
 
-    const { country_code } = useParams<{ country_code?: string }>() as any;
+    const { country_code } = params;
 
     const countryElement: Country | undefined = countries.find((element: Country) => (element.code === (country_code as string)));
 
@@ -381,4 +382,4 @@ const VerifyCountries = ({}: VerifyCountriesProps) => {
     );
 };
 
-export default VerifyCountries;
+export default Page;

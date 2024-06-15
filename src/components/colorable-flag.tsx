@@ -1,3 +1,5 @@
+"use client";
+
 import { MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { renderToString } from "react-dom/server";
 import Image from "next/image";
@@ -298,7 +300,6 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
     useEffect(() => {
         if (isValidated === true) {
             onValidate(score);
-            toast.success("Flag validated");
             svgContainer.current?.classList.add(styles.validated);
         }
     }, [isValidated]);
@@ -355,7 +356,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                     <div ref={svgContainer} className={ `${styles.svgContainer} ${!isValidated && "bg-gray-700" } flex items-center justify-center mx-auto ${ !devMode && "my-5"}` }>
 
                         { (svgColors.length === 0 && !isValidated) && (
-                            <AppLogo asLoader={true} loaderLoop={true} hasLightBackground={true} loaderTransitionDuration={80} className="w-full h-full" />
+                            <AppLogo borderThin asLoader loaderLoop hasLightBackground loaderTransitionDuration={80} className="w-full h-full" />
                         ) }
 
                         <div className={`${isValidated ? "opacity-100" : "opacity-0" } w-full h-full absolute flex flex-col gap-2 items-center justify-center text-slate-800 text-8xl font-mono`}>
@@ -364,7 +365,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                                 <p>%</p>
                             </div>
                             <div className="w-56">
-                                <ProgressBar value={score.score + score.bonus} colorSync={true} />
+                                <ProgressBar value={score.score + score.bonus} colorSync />
                             </div>
                         </div>
                         <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/images/flags/country/${sourceElement.code}.svg`} width={100} height={100} />

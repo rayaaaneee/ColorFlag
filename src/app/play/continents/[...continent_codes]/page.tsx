@@ -1,6 +1,3 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import Continent from "@/useful/interfaces/continent";
 import continentArray from "@/asset/data/continents.json";
 import NotFound from "@/components/not-found";
@@ -10,14 +7,33 @@ import allCountriesInContinentImg from '@/asset/img/pages/play/all-countries-in-
 import choosingCountryImg from '@/asset/img/pages/play/countries.png';
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 
-const Page = () => {
+interface PageProps {
+    params: { 
+        continent_codes: string[]; 
+    };
+}
+
+export const generateMetadata = ({ params }: PageProps) => {
+    const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
+
+    const { continent_codes } = params;
+
+    const selectedContinents: Continent[] = continents.filter((continent: Continent) => continent_codes.includes(continent.code.replace("/", "-")));
+
+    const continentNames: string[] = selectedContinents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
+
+    const title = `Train - ${continentNames.join(", ")}`;
+
+    return { title };
+}
+
+const Page = ({ params }: PageProps) => {
 
     const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
 
-    const { continent_codes } = useParams<{ continent_codes?: string[] }>() as any;
-    console.log(continent_codes);
+    const { continent_codes } = params;
+
     const selectedContinents: Continent[] = continents.filter((continent: Continent) => continent_codes.includes(continent.code.replace("/", "-")));
-    console.log(selectedContinents);
 
     const continentNames: string[] = selectedContinents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
 
@@ -27,7 +43,7 @@ const Page = () => {
             title: `Choose a country in ${continentNames.join(", ")}`,
             imgClass: "w-1/2 m-auto",
             description: "",
-            href: `/play/country?continent_code=${selectedContinents.map((continent: Continent) => continent.code).join(",")}`,
+            href: `/play/country?continent_codes=${selectedContinents.map((continent: Continent) => continent.code).join(",")}`,
             tags: [
                 "local",
             ]
