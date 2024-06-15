@@ -39,9 +39,9 @@ const CardLink = ({ className = "", element, heightClass = "h-[27rem]" }: CardLi
                 }) }
             </div>
             <div className="w-full flex items-end justify-end">
-                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 font-bold py-2 px-4 rounded-lg">
+                <Link href={element.href} className="mb-3 flex items-center gap-2 mr-3 py-2 px-4 rounded-lg">
                     <Button 
-                        className="w-full h-full bg-white hover:bg-gray-200 text-gray-800 py-2 px-3"
+                        className="w-full h-full bg-white font-bold hover:bg-gray-200 text-gray-800 py-2 px-3"
                         hasShadow={false}
                     >
                         <>

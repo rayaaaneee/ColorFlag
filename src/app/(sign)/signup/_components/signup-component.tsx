@@ -58,7 +58,10 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
         setIsLoading(true);
 
         try {
-            const user: User = await SignUp({username, email, password} as User);
+            const success: Boolean = await SignUp({username, email, password} as User);
+            if (!success) {
+                throw new Error("An error occurred while signing up");
+            }
         } catch (error: any) {
             toast.error(error.message);
         } finally {
@@ -86,7 +89,7 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
                         <Bar barClassName="border-gray-400 w-1/4">
                             <HeadingThree className="mb-0 font-semibold text-gray-400">Or with</HeadingThree>
                         </Bar>
-                        <div className="flex gap-4 p-3 items-center justify-center w-full h-fit">
+                        <div className="flex gap-4 items-center justify-center w-full h-fit">
                             <GoogleConnectionButton />
                             <FacebookConnectionButton />
                             <GithubConnectionButton />

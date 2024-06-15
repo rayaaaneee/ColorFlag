@@ -62,7 +62,7 @@ const SignInComponent = ({}: SignInComponentProps) => {
                 <>
                     <HeadingOne className={"text-center font-bold"}>Sign in to your account</HeadingOne>
                     <HeadingTwo className="italic">Login using social networks</HeadingTwo>
-                    <div className="flex gap-4 p-3 w-fit h-fit">
+                    <div className="flex gap-4 w-fit h-fit">
                         <GoogleConnectionButton />
                         <FacebookConnectionButton />
                         <GithubConnectionButton />

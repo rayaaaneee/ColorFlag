@@ -44,6 +44,7 @@ model User {
   email          String?   @unique
   email_verified DateTime? @map("emailVerified")
   image          String?
+  password       String?
 
   accounts Account[]
   games    Game[]

@@ -2,6 +2,7 @@ import { FaGoogle } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa6";
 import { TbBrandGithubFilled } from "react-icons/tb";
 import { MouseEventHandler } from "react";
+import { FaApple } from "react-icons/fa";
 
 import Tooltip from '../usefuls/tooltip';
 import Button from "./button";
@@ -43,5 +44,12 @@ export const FacebookConnectionButton = ({}: CustomConnectionButtonProps) =>
     (<Tooltip text={"Facebook"}>
         <ConnectionButton className="bg-blue-900 hover:bg-blue-950">
             <FaFacebookF className="w-1/3 h-1/3" />
+        </ConnectionButton>
+    </Tooltip>)
+
+export const AppleConnectionButton = ({}: CustomConnectionButtonProps) => 
+    (<Tooltip text={"Apple"}>
+        <ConnectionButton className="bg-black hover:bg-gray-900">
+            <FaApple className="w-1/3 h-1/3" />
         </ConnectionButton>
     </Tooltip>)

@@ -5,7 +5,7 @@ import User from "@/useful/interfaces/user";
 
 import bcrypt from "bcrypt";
 
-const SignIn = async ({ username, password }: User): User => {
+const SignIn = async ({ username, password }: User): Promise<User> => {
 
     console.log(username, password);
     if (!username) throw new Error("Please enter a valid username");

@@ -175,7 +175,7 @@ const InputText = forwardRef(({disabled = false, size = "md", className = "", in
                     inputClassName,
                 )} placeholder={placeholder} />
             { (type === "password") &&  (
-                <button onClick={togglePasswordVisibility} type="button" className={`absolute top-0 h-full end-0 px-3.5 rounded-e-full flex items-center justify-center`}>
+                <button tabIndex={-1} onClick={togglePasswordVisibility} type="button" className={`absolute top-0 h-full end-0 px-3.5 rounded-e-full flex items-center justify-center`}>
                     <svg className={cn(
                         "flex-shrink text-white",
                         getIconSize(),
