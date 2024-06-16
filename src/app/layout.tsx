@@ -1,12 +1,10 @@
+import "@/asset/scss/globals.scss";
+import LoadingFallback from "@/components/boundaries/loading-fallback";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "react-hot-toast";
-import "@/asset/scss/globals.scss";
-import Menu from "../components/menu";
 import { Suspense } from "react";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import LoadingFallback from "@/components/boundaries/loading-fallback";
-import CustomErrorBoundary from "@/components/boundaries/error-boundary";
+import { Toaster } from "react-hot-toast";
+import Menu from "./_components/menu";
 
 const inter = Inter({ subsets: ["latin"] });
 

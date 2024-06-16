@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { Adapter } from 'next-auth/adapters'
 
 const prismaClientSingleton = () => {
   return new PrismaClient()

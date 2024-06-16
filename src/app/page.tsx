@@ -1,10 +1,8 @@
+import ItalyCustomMap from "@/asset/img/pages/home/custom-italy-map.svg";
 import Button from "@/components/inputs/button";
+import AppLogo from "@/components/svg/app-logo";
 import Link from "next/link";
 import { PiSignInLight } from "react-icons/pi";
-
-import ItalyCustomMap from "@/asset/img/pages/home/custom-italy-map.svg";
-import AppLogo from "@/components/svg/app-logo";
-
 
 const Home = () => {
   return (

@@ -1,8 +1,8 @@
-import Country from "@/useful/interfaces/country";
-import countriesArray from "@/asset/data/countries.json";
 import continentsArray from "@/asset/data/continents.json";
+import countriesArray from "@/asset/data/countries.json";
 import NotFound from "@/components/not-found";
 import Continent from "@/useful/interfaces/continent";
+import Country from "@/useful/interfaces/country";
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
 import SubPage from "./sub-page";
 

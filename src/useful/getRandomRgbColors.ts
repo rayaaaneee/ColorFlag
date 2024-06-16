@@ -1,6 +1,6 @@
 import { RgbaObject } from "hex-rgb";
-import initRgbCssString from "./string-treatment/initRgbCssString";
 import getRgbaObject from "./getRgbaObject";
+import initRgbCssString from "./string-treatment/initRgbCssString";
 
 export const getMaxColors = (minDifference: number): number => {
     const rgbSpace: number = 256 * 256 * 256;

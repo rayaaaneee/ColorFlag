@@ -1,29 +1,28 @@
 "use client";
 
+import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
+import styles from "@/asset/scss/play.module.scss";
+import Button from "@/components/inputs/button";
+import NotFound from "@/components/not-found";
+import SvgDefs from "@/components/svg/svg-defs";
+import shuffle from "@/useful/array.shuffle";
+import getRandomRgbColors from "@/useful/getRandomRgbColors";
+import hexToRgb from "@/useful/string-treatment/hexToRgb";
+import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
+import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
+import transformSelfClosingToRegularTag from "@/useful/string-treatment/transformSelfClosingToRegularTag";
+import ChildrenType from "@/useful/types/children-type";
+import Image from "next/image";
 import { MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { renderToString } from "react-dom/server";
-import Image from "next/image";
 import toast from "react-hot-toast";
-import styles from "@/asset/scss/play.module.scss";
-import hexToRgb from "@/useful/string-treatment/hexToRgb";
 import PaintbrushMouse from "./paintbrush-mouse";
-import SvgDefs from "@/components/svg/svg-defs";
-import getRandomRgbColors from "@/useful/getRandomRgbColors";
-import shuffle from "@/useful/array.shuffle";
-import NotFound from "@/components/not-found";
-import Button from "@/components/inputs/button";
 import SelectableColorCircle from "./selectable-color-circle";
-import { SvgPatternInterface } from "./svg/svg-pattern";
-import ChildrenType from "@/useful/types/children-type";
-import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
-import transformSelfClosingToRegularTag from "@/useful/string-treatment/transformSelfClosingToRegularTag";
-import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
-import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
-import Loading from "./usefuls/loading";
-import EraserButton from "./usefuls/eraser-button";
-import ProgressBar from "./usefuls/progress-bar";
-import FlagSvg, { FlagType } from "./usefuls/flag-svg";
 import AppLogo from "./svg/app-logo";
+import { SvgPatternInterface } from "./svg/svg-pattern";
+import EraserButton from "./usefuls/eraser-button";
+import FlagSvg, { FlagType } from "./usefuls/flag-svg";
+import ProgressBar from "./usefuls/progress-bar";
 
 export interface sourceElementInterface {
     name: string;

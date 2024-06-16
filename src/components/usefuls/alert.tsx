@@ -1,11 +1,11 @@
 import ChildrenType from "@/useful/types/children-type";
 import { MouseEventHandler, useRef, useState } from "react";
 
+import cn from "@/lib/utils/cn";
 import { FaCircleCheck } from "react-icons/fa6";
 import { MdInfo } from "react-icons/md";
-import { TiWarning } from "react-icons/ti";
 import { RiErrorWarningFill } from "react-icons/ri";
-import cn from "@/lib/utils/cn";
+import { TiWarning } from "react-icons/ti";
 
 export type AlertPositionType = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 

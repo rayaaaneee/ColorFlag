@@ -3,16 +3,15 @@
 import Button from "@/components/inputs/button";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
 import InputText from "@/components/inputs/input-text";
+import SignUp from "@/components/server/sign-up";
 import Bar from "@/components/usefuls/bar";
 import CheckboxContainer from "@/components/usefuls/checkbox-container";
 import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
-import { FormEvent, FormEventHandler, useRef, useState } from "react";
+import User from "@/useful/interfaces/user";
+import { FormEvent, FormEventHandler, useState } from "react";
 import toast from "react-hot-toast";
 import LeftSide from "../../_components/left-side";
 import SignLoader from "../../_components/sign-loader";
-import { signIn } from "@/lib/auth";
-import SignUp from "@/components/server/sign-up";
-import User from "@/useful/interfaces/user";
 
 export interface SignUpComponentProps {
 

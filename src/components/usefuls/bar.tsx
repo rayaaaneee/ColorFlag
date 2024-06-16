@@ -1,5 +1,5 @@
 import cn from "@/lib/utils/cn";
-import ChildrenType from "@/useful/types/children-type"
+import ChildrenType from "@/useful/types/children-type";
 
 export interface BarPropsInterface {
     children?: ChildrenType,

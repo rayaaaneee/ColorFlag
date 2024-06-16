@@ -1,36 +1,32 @@
 "use client";
 
-import ColorableFlag, { Shape, ShapeClickerCallback } from '@/components/colorable-flag';
-import Country from '@/useful/interfaces/country';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-
-import styles from "@/asset/scss/dev.module.scss";
-
 import countriesArray from "@/asset/data/countries.json";
-import uppercaseFirstWordsLetters from '@/useful/string-treatment/uppercaseFirstWordsLetters';
-import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import Checkbox from '@/components/usefuls/checkbox-container';
-import CopyButton from '@/components/inputs/copy-button';
-import SelectableColorCircle from '@/components/selectable-color-circle';
-import Tooltip from '@/components/usefuls/tooltip';
-
+import styles from "@/asset/scss/dev.module.scss";
+import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
+import ColorableFlag, { Shape, ShapeClickerCallback } from '@/components/colorable-flag';
 import Button from '@/components/inputs/button';
-import { MouseEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import CopyButton from '@/components/inputs/copy-button';
+import NotFound from '@/components/not-found';
 import PaintbrushMouse from '@/components/paintbrush-mouse';
-import { IoSendSharp } from "react-icons/io5";
-import toast from 'react-hot-toast';
-
+import SelectableColorCircle from '@/components/selectable-color-circle';
 import Alert from '@/components/usefuls/alert';
-import rgbToHex, { hexCanBecomeShorter, shortenHexColor } from '@/useful/string-treatment/rgbToHex';
-import Image from 'next/image';
-import { IoMdInformation, IoMdLink } from 'react-icons/io';
-import Link from 'next/link';
+import Checkbox from '@/components/usefuls/checkbox-container';
+import EraserButton from '@/components/usefuls/eraser-button';
+import Tooltip from '@/components/usefuls/tooltip';
+import DEV_MODE from '@/useful/dev-mode';
 import getAttributes, { AttributeInterface } from '@/useful/getAttributes';
 import getCssSelector from '@/useful/getCssSelector';
-import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
-import EraserButton from '@/components/usefuls/eraser-button';
-import DEV_MODE from '@/useful/dev-mode';
-import NotFound from '@/components/not-found';
+import Country from '@/useful/interfaces/country';
+import rgbToHex, { hexCanBecomeShorter, shortenHexColor } from '@/useful/string-treatment/rgbToHex';
+import uppercaseFirstWordsLetters from '@/useful/string-treatment/uppercaseFirstWordsLetters';
+import Image from 'next/image';
+import Link from 'next/link';
+import { MouseEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { IoMdInformation, IoMdLink } from 'react-icons/io';
+import { IoSendSharp } from "react-icons/io5";
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 export interface PageProps {
     params: { 

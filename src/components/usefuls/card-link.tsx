@@ -1,10 +1,9 @@
-import { MdOutlineNavigateNext } from "react-icons/md";
-import Image from "next/image";
-import Link from "next/link";
 import Button from "@/components/inputs/button";
-import Tag from "./tag";
 import { Url } from "next/dist/shared/lib/router/router";
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
+import { MdOutlineNavigateNext } from "react-icons/md";
+import Tag from "./tag";
 
 export interface Card {
     image: StaticImageData,

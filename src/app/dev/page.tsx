@@ -1,12 +1,11 @@
 "use client";
 
-import CardLink, { Card } from "@/components/usefuls/card-link";
-import verifyIcon from "@/asset/img/pages/dev/verify.png";
 import countriesArray from "@/asset/data/countries.json";
-import Country from "@/useful/interfaces/country";
+import verifyIcon from "@/asset/img/pages/dev/verify.png";
 import NotFound from "@/components/not-found";
+import CardLink, { Card } from "@/components/usefuls/card-link";
 import DEV_MODE from "@/useful/dev-mode";
-import { Metadata } from "next";
+import Country from "@/useful/interfaces/country";
 
 //export const metadata: Metadata = {
 //    title: "Dev",

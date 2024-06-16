@@ -1,7 +1,7 @@
 import { MouseEventHandler, useState } from "react";
-import Tooltip from "./tooltip";
-import Button from "../inputs/button";
 import { CiEraser } from "react-icons/ci";
+import Button from "../inputs/button";
+import Tooltip from "./tooltip";
 
 export interface EraserButtonTooltipTexts {
     hovered: string;

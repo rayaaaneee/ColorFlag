@@ -1,6 +1,3 @@
-import path from "path";
-import { ComponentType, ReactNode } from "react";
-
 export enum FlagType {
     COUNTRY = 'country',
     US_STATE = 'us-state',

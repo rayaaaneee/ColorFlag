@@ -1,8 +1,7 @@
-import { ChangeEventHandler } from "react";
-import Checkbox from "../inputs/checkbox";
-import { CheckboxPropsInterface } from "../inputs/checkbox";
-import SizeType from "@/useful/types/size-type";
 import cn from "@/lib/utils/cn";
+import SizeType from "@/useful/types/size-type";
+import { ChangeEventHandler } from "react";
+import Checkbox, { CheckboxPropsInterface } from "../inputs/checkbox";
 
 export interface CheckboxContainerProps extends CheckboxPropsInterface{
     label: string;

@@ -1,8 +1,6 @@
+import Button, { ButtonProps } from "@/components/inputs/button";
 import Link from "next/link";
-import Button, { ButtonProps } from "@/components/inputs/button"
-import { IoMdArrowRoundForward } from "react-icons/io";
-import { IoMdArrowRoundBack } from "react-icons/io";
-import React from "react";
+import { IoMdArrowRoundBack, IoMdArrowRoundForward } from "react-icons/io";
 
 export enum Direction {
     BACK = 1,

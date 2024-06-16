@@ -1,9 +1,9 @@
 import countriesArray from "@/asset/data/countries.json";
+import ColorableFlag, { sourceElementInterface } from "@/components/colorable-flag";
+import NotFound from "@/components/not-found";
 import Country from "@/useful/interfaces/country";
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
-import ColorableFlag, { sourceElementInterface } from "@/components/colorable-flag";
 import { Metadata } from "next";
-import NotFound from "@/components/not-found";
 
 interface PageProps {
     params: { 

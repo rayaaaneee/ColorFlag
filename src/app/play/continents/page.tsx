@@ -1,7 +1,7 @@
-import Continent from "@/useful/interfaces/continent";
 import continentsArray from "@/asset/data/continents.json";
-import { ClientComponent } from "./_components/client-component";
+import Continent from "@/useful/interfaces/continent";
 import { Metadata } from "next";
+import { ClientComponent } from "./_components/client-component";
 
 export const metadata: Metadata = {
     title: 'Choose continent(s)',
