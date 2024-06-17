@@ -30,8 +30,8 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
         
         const username: string = formData.get("username") as string;
         const email: string = formData.get("email") as string;
-        const password: string = formData.get("password") as string;
-        const confirmPassword: string = formData.get("confirm-password") as string;
+        const password: string = (formData.get("password") as string).trim();
+        const confirmPassword: string = (formData.get("confirm-password") as string).trim();
 
         if (!username) {
             toast.error("Please enter a valid username");
@@ -57,10 +57,8 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
         setIsLoading(true);
 
         try {
-            const success: Boolean = await SignUp({username, email, password} as User);
-            if (!success) {
-                throw new Error("An error occurred while signing up");
-            }
+            const user: Boolean = await SignUp({ username, email, password } as User);
+            
         } catch (error: any) {
             toast.error(error.message);
         } finally {

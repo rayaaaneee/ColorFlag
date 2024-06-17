@@ -4,9 +4,8 @@ interface User {
     email: string;
     password: string;
     createdAt: Date;
-
-
-    [key: string]: any;
+    emailVerified: Date | null;
+    image: string | null;
 }
 
 export default User;

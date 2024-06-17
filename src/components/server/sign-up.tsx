@@ -29,13 +29,14 @@ const SignUp = async ({ username, email, password }: User): Promise<never> => {
 
         if (!user) throw new Error("An error occurred while creating the user");
 
-        return redirect("/signin");
-
     } catch (error: any) {
-        throw new Error("An error occurred while creating the user");
+        console.error(error);
+        throw new Error(error.message);
     } finally {
         await prisma.$disconnect();
     }
+
+    redirect("/");
 };
 
 export default SignUp;

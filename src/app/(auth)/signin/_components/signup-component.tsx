@@ -1,4 +1,5 @@
 import Button from "@/components/inputs/button";
+import Bar from "@/components/usefuls/bar";
 import { HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
 import Link from "next/link";
 import RightSide from "../../_components/right-side";
