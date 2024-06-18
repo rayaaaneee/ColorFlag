@@ -1,5 +1,5 @@
-import ChildrenType from "@/useful/types/children-type";
-import { MouseEventHandler, useRef, useState } from "react";
+import type ChildrenType from "@/useful/types/children-type";
+import { useRef, useState, type MouseEventHandler } from "react";
 
 import cn from "@/lib/utils/cn";
 import { FaCircleCheck } from "react-icons/fa6";

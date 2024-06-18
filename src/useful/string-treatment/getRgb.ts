@@ -1,4 +1,4 @@
-import { RgbaObject } from 'hex-rgb';
+import { type RgbaObject } from 'hex-rgb';
 
 const getRgb = (colorName: string /* Example : "red", "white" */): RgbaObject => {
     const canvas = document.createElement("canvas");

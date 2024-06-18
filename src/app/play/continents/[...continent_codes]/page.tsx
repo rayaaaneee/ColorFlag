@@ -1,7 +1,7 @@
 import continentArray from "@/asset/data/continents.json";
 import NotFound from "@/components/not-found";
-import CardLink, { Card } from "@/components/usefuls/card-link";
-import Continent from "@/useful/interfaces/continent";
+import CardLink, { type Card } from "@/components/usefuls/card-link";
+import type Continent from "@/useful/interfaces/continent";
 
 import allCountriesInContinentImg from '@/asset/img/pages/play/all-countries-in-continents.png';
 import choosingCountryImg from '@/asset/img/pages/play/countries.png';

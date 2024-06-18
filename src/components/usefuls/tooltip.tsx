@@ -1,5 +1,5 @@
 import cn from "@/lib/utils/cn";
-import ChildrenType from "@/useful/types/children-type";
+import type ChildrenType from "@/useful/types/children-type";
 import { FaCircleCheck } from "react-icons/fa6";
 import { MdInfo } from "react-icons/md";
 import { RiErrorWarningFill } from "react-icons/ri";

@@ -1,6 +1,6 @@
 import styles from "@/asset/scss/play.module.scss";
 import cn from "@/lib/utils/cn";
-import { MouseEventHandler } from "react";
+import { type MouseEventHandler } from "react";
 
 export interface SelectableColorCircleProps {
     color: string;

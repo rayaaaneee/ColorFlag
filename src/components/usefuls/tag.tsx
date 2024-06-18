@@ -1,5 +1,5 @@
 import cn from "@/lib/utils/cn";
-import { Key } from "react";
+import { type Key } from "react";
 
 export interface TagInterface {
     text: string,

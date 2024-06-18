@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import User from "@/useful/interfaces/user";
+import type User from "@/useful/interfaces/user";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 

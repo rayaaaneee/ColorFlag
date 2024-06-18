@@ -1,4 +1,4 @@
-import { RgbaObject } from "hex-rgb";
+import { type RgbaObject } from "hex-rgb";
 
 const initRgbCssString = (rgb: RgbaObject): string => (`rgb(${rgb.red}, ${rgb.green}, ${rgb.blue})`)
 

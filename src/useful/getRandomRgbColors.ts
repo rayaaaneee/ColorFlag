@@ -1,4 +1,4 @@
-import { RgbaObject } from "hex-rgb";
+import { type RgbaObject } from "hex-rgb";
 import getRgbaObject from "./getRgbaObject";
 import initRgbCssString from "./string-treatment/initRgbCssString";
 

@@ -1,4 +1,4 @@
-import { RgbaObject } from "hex-rgb"
+import { type RgbaObject } from "hex-rgb";
 
 const getRgbaObject = (rgb: string): RgbaObject => {
     const rgbArray: string[] = rgb.replace("rgb(", "").replace(")", "").split(",");

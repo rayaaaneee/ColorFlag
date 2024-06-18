@@ -1,4 +1,4 @@
-import Button, { ButtonProps } from "@/components/inputs/button";
+import Button, { type ButtonProps } from "@/components/inputs/button";
 import Link from "next/link";
 import { IoMdArrowRoundBack, IoMdArrowRoundForward } from "react-icons/io";
 

@@ -1,8 +1,8 @@
 "use client";
 
 import cn from "@/lib/utils/cn";
-import SizeType from "@/useful/types/size-type";
-import { ChangeEventHandler, ForwardedRef, forwardRef, useState } from "react";
+import type SizeType from "@/useful/types/size-type";
+import { forwardRef, useState, type ChangeEventHandler, type ForwardedRef } from "react";
 import { MdKey } from "react-icons/md";
 
 export interface InputTextProps {

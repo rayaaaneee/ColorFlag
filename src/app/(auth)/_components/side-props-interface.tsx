@@ -1,4 +1,4 @@
-import ChildrenType from "@/useful/types/children-type";
+import type ChildrenType from "@/useful/types/children-type";
 
 interface SidePropsInterface {
     children?: ChildrenType;

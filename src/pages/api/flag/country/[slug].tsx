@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import path from 'path';
 import * as fs from 'fs';
+import { type NextApiRequest, type NextApiResponse } from 'next';
+import path from 'path';
 
 // Handler function for GET requests
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

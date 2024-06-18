@@ -1,9 +1,16 @@
-import React from 'react'
+export interface PageProps {
+    // empty
+}
 
-const Page = () => {
-  return (
-    <div>Page</div>
-  )
+const Page = ({}: PageProps) => {
+
+    
+
+    return (
+        <div>
+            Page
+        </div>
+    );
 }
 
 export default Page;

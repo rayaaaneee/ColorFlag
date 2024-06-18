@@ -1,6 +1,6 @@
 import Button from "@/components/inputs/button";
-import { Url } from "next/dist/shared/lib/router/router";
-import Image, { StaticImageData } from "next/image";
+import { type Url } from "next/dist/shared/lib/router/router";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { MdOutlineNavigateNext } from "react-icons/md";
 import Tag from "./tag";

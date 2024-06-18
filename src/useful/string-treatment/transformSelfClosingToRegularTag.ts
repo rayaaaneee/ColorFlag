@@ -1,9 +1,6 @@
 /**
-Convert RGB(A) color to HEX.
-
 @example
 ```
-
     transformSelfClosingToRegularTag('<div/>') => '<div></div>'
     transformSelfClosingToRegularTag('<div class="foo" />') => '<div class="foo"></div>'
     transformSelfClosingToRegularTag('<div class="foo" id="bar"/>') => '<div class="foo" id="bar"></div>'

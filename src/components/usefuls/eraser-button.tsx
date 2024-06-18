@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from "react";
+import { useState, type MouseEventHandler } from "react";
 import { CiEraser } from "react-icons/ci";
 import Button from "../inputs/button";
 import Tooltip from "./tooltip";

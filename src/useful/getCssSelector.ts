@@ -1,4 +1,4 @@
-import getAttributes, { AttributeInterface } from "./getAttributes";
+import getAttributes, { type AttributeInterface } from "./getAttributes";
 
 const getCssSelector = (element: Element, displayClass: boolean = false, displayId: boolean = false): string => {
 

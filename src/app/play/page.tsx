@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
+import { type Metadata } from 'next';
 
 import continentsImg from "@/asset/img/pages/play/continents.webp";
 import countryImg from "@/asset/img/pages/play/countries.png";
 import sportsImg from "@/asset/img/pages/play/sports.png";
 
-import CardLink, { Card } from "@/components/usefuls/card-link";
+import CardLink, { type Card } from "@/components/usefuls/card-link";
 
 export const metadata: Metadata = {
   title: 'Play',

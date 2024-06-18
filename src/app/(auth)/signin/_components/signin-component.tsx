@@ -1,18 +1,18 @@
 "use client";
 
-import InputText from "@/components/inputs/input-text";
 import Button from "@/components/inputs/button";
-import { FormEventHandler, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
-import CheckboxContainer from "@/components/usefuls/checkbox-container";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
-import CustomLink from "@/components/usefuls/custom-link";
+import InputText from "@/components/inputs/input-text";
+import SignIn from "@/components/server/sign-in";
 import Bar from "@/components/usefuls/bar";
+import CheckboxContainer from "@/components/usefuls/checkbox-container";
+import CustomLink from "@/components/usefuls/custom-link";
+import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
+import type User from "@/useful/interfaces/user";
+import { useState, type FormEventHandler } from "react";
+import toast from "react-hot-toast";
 import LeftSide from "../../_components/left-side";
 import SignLoader from "../../_components/sign-loader";
-import SignIn from "@/components/server/sign-in";
-import User from "@/useful/interfaces/user";
 
 export interface SignInComponentProps {
 

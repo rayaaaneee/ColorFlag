@@ -1,6 +1,6 @@
 // app/api/svg/route.tsx
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import { type NextApiRequest, type NextApiResponse } from 'next';
 
 // Handler function for GET requests
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

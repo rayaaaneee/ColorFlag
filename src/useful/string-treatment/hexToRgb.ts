@@ -1,6 +1,6 @@
-import hexRgb, { RgbaObject } from 'hex-rgb';
 import getRgb from '@/useful/string-treatment/getRgb';
 import initRgbCssString from '@/useful/string-treatment/initRgbCssString';
+import hexRgb, { type RgbaObject } from 'hex-rgb';
 
 const hexToRgb = (hexColor: string): string => {
     let rgbObject: RgbaObject;

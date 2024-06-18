@@ -1,10 +1,10 @@
 "use client";
 
 import Button from "@/components/inputs/button";
-import Select, { ElementValue, SelectDataSourceInterface, Setter } from "@/components/inputs/select";
-import Country from "@/useful/interfaces/country";
+import Select, { type ElementValue, type SelectDataSourceInterface, type Setter } from "@/components/inputs/select";
+import type Country from "@/useful/interfaces/country";
 import { useRouter } from "next/navigation";
-import { MouseEventHandler, useState } from "react";
+import { useState, type MouseEventHandler } from "react";
 import toast from "react-hot-toast";
 
 export interface SubPagePropsInterface {

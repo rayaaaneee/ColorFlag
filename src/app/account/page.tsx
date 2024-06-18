@@ -1,5 +1,5 @@
-import Select, { SelectDataSourceInterface } from "@/components/inputs/select";
-import { Metadata } from "next";
+import Select, { type SelectDataSourceInterface } from "@/components/inputs/select";
+import { type Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "My account",

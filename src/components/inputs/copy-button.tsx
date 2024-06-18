@@ -1,7 +1,7 @@
 import Button from "@/components/inputs/button";
 import Tooltip from "@/components/usefuls/tooltip";
 import cn from "@/lib/utils/cn";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { useEffect, useState, type MouseEventHandler } from "react";
 import { FaCheck, FaCopy } from "react-icons/fa6";
 
 export interface CopyButtonProps {

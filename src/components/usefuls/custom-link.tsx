@@ -1,8 +1,8 @@
 import cn from "@/lib/utils/cn";
-import ChildrenType from "@/useful/types/children-type";
-import { Url } from "next/dist/shared/lib/router/router";
+import type ChildrenType from "@/useful/types/children-type";
+import { type Url } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
-import { ForwardedRef, MouseEventHandler, forwardRef } from "react";
+import { forwardRef, type ForwardedRef, type MouseEventHandler } from "react";
 
 export interface CustomLinkPropsInterface {
     href: Url;

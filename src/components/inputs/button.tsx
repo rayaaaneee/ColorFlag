@@ -1,6 +1,6 @@
 import cn from "@/lib/utils/cn";
-import ChildrenType from "@/useful/types/children-type";
-import { MouseEventHandler } from "react";
+import type ChildrenType from "@/useful/types/children-type";
+import { type MouseEventHandler } from "react";
 
 
 export interface ButtonProps {

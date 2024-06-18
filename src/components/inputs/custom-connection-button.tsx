@@ -1,12 +1,11 @@
-import { FaGoogle } from "react-icons/fa";
+import { type MouseEventHandler } from "react";
+import { FaApple, FaGoogle } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa6";
 import { TbBrandGithubFilled } from "react-icons/tb";
-import { MouseEventHandler } from "react";
-import { FaApple } from "react-icons/fa";
 
+import cn from "@/lib/utils/cn";
 import Tooltip from '../usefuls/tooltip';
 import Button from "./button";
-import cn from "@/lib/utils/cn";
 
 interface ConnectionButtonProps {
     children?: JSX.Element;

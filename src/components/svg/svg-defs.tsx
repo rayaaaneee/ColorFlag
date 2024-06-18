@@ -1,9 +1,8 @@
-import SvgPattern, { SvgPatternInterface } from "@/components/svg/svg-pattern";
+import SvgPattern, { type SvgPatternInterface } from "@/components/svg/svg-pattern";
 
 interface SvgDefsInterface  {
     patterns: SvgPatternInterface[]
 }
-    
 
 const SvgDefs = ({ patterns }: SvgDefsInterface) => {
     return (

@@ -1,7 +1,7 @@
 "use client";
 
 import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
-import React, { ForwardedRef, MouseEventHandler, forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type MouseEventHandler } from "react";
 
 import styles from "@/asset/scss/components/search-select.module.scss";
 import cn from "@/lib/utils/cn";

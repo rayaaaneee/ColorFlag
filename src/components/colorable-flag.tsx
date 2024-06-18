@@ -1,6 +1,6 @@
 "use client";
 
-import { SvgCodeInterface, ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
+import { type SvgCodeInterface, type ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
 import styles from "@/asset/scss/play.module.scss";
 import Button from "@/components/inputs/button";
 import NotFound from "@/components/not-found";
@@ -11,15 +11,15 @@ import hexToRgb from "@/useful/string-treatment/hexToRgb";
 import replaceFillAttribute from "@/useful/string-treatment/replaceFillAttribute";
 import { replaceColorWithShorterHex } from "@/useful/string-treatment/rgbToHex";
 import transformSelfClosingToRegularTag from "@/useful/string-treatment/transformSelfClosingToRegularTag";
-import ChildrenType from "@/useful/types/children-type";
+import type ChildrenType from "@/useful/types/children-type";
 import Image from "next/image";
-import { MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEventHandler, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import toast from "react-hot-toast";
 import PaintbrushMouse from "./paintbrush-mouse";
 import SelectableColorCircle from "./selectable-color-circle";
 import AppLogo from "./svg/app-logo";
-import { SvgPatternInterface } from "./svg/svg-pattern";
+import { type SvgPatternInterface } from "./svg/svg-pattern";
 import EraserButton from "./usefuls/eraser-button";
 import FlagSvg, { FlagType } from "./usefuls/flag-svg";
 import ProgressBar from "./usefuls/progress-bar";
