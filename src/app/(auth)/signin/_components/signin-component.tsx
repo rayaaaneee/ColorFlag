@@ -3,12 +3,12 @@
 import Button from "@/components/inputs/button";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
 import InputText from "@/components/inputs/input-text";
-import SignIn from "@/components/server/sign-in";
-import Bar from "@/components/usefuls/bar";
-import CheckboxContainer from "@/components/usefuls/checkbox-container";
-import CustomLink from "@/components/usefuls/custom-link";
-import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
-import type User from "@/useful/interfaces/user";
+import SignInAction from "@/components/server/sign-in-action";
+import Bar from "@/components/utils/bar";
+import CheckboxContainer from "@/components/utils/checkbox-container";
+import CustomLink from "@/components/utils/custom-link";
+import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/utils/headings";
+import ActionReturn from "@/utils/types/action-return";
 import { useState, type FormEventHandler } from "react";
 import toast from "react-hot-toast";
 import LeftSide from "../../_components/left-side";
@@ -18,7 +18,7 @@ export interface SignInComponentProps {
 
 }
 
-const SignInComponent = ({}: SignInComponentProps) => {
+const SignInComponent = ({ }: SignInComponentProps) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -43,14 +43,14 @@ const SignInComponent = ({}: SignInComponentProps) => {
 
         setIsLoading(true);
 
-        try {
-            await SignIn({ username, password } as User);
-        } catch (error: any) {
-            toast.error(error.message);
-            console.error(error);
-        } finally {
-            setIsLoading(false);
+        const action: ActionReturn = await SignInAction("credentials", formData);
+        if (action.status === "error") {
+            toast.error(action.msg);
+        } else {
+            toast.success(action.msg);
         }
+        
+        setIsLoading(false);
 
     }
 

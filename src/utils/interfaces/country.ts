@@ -1,4 +1,4 @@
-import Continent from "@/useful/interfaces/continent";
+import Continent from "@/utils/interfaces/continent";
 
 interface Country {
     code: string,

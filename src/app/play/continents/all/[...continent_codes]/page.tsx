@@ -1,9 +1,9 @@
 import continentArray from "@/asset/data/continents.json";
 import countriesArray from "@/asset/data/countries.json";
 import NotFound from "@/components/not-found";
-import type Continent from "@/useful/interfaces/continent";
-import type Country from "@/useful/interfaces/country";
-import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
+import type Continent from "@/utils/interfaces/continent";
+import type Country from "@/utils/interfaces/country";
+import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 
 interface PageProps {
     params: { 

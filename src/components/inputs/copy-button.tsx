@@ -1,5 +1,5 @@
 import Button from "@/components/inputs/button";
-import Tooltip from "@/components/usefuls/tooltip";
+import Tooltip from "@/components/utils/tooltip";
 import cn from "@/lib/utils/cn";
 import { useEffect, useState, type MouseEventHandler } from "react";
 import { FaCheck, FaCopy } from "react-icons/fa6";

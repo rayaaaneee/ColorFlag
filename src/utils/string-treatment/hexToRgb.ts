@@ -1,5 +1,5 @@
-import getRgb from '@/useful/string-treatment/getRgb';
-import initRgbCssString from '@/useful/string-treatment/initRgbCssString';
+import getRgb from '@/utils/string-treatment/getRgb';
+import initRgbCssString from '@/utils/string-treatment/initRgbCssString';
 import hexRgb, { type RgbaObject } from 'hex-rgb';
 
 const hexToRgb = (hexColor: string): string => {

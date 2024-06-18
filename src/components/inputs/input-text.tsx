@@ -1,7 +1,7 @@
 "use client";
 
 import cn from "@/lib/utils/cn";
-import type SizeType from "@/useful/types/size-type";
+import type SizeType from "@/utils/types/size-type";
 import { forwardRef, useState, type ChangeEventHandler, type ForwardedRef } from "react";
 import { MdKey } from "react-icons/md";
 

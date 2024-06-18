@@ -1,5 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import NextAuth from "next-auth";
+import bcrypt from "bcrypt";
+import NextAuth, { AuthError } from "next-auth";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -17,12 +18,6 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
     },
     jwt: {
         maxAge: 60 * 60 * 24 * 30, // 30 days
-        encode: async ({ token, secret }) => {
-            return "";
-        },
-        decode: async ({ token, secret }) => {
-            return {};
-        },
     },
     pages: {
         signIn: "/signin",
@@ -38,42 +33,32 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
           return token
         },
         async session({ session, token, user }) {
-            session.user = user;
-            user.id
-      
-            let userDetails = await prisma.user.findUnique({
-              where: {
-                id: user.id,
-              },
-            });
-
-            if (!userDetails) {
-              return session;
-            }
-            session.user = userDetails;
-      
             return session;
-          },
+        },
     },
     providers: [
         GithubProvider({
+            id: "github",
             clientId: process.env.GITHUB_ID as string,
             clientSecret: process.env.GITHUB_SECRET as string,
         }), 
         GoogleProvider({
+            id: "google",
             clientId: process.env.GOOGLE_ID as string,
             clientSecret: process.env.GOOGLE_SECRET as string,
         }), 
         FacebookProvider({
+            id: "facebook",
             clientId: process.env.FACEBOOK_ID as string,
             clientSecret: process.env.FACEBOOK_SECRET as string,
         }), 
         AppleProvider({
+            id: "apple",
             clientId: process.env.APPLE_ID as string,
             clientSecret: process.env.APPLE_SECRET as string,
         }),
         CredentialsProvider({
-            id: "default",
+            id: "credentials",
             name: "Credentials",
             credentials: {
                 username: { label: "Username", type: "text" },
@@ -88,20 +73,24 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
                     const user = await prisma.user.findFirst({
                         where: {
                             username: username as string,
-                            password: password as string,
                         }
                     });
 
                     if (user !== null) {
-                        return user;
+
+                        const isValid = await bcrypt.compare(password as string, user.password as string);
+
+                        if (isValid) {
+                            return user;
+                        } else {
+                            return null;
+                        }
                     } else {
-                        return null;
+                        throw new AuthError("NotFound");
                     }
             
                 } catch (error: any) {
-            
-                    throw new Error("An error occurred while comparing the passwords");
-                
+                    throw new Error(error.message);
                 }
             },
         }),

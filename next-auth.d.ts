@@ -1,4 +1,4 @@
-import User from "@/useful/interfaces/user";
+import User from "@/utils/interfaces/user";
 import "next-auth";
 
 declare module "next-auth" { 

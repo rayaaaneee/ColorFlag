@@ -1,5 +1,5 @@
 import continentsArray from "@/asset/data/continents.json";
-import type Continent from "@/useful/interfaces/continent";
+import type Continent from "@/utils/interfaces/continent";
 import { type Metadata } from "next";
 import { ClientComponent } from "./_components/client-component";
 

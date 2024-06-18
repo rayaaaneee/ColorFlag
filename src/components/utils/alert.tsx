@@ -1,4 +1,4 @@
-import type ChildrenType from "@/useful/types/children-type";
+import type ChildrenType from "@/utils/types/children-type";
 import { useRef, useState, type MouseEventHandler } from "react";
 
 import cn from "@/lib/utils/cn";

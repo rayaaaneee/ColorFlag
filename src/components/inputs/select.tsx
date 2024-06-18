@@ -1,13 +1,13 @@
 "use client";
 
-import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
+import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type MouseEventHandler } from "react";
 
 import styles from "@/asset/scss/components/search-select.module.scss";
 import cn from "@/lib/utils/cn";
-import addAnBeforeVowel from "@/useful/string-treatment/addAnBeforeVowel";
-import getPluralWord from "@/useful/string-treatment/getPluralWord";
-import replaceAccents from "@/useful/string-treatment/replaceAccents";
+import addAnBeforeVowel from "@/utils/string-treatment/addAnBeforeVowel";
+import getPluralWord from "@/utils/string-treatment/getPluralWord";
+import replaceAccents from "@/utils/string-treatment/replaceAccents";
 
 export type ElementValue = string | number | boolean | null | undefined;
 

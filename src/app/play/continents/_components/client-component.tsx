@@ -2,7 +2,7 @@
 
 import Button from "@/components/inputs/button";
 import Select, { ElementValue, Setter } from "@/components/inputs/select";
-import Continent from "@/useful/interfaces/continent";
+import Continent from "@/utils/interfaces/continent";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
 import toast from "react-hot-toast";

@@ -2,7 +2,7 @@
 
 import styles from "@/asset/scss/layout.module.scss";
 
-import DEV_MODE from "@/useful/dev-mode";
+import DEV_MODE from "@/utils/dev-mode";
 
 import Image from "next/image";
 import Link from 'next/link';
@@ -13,7 +13,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { PiSignInBold, PiSignOutBold } from "react-icons/pi";
 import { RiAccountPinCircleFill, RiCodeView } from "react-icons/ri";
 
-import Tooltip from "../../components/usefuls/tooltip";
+import Tooltip from "../../components/utils/tooltip";
 
 interface MenuItem {
     icon: JSX.Element;

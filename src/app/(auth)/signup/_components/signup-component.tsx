@@ -3,11 +3,12 @@
 import Button from "@/components/inputs/button";
 import { FacebookConnectionButton, GithubConnectionButton, GoogleConnectionButton } from "@/components/inputs/custom-connection-button";
 import InputText from "@/components/inputs/input-text";
-import SignUp from "@/components/server/sign-up";
-import Bar from "@/components/usefuls/bar";
-import CheckboxContainer from "@/components/usefuls/checkbox-container";
-import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
-import type User from "@/useful/interfaces/user";
+import SignUpAction from "@/components/server/sign-up-action";
+import Bar from "@/components/utils/bar";
+import CheckboxContainer from "@/components/utils/checkbox-container";
+import { HeadingOne, HeadingThree, HeadingTwo } from "@/components/utils/headings";
+import type User from "@/utils/interfaces/user";
+import type ActionReturn from "@/utils/types/action-return";
 import { useState, type FormEvent, type FormEventHandler } from "react";
 import toast from "react-hot-toast";
 import LeftSide from "../../_components/left-side";
@@ -56,14 +57,15 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
 
         setIsLoading(true);
 
-        try {
-            const user: Boolean = await SignUp({ username, email, password } as User);
-            
-        } catch (error: any) {
-            toast.error(error.message);
-        } finally {
+
+        const result: ActionReturn = await SignUpAction({ username, email, password } as User);
+        if (result === undefined) {
+            toast.success("User created successfully");
+        } else if (result.status === "error") {
+            toast.error(result.msg);
             setIsLoading(false);
         }
+
     }
 
     return (

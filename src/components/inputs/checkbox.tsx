@@ -2,7 +2,7 @@ import { forwardRef, type ChangeEventHandler, type ForwardedRef } from "react";
 
 import CheckedImg from '@/asset/img/general/inputs/checked.svg';
 import cn from "@/lib/utils/cn";
-import type SizeType from "@/useful/types/size-type";
+import type SizeType from "@/utils/types/size-type";
 
 export interface CheckboxPropsInterface {
     checked?: boolean;

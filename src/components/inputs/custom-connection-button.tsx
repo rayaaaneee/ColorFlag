@@ -4,7 +4,7 @@ import { FaFacebookF } from "react-icons/fa6";
 import { TbBrandGithubFilled } from "react-icons/tb";
 
 import cn from "@/lib/utils/cn";
-import Tooltip from '../usefuls/tooltip';
+import Tooltip from '../utils/tooltip';
 import Button from "./button";
 
 interface ConnectionButtonProps {

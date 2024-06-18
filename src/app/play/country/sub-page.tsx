@@ -2,7 +2,7 @@
 
 import Button from "@/components/inputs/button";
 import Select, { type ElementValue, type SelectDataSourceInterface, type Setter } from "@/components/inputs/select";
-import type Country from "@/useful/interfaces/country";
+import type Country from "@/utils/interfaces/country";
 import { useRouter } from "next/navigation";
 import { useState, type MouseEventHandler } from "react";
 import toast from "react-hot-toast";

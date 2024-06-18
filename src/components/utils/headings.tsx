@@ -1,5 +1,5 @@
 import cn from "@/lib/utils/cn";
-import type ChildrenType from "@/useful/types/children-type";
+import type ChildrenType from "@/utils/types/children-type";
 
 export interface HeadingProps {
     children?: ChildrenType,

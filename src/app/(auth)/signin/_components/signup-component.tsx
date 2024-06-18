@@ -1,5 +1,5 @@
 import Button from "@/components/inputs/button";
-import { HeadingThree, HeadingTwo } from "@/components/usefuls/headings";
+import { HeadingThree, HeadingTwo } from "@/components/utils/headings";
 import Link from "next/link";
 import RightSide from "../../_components/right-side";
 

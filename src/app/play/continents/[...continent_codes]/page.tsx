@@ -1,11 +1,11 @@
 import continentArray from "@/asset/data/continents.json";
 import NotFound from "@/components/not-found";
-import CardLink, { type Card } from "@/components/usefuls/card-link";
-import type Continent from "@/useful/interfaces/continent";
+import CardLink, { type Card } from "@/components/utils/card-link";
+import type Continent from "@/utils/interfaces/continent";
 
 import allCountriesInContinentImg from '@/asset/img/pages/play/all-countries-in-continents.png';
 import choosingCountryImg from '@/asset/img/pages/play/countries.png';
-import uppercaseFirstWordsLetters from "@/useful/string-treatment/uppercaseFirstWordsLetters";
+import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 
 interface PageProps {
     params: { 
