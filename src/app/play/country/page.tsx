@@ -4,7 +4,7 @@ import NotFound from "@/components/not-found";
 import type Continent from "@/utils/interfaces/continent";
 import type Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
-import SubPage from "./sub-page";
+import ClientComponent from "./_components/client-component";
 
 interface PageProps {
     searchParams: { 
@@ -40,7 +40,7 @@ const Page = ({ searchParams }: PageProps) => {
     return (
         <>
             <h1>Choose the country to train { continents.length > 0 && `in ${ continents.map((continent: Continent) => uppercaseFirstWordsLetters(continent.name)).join(", ") }` } :</h1>
-            <SubPage countries={countries} />
+            <ClientComponent countries={countries} />
         </>
     );
 }

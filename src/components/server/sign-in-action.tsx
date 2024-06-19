@@ -11,7 +11,6 @@ const SignInAction = async (provider: string, formData: FormData): Promise<Actio
         const result: never = await signIn(provider, formData);
         console.log(result);
     } catch (error: any) { 
-        console.error(error.message);
         if (error instanceof AuthError) {
             switch (error.type) { 
                 case "CredentialsSignin":

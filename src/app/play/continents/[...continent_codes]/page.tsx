@@ -5,6 +5,8 @@ import type Continent from "@/utils/interfaces/continent";
 
 import allCountriesInContinentImg from '@/asset/img/pages/play/all-countries-in-continents.png';
 import choosingCountryImg from '@/asset/img/pages/play/countries.png';
+import shapesIconImg from '@/asset/img/pages/play/shapes.jpg';
+
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 
 interface PageProps {
@@ -40,7 +42,7 @@ const Page = ({ params }: PageProps) => {
     const cardElements: Card[] = [
         {
             image: choosingCountryImg,
-            title: `Choose a country in ${continentNames.join(", ")}`,
+            title: `Choose a country`,
             imgClass: "w-1/2 m-auto",
             description: "",
             href: `/play/country?continent_codes=${selectedContinents.map((continent: Continent) => continent.code).join(",")}`,
@@ -50,13 +52,24 @@ const Page = ({ params }: PageProps) => {
         },
         {
             image: allCountriesInContinentImg,
-            title: `Guess all countries flags in ${continentNames.join(", ")}`,
+            title: `Guess all countries flags`,
             description: "",
             imgClass: "w-[45%] m-auto",
             href: `/play/continents/all/${selectedContinents.map((continent: Continent) => continent.code.replace("/", "-")).join("/")}`,
             tags: [
                 "tour",
                 "global",
+            ]
+        },
+        {
+            image: shapesIconImg,
+            title: `Shape test`,
+            description: "",
+            imgClass: "w-[65%] m-auto",
+            href: `/play/shapes/all?continent_codes=${selectedContinents.map((continent: Continent) => continent.code.replace("/", "-")).join("/")}`,
+            tags: [
+                "geography",
+                "worldmap"
             ]
         }
     ];
@@ -66,7 +79,7 @@ const Page = ({ params }: PageProps) => {
     return (
         <div className="flex flex-row gap-5 items-center justify-center">
             { cardElements.map((card, index) => {
-                return <CardLink heightClass="h-[25rem]" key={`continent-card-${index}`} element={card} />
+                return <CardLink heightClass="h-[22rem]" key={`continent-card-${index}`} element={card} />
             }) }
         </div>
     );

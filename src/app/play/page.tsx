@@ -16,9 +16,9 @@ const Play = () => {
     const cardsContent: Card[] = [
         {
             image: continentsImg,
-            title: "Choose one or any continents",
+            title: "Continents",
             imgClass: "w-full",
-            description: "Train your geography skills by guessing or coloring the flags of the countries in a continent",
+            description: "Train your geography skills by guessing or coloring the flags of the countries in a continent, or guessing them shape on the map",
             href: "/play/continents",
             tags: [
                 "worldwide"
@@ -26,9 +26,9 @@ const Play = () => {
         },
         {
             image: countryImg,
-            title: "Choose one or any countries",
+            title: "Countries",
             imgClass: "w-1/3 m-auto",
-            description: "Test your knowledge by guessing or coloring the flags of the countries in the world",
+            description: "Test your knowledge by guessing or coloring the flags of the countries in the world, or guessing its shape on the map",
             href: "/play/country",
             tags: [
                 "local"
@@ -36,7 +36,7 @@ const Play = () => {
         },
         {
             image: sportsImg,
-            title: "Choose a sport",
+            title: "Sports",
             imgClass: "w-1/3 m-auto",
             description: "Guess flag colors of famous sports club in the world",
             href: "/play/sport",

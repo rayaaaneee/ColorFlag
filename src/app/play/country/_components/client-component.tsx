@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 import { useState, type MouseEventHandler } from "react";
 import toast from "react-hot-toast";
 
-export interface SubPagePropsInterface {
+export interface ClientComponentPropsInterface {
     countries: Country[];
 }
 
-const SubPage = ({countries}: SubPagePropsInterface) => {
+const ClientComponent = ({countries}: ClientComponentPropsInterface) => {
 
     const [selectedCountry, setSelectedCountry] = useState<ElementValue>();
     const router = useRouter();
@@ -42,4 +42,4 @@ const SubPage = ({countries}: SubPagePropsInterface) => {
     );
 }
 
-export default SubPage;
+export default ClientComponent;
