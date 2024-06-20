@@ -45,7 +45,7 @@ const Page = ({ params: { country_code } }: PageProps) => {
 
     if (!country) return (<NotFound />);
 
-    const otherCountries: CountryMapGame[] = CountryAPI.getRandomCountries(3, ["eu", "na"], [country_code], true);
+    const otherCountries: CountryMapGame[] = CountryAPI.getRandomCountries(3, country.continent ? [country.continent.code] : [], [country_code], true);
     otherCountries.forEach((country: CountryMapGame) => country.isAnswer = false)
 
     const countries: CountryMapGame[] = [country, ...otherCountries].sort(() => Math.random() - 0.5);
