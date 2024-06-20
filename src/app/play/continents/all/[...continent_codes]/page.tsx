@@ -1,8 +1,6 @@
-import continentArray from "@/asset/data/continents.json";
-import countriesArray from "@/asset/data/countries.json";
 import NotFound from "@/components/not-found";
+import ContinentAPI from "@/lib/utils/api/continent-api";
 import type Continent from "@/utils/interfaces/continent";
-import type Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 
 interface PageProps {
@@ -11,14 +9,23 @@ interface PageProps {
     };
 }
 
+const getContinents = (continent_codes: string[]): {
+    continents: Continent[];
+    names: string[];
+} => {
+    continent_codes = continent_codes.map((code) => code.replace("-", "/"));
+    
+    const continents: Continent[] = ContinentAPI.get(continent_codes.map((code) => code.replace("-", "/")));
+    const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
+
+    return { continents, names };
+}
+
 export const generateMetadata = ({ params }: PageProps) => {
-    const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
 
     const { continent_codes } = params;
 
-    const selectedContinents: Continent[] = continents.filter((continent: Continent) => continent_codes.includes(continent.code.replace("/", "-")));
-
-    const continentNames: string[] = selectedContinents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
+    const { names: continentNames } = getContinents(continent_codes);
 
     const title = `Guess all flags - ${continentNames.join(", ")}`;
 
@@ -28,18 +35,11 @@ export const generateMetadata = ({ params }: PageProps) => {
 
 const Page = ({ params }: PageProps) => {
 
-    const continents: Continent[] = continentArray satisfies Continent[] as Continent[];
-    const countries: Country[] = countriesArray satisfies Country[] as Country[];
-
     const { continent_codes } = params;
 
-    const selectedContinents: Continent[] = continents.filter((continent: Continent) => continent_codes.includes(continent.code.replace("/", "-")));
+    const { names: continentNames, continents } = getContinents(continent_codes);
 
-    const selectedCountries: Country[] = countries.filter((country: Country) => continent_codes.includes(country.continent_code.replace("/", "-")));
-
-    const continentNames: string[] = selectedContinents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
-
-    if (selectedContinents.length === 0 || selectedContinents.length !== continent_codes.length) return <NotFound />
+    if (continents.length === 0 || continents.length !== continent_codes.length) return <NotFound />
 
     return (
         <>

@@ -1,10 +1,24 @@
-import continentsArray from "@/asset/data/continents.json";
-import countriesArray from "@/asset/data/countries.json";
 import NotFound from "@/components/not-found";
+import ContinentAPI from "@/lib/utils/api/continent-api";
+import CountryAPI from "@/lib/utils/api/country-api";
 import type Continent from "@/utils/interfaces/continent";
-import type Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import ClientComponent from "./_components/client-component";
+
+const getContinents = (continent_codes: string): {
+    continents: Continent[];
+    names: string[];
+    allCodesExist: boolean;
+} => { 
+    let codes = continent_codes.split(",");
+    codes = codes.map((code) => code.replace("-", "/"));
+
+    const continents: Continent[] = ContinentAPI.get(codes, true);
+    const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
+    const allCodesExist = codes.every((code) => ContinentAPI.exists(code));
+
+    return { continents, names, allCodesExist };
+}
 
 interface PageProps {
     searchParams: { 
@@ -12,34 +26,34 @@ interface PageProps {
     };
 }
 
-export const generateMetadata = ({ searchParams }: PageProps) => {
-    const continent_codes: string[] | undefined = searchParams.continent_codes?.split(",");
-
-    const continents: Continent[] = (continentsArray satisfies Continent[] as Continent[]).filter((continent: Continent) => continent_codes ? continent_codes.includes(continent.code) : false);
+export const generateMetadata = ({ searchParams: { continent_codes } }: PageProps) => {
+    
+    const { continents, names } = getContinents(continent_codes ? continent_codes : '');
 
     const baseTitle: string = 'Choose the country to train';
-    const title = continents.length > 0 ? `${baseTitle} in ${ continents.map((continent: Continent) => uppercaseFirstWordsLetters(continent.name)).join(", ") }` : baseTitle;
+    const title = continents.length > 0 ? `${baseTitle} in ${ names.join(", ") }` : baseTitle;
 
     return { title };
 };
 
-const Page = ({ searchParams }: PageProps) => {
+const Page = ({ searchParams: { continent_codes } }: PageProps) => {
 
-    const continent_codes: string[] | undefined = searchParams.continent_codes?.split(",");
 
-    const continents: Continent[] = (continentsArray satisfies Continent[] as Continent[]).filter((continent: Continent) => continent_codes ? continent_codes.includes(continent.code) : false);
 
-    const countries: Country[] = (countriesArray satisfies Country[] as Country[]).filter(country => continent_codes ? continent_codes.includes(country.continent_code) : true);
+    const { continents, allCodesExist, names: continentNames } = getContinents(continent_codes ? continent_codes : '');
 
-    const allContinentsCodesExist = continent_codes ? continent_codes.every((code) => countries.some((country) => country.continent_code === code)) : true;
-
-    if (!allContinentsCodesExist || continent_codes?.length === 0) {
+    if (continent_codes && (!allCodesExist || (continent_codes.length === 0))) {
         return <NotFound />
     }
 
+    const countries = continent_codes ? continents.map((continent) => {
+        if (continent.countries) return continent.countries
+        else return []
+    }).flat() : CountryAPI.getAll();
+
     return (
         <>
-            <h1>Choose the country to train { continents.length > 0 && `in ${ continents.map((continent: Continent) => uppercaseFirstWordsLetters(continent.name)).join(", ") }` } :</h1>
+            <h1>Choose the country to train { continents.length > 0 && `in ${ continentNames.join(", ") }` } :</h1>
             <ClientComponent countries={countries} />
         </>
     );

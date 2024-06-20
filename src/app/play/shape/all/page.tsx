@@ -1,12 +1,12 @@
 import { HeadingOne } from "@/components/utils/headings";
 
 export interface PageProps {
-    // empty
+    searchParams: {
+        continent_code: string;
+    }
 }
 
-const Page = ({}: PageProps) => {
-
-    
+const Page = ({ searchParams: { continent_code } }: PageProps) => {
 
     return (
         <div>

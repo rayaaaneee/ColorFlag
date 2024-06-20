@@ -47,13 +47,11 @@ const Play = () => {
     ]
 
     return (
-        <>
-            <div className="flex flex-row gap-5 items-center justify-center">
-                { cardsContent.map((el: Card, index: number) => {
-                    return (<CardLink heightClass="h-[28rem]" element={el} key={index} />);
-                }) }
-            </div>
-        </>
+        <div className="flex flex-row gap-5 items-center justify-center">
+            { cardsContent.map((el: Card, index: number) => {
+                return (<CardLink heightClass="h-[28rem]" element={el} key={index} />);
+            }) }
+        </div>
     );
 }
 export default Play;

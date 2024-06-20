@@ -11,7 +11,7 @@ export interface ClientComponentPropsInterface {
     countries: Country[];
 }
 
-const ClientComponent = ({countries}: ClientComponentPropsInterface) => {
+const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
 
     const [selectedCountry, setSelectedCountry] = useState<ElementValue>();
     const router = useRouter();

@@ -6,7 +6,7 @@ const Page = ({}: PageProps) => {
     return (
         <h1>
             Page
-        </div>
+        </h1>
     );
 }
 

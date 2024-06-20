@@ -1,4 +1,4 @@
-import continentsArray from "@/asset/data/continents.json";
+import ContinentAPI from "@/lib/utils/api/continent-api";
 import type Continent from "@/utils/interfaces/continent";
 import { type Metadata } from "next";
 import { ClientComponent } from "./_components/client-component";
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
 
-    const continents: Continent[] = continentsArray satisfies Continent[] as Continent[];
+    const continents: Continent[] = ContinentAPI.getAll();
 
     return (
         <>

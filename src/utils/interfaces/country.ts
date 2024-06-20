@@ -5,6 +5,7 @@ interface Country {
     name: string,
     continent_code: string,
     non_country?: boolean,
+    
     continent?: Continent,
 }
 
