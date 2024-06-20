@@ -21,8 +21,8 @@ const getCountry = (country_code: string): {
     name: string;
 } => {
 
-    const country: CountryMapGame | undefined = CountryAPI.getInstance().find(country_code, (country) => {
-        return country.non_country === true;
+    const country: CountryMapGame | undefined = CountryAPI.getInstance().find((country) => {
+        return country.non_country !== true && country.continent_code === country_code;
     }, true);
 
     if (country) country.isAnswer = true;
@@ -48,8 +48,8 @@ const Page = ({ params: { country_code } }: PageProps) => {
 
     if (!country) return (<NotFound />);
 
-    const otherCountries: CountryMapGame[] = CountryAPI.getInstance().getRandomEntities(3, (data) => {
-        return data.continent_code === country.continent_code;
+    const otherCountries: CountryMapGame[] = CountryAPI.getInstance().getRandomEntities(3, (country) => {
+        return country.continent_code === country.continent_code && country.non_country !== true;
     }, true);
     otherCountries.forEach((country: CountryMapGame) => country.isAnswer = false)
 

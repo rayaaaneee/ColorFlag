@@ -16,33 +16,12 @@ class ContinentAPI extends API<Continent> {
     }
 
     public init(entity: Continent): Continent {
-        entity.countries = this.countryAPI.getByContinent(entity);
+        entity.countries = Array.from(this.getCountries(entity));
         return entity;
     }
 
-    public getAll(init = false): Continent[] {
-        return this.data.map((continent: Continent) => { 
-            if (init) continent = this.init(continent);
-            return continent;
-        });
-    }
-  
-    public find(code: string, where: (data: Continent) => boolean = _ => true,  init = false): Continent | undefined {
-        let continent: Continent | undefined = this.data.find((continent) => continent.code === code && where(continent)) satisfies Continent | undefined;
-
-        if (continent && init) continent = this.init(continent);
-        return continent;
-    }
-
-    public get(codes: string[], init = false): Continent[] {
-        return (this.data.filter((continent) => codes.includes(continent.code)) satisfies Continent[] as Continent[]).map((continent: Continent) => { 
-            if (init) continent = this.init(continent);
-            return continent;
-        });
-    }
-
-    public exists(code: string): boolean {
-        return this.data.some((continent) => continent.code === code);
+    public getCountries(continent: Continent, init: boolean = false) {
+        return this.countryAPI.findAll((country) => country.continent_code === continent.code, init);
     }
 
     public static getInstance(): ContinentAPI {

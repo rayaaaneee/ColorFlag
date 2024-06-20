@@ -22,7 +22,7 @@ const getContinents = (continent_codes: string[]): {
 } => {
     continent_codes = continent_codes.map((code) => code.replace("-", "/"));
 
-    const continents: Continent[] = ContinentAPI.getInstance().get(continent_codes);
+    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(continent_codes));
 
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
 
