@@ -1,5 +1,7 @@
 import json
+
 from _vars import base_data_path
+
 
 def sort_and_write_json(file_path: str):
     with open(file_path, "r") as f:

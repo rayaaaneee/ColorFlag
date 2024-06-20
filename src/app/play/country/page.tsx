@@ -13,9 +13,9 @@ const getContinents = (continent_codes: string): {
     let codes = continent_codes.split(",");
     codes = codes.map((code) => code.replace("-", "/"));
 
-    const continents: Continent[] = ContinentAPI.get(codes, true);
+    const continents: Continent[] = ContinentAPI.getInstance().get(codes, true);
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
-    const allCodesExist = codes.every((code) => ContinentAPI.exists(code));
+    const allCodesExist = codes.every((code) => ContinentAPI.getInstance().exists(code));
 
     return { continents, names, allCodesExist };
 }
@@ -49,7 +49,7 @@ const Page = ({ searchParams: { continent_codes } }: PageProps) => {
     const countries = continent_codes ? continents.map((continent) => {
         if (continent.countries) return continent.countries
         else return []
-    }).flat() : CountryAPI.getAll();
+    }).flat() : CountryAPI.getInstance().getAll();
 
     return (
         <>

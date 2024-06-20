@@ -1,70 +1,63 @@
 import countriesJson from "@/asset/data/countries.json";
 
-import ContinentAPI from "./continent-api";
 
 import Continent from "@/utils/interfaces/continent";
 import Country from "@/utils/interfaces/country";
+import API from "./types/api";
 
-class CountryAPI {
+class CountryAPI extends API<Country> {
 
-    static getAll(init = false): Country[] {
-        return (countriesJson satisfies Country[] as Country[]).map((country: Country) => { 
-            if (init) country.continent = ContinentAPI.find(country.continent_code);
+    public readonly data: Country[] = countriesJson satisfies Country[] as Country[];
+    private static instance: CountryAPI;
+    private continentAPI: CountryAPI = CountryAPI.getInstance();
+
+    private constructor() {
+        super();
+    }
+
+    public init(entity: Country): Country { 
+        entity.continent = this.continentAPI.find(entity.continent_code);
+        return entity;
+    }
+
+    public getAll(init = false): Country[] {
+        return (this.data satisfies Country[] as Country[]).map((country: Country) => { 
+            if (init) country.continent = this.init(country);
             return country;
         });
     }
   
-    static get(codes: string[], init = false): Country[] {
-        const countries: Country[] = (countriesJson.filter((country) => codes.includes(country.code)) satisfies Country[] as Country[]);
+    public get(codes: string[], init = false): Country[] {
+        const countries: Country[] = (this.data.filter((country) => codes.includes(country.code)) satisfies Country[] as Country[]);
         if (init) {
-            countries.forEach((country: Country) => country.continent = ContinentAPI.find(country.continent_code));
+            countries.forEach((country: Country) => country.continent = this.init(country));
         }
         return countries;
     }
 
-    static find(code: string, init = false): Country | undefined {
-        const country: Country | undefined = countriesJson.find((country) => country.code === code) satisfies Country | undefined;
+    public find(code: string, where: (data: Country) => boolean = (_ => true), init = false): Country | undefined {
+        const country: Country | undefined = this.data.find((country) => country.code === code && where(country)) satisfies Country | undefined;
 
-        if (init && country) country.continent = ContinentAPI.find(country.continent_code);
+        if (init && country) country.continent = this.init(country);
         return country;
     }
 
-    static getByContinent(continent: Continent, init = false): Country[] {
-        return (countriesJson.filter((country) => country.continent_code === continent.code) satisfies Country[]).map((country: Country) => { 
+    public exists(code: string, where: (country: Country) => boolean = _ => true): boolean {
+        return this.data.some((country) => country.code === code);
+    }
+
+    public getByContinent(continent: Continent, init = false): Country[] {
+        return (this.data.filter((country) => country.continent_code === continent.code) satisfies Country[]).map((country: Country) => { 
             if (init) country.continent = continent;
             return country;
         });
     }
 
-    static getRandomCountry(continentCodes: string[] = [], forbiddenCodes: string[] = [], init = false): Country { 
-        const country_index: number = Math.floor(Math.random() * countriesJson.length);
-        const country: Country = countriesJson[country_index] as Country;
-        if (forbiddenCodes.includes(country.code) || (continentCodes.length > 0 && !continentCodes.includes(country.continent_code))) {
-            return this.getRandomCountry(continentCodes, forbiddenCodes, init);
-        }
-        if (init) country.continent = ContinentAPI.find(country.continent_code);
-        return country;
-    }
-
-    static getRandomCountries(quantity: number, continentCodes: string[] = [], forbiddenCodes: string[] = [], init = false): Country[] {
-        const countries: Country[] = [];
-        const continents: Continent[] = ContinentAPI.get(continentCodes, true);
-
-        if (quantity > countriesJson.length) quantity = countriesJson.length;
-
-        const countriesCount: number = continents.map(continent => continent.countries).flat().length;
-        if ((continents.length > 0) && (quantity > countriesCount)) quantity = countriesCount;
-
-        while (countries.length < quantity) {
-            const country: Country = this.getRandomCountry(continents.map(continent => continent.code), forbiddenCodes, init);
-
-            if (!countries.includes(country)) {
-                countries.push(country);
-            }
-        }
-
-        return countries;
+    public static getInstance(): CountryAPI {
+        if (!CountryAPI.instance) CountryAPI.instance = new CountryAPI();
+        return CountryAPI.instance;
     }
 }
 
 export default CountryAPI;
+

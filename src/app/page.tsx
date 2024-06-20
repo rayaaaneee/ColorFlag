@@ -5,6 +5,8 @@ import Link from "next/link";
 import { PiSignInLight } from "react-icons/pi";
 
 const Home = () => {
+
+  
   return (
     <div className="m-auto relative flex flex-col gap-7 justify-center items-center">
       <div className="absolute z-1 top-0 w-full h-full right-0 p-5">
