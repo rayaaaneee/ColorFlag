@@ -35,6 +35,36 @@ class CountryAPI {
             return country;
         });
     }
+
+    static getRandomCountry(continentCodes: string[] = [], forbiddenCodes: string[] = [], init = false): Country { 
+        const country_index: number = Math.floor(Math.random() * countriesJson.length);
+        const country: Country = countriesJson[country_index] as Country;
+        if (forbiddenCodes.includes(country.code) || (continentCodes.length > 0 && !continentCodes.includes(country.continent_code))) {
+            return this.getRandomCountry(continentCodes, forbiddenCodes, init);
+        }
+        if (init) country.continent = ContinentAPI.find(country.continent_code);
+        return country;
+    }
+
+    static getRandomCountries(quantity: number, continentCodes: string[] = [], forbiddenCodes: string[] = [], init = false): Country[] {
+        const countries: Country[] = [];
+        const continents: Continent[] = ContinentAPI.get(continentCodes, true);
+
+        if (quantity > countriesJson.length) quantity = countriesJson.length;
+
+        const countriesCount: number = continents.map(continent => continent.countries).flat().length;
+        if ((continents.length > 0) && (quantity > countriesCount)) quantity = countriesCount;
+
+        while (countries.length < quantity) {
+            const country: Country = this.getRandomCountry(continents.map(continent => continent.code), forbiddenCodes, init);
+
+            if (!countries.includes(country)) {
+                countries.push(country);
+            }
+        }
+
+        return countries;
+    }
 }
 
 export default CountryAPI;

@@ -7,6 +7,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        "pulse-fast": "pulse 1.5s linear infinite",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

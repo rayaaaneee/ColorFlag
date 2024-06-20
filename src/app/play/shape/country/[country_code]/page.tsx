@@ -1,8 +1,10 @@
+import NotFound from "@/components/not-found";
 import { HeadingOne } from "@/components/utils/headings";
 import CountryAPI from "@/lib/utils/api/country-api";
 import Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import { Metadata } from "next";
+import ClientComponent from "./_components/client-component";
 
 export interface PageProps {
     params: {
@@ -10,13 +12,20 @@ export interface PageProps {
     }
 }
 
+export interface CountryMapGame extends Country {
+    isAnswer?: boolean;
+}
+
 const getCountry = (country_code: string): {
-    country: Country | undefined;
+    country: CountryMapGame | undefined;
     name: string;
 } => {
-    const country: Country | undefined = CountryAPI.find(country_code);
+
+    const country: CountryMapGame | undefined = CountryAPI.find(country_code, true);
+    if (country) country.isAnswer = true;
+
     return {
-        country: country,
+        country,
         name: uppercaseFirstWordsLetters(country?.name ?? 'Unknown')
     };
 }
@@ -34,11 +43,19 @@ const Page = ({ params: { country_code } }: PageProps) => {
 
     const { country, name: countryName } = getCountry(country_code);
 
+    if (!country) return (<NotFound />);
+
+    const otherCountries: CountryMapGame[] = CountryAPI.getRandomCountries(3, ["eu", "na"], [country_code], true);
+    otherCountries.forEach((country: CountryMapGame) => country.isAnswer = false)
+
+    const countries: CountryMapGame[] = [country, ...otherCountries].sort(() => Math.random() - 0.5);
+
     return (
-        <div>
+        <div className="flex flex-col gap-5 items-center justify-center">
             <HeadingOne>
                 Guess the shape of {countryName}
             </HeadingOne>
+            <ClientComponent countries={countries} />
         </div>
     );
 }

@@ -7,9 +7,7 @@ import { AuthError } from "next-auth";
 const SignInAction = async (provider: string, formData: FormData): Promise<ActionReturn> => {
     "use server";
     try {
-
         const result: never = await signIn(provider, formData);
-        console.log(result);
     } catch (error: any) { 
         if (error instanceof AuthError) {
             switch (error.type) { 

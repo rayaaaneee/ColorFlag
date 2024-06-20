@@ -44,10 +44,12 @@ const SignInComponent = ({ }: SignInComponentProps) => {
         setIsLoading(true);
 
         const action: ActionReturn = await SignInAction("credentials", formData);
-        if (action.status === "error") {
-            toast.error(action.msg);
-        } else {
-            toast.success(action.msg);
+        if (action) {
+            if (action.status === "error") {
+                toast.error(action.msg);
+            } else {
+                toast.success(action.msg);
+            }
         }
         
         setIsLoading(false);
