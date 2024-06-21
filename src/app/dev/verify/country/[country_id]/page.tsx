@@ -1,6 +1,5 @@
 "use client";
 
-import countriesArray from "@/asset/data/countries.json";
 import styles from "@/asset/scss/dev.module.scss";
 import ButtonsGoBackAndNext from '@/components/buttons-go-back-and-next';
 import ColorableFlag, { type Shape, type ShapeClickerCallback } from '@/components/colorable-flag';
@@ -13,6 +12,7 @@ import Alert from '@/components/utils/alert';
 import Checkbox from '@/components/utils/checkbox-container';
 import EraserButton from '@/components/utils/eraser-button';
 import Tooltip from '@/components/utils/tooltip';
+import CountryAPI from "@/lib/utils/api/country-api";
 import DEV_MODE from '@/utils/dev-mode';
 import getAttributes, { type AttributeInterface } from '@/utils/getAttributes';
 import getCssSelector from '@/utils/getCssSelector';
@@ -30,7 +30,7 @@ import { vs2015 as theme } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 export interface PageProps {
     params: { 
-        country_code: string; 
+        country_id: string; 
     };
 }
 
@@ -83,11 +83,9 @@ const Page = ({ params }: PageProps) => {
     ];
     const [toolSelected, setToolSelected] = useState<ToolButtonInterface | null>(null);
 
-    const countries: Country[] = countriesArray as Country[];
+    const { country_id } = params;
 
-    const { country_code } = params;
-
-    const countryElement: Country | undefined = countries.find((element: Country) => (element.code === (country_code as string)));
+    const countryElement: Country | undefined = CountryAPI.getInstance().find((element: Country) => (element.id === (country_id as string)));
 
     const countryName: string = countryElement !== undefined ? uppercaseFirstWordsLetters(countryElement.name) : 'Unknown';
 
@@ -268,7 +266,7 @@ const Page = ({ params }: PageProps) => {
     const validateSvg: MouseEventHandler<HTMLButtonElement> = (e) => {
         if (hasSelectedShapes) {
             if (svgCode !== null) {
-                fetch(`/api/flag/country/${country_code}`, {
+                fetch(`/api/flag/country/${country_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -293,7 +291,7 @@ const Page = ({ params }: PageProps) => {
         }
     }
 
-    if (!DEV_MODE) {
+    if (!DEV_MODE || countryElement === undefined) {
         return <NotFound />;
     }
 
@@ -306,7 +304,7 @@ const Page = ({ params }: PageProps) => {
             ) }
             { originalFlagOpened && (
                 <Alert position='top-right' type='info' onClose={_ => setOriginalFlagOpened(false)}>
-                    <Image src={ `/images/flags/country/1x1/${country_code}.svg` } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
+                    <Image src={ `/images/flags/country/1x1/${country_id}.svg` } draggable={false} className='rounded-2xl w-48 h-48' alt={`${countryName}-flag`} width={100} height={100} />
                 </Alert>
             ) }
             <div ref={svgCodeContainer} className='hidden' dangerouslySetInnerHTML={{ __html : svgCode?.svg || "" }}></div>
@@ -338,8 +336,8 @@ const Page = ({ params }: PageProps) => {
                         <EraserButton onClick={clearAll} tooltipTexts={{ hovered: 'Clear all', clicked: 'Cleared' }} />
                     </div>
                     <ButtonsGoBackAndNext
-                        dataSource={countries.map(country => ({ value: country.code}))} 
-                        currentValue={ country_code } 
+                        dataSource={CountryAPI.getInstance().findAll().asList()} 
+                        currentValue={ country_id } 
                         url={ `/dev/verify/country` }
                         cannotLoop={true}
                     />
@@ -365,7 +363,7 @@ const Page = ({ params }: PageProps) => {
                             <IoSendSharp />
                         </Button>
                     </Tooltip>
-                    <Link target='_blank' href={`/play/country/${country_code}`}>
+                    <Link target='_blank' href={`/play/country/${country_id}`}>
                         <Button className='gap-2'>
                             <p>Try</p>
                             <IoMdLink className='text-lg mt-[1px]' />

@@ -13,7 +13,7 @@ export type ElementValue = string | number | boolean | null | undefined;
 
 export interface SelectDataSourceInterface {
     name: string,
-    value: ElementValue,
+    id: ElementValue,
     isDefault?: boolean,
 }
 
@@ -60,7 +60,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
 
     const defaultSelectedValue: SelectDataSourceInterface = { 
         name: initDefaultValue(), 
-        value: undefined,
+        id: undefined,
         isDefault: true
     }
 
@@ -90,23 +90,23 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
         const element = e.currentTarget;
         const value: ElementValue = element.getAttribute('value') as ElementValue;
         const isSelected: boolean = element.classList.contains('selected');
-        const newValue: SelectDataSourceInterface = { name: element.textContent || '', value: value};
+        const newValue: SelectDataSourceInterface = { name: element.textContent || '', id: value};
         if (isMultiple) { 
             if (!isSelected) {
                 setSelectedValue((value: SelectedValueType) => {
                     const returnResult: SelectDataSourceInterface[] = [...value as SelectDataSourceInterface[], newValue]
                         .filter((item) => item.isDefault !== true);
 
-                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.value));
+                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.id));
 
                     return returnResult;
                 });
             } else {
                 setSelectedValue((value: SelectedValueType) => {
                     const returnResult: SelectDataSourceInterface[] = (value as SelectDataSourceInterface[])
-                        .filter((item) => item.value !== newValue.value && item.isDefault !== true);
+                        .filter((item) => item.id !== newValue.id && item.isDefault !== true);
 
-                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.value));
+                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.id));
 
                     if (returnResult.length === 0) return [defaultSelectedValue];
                     else return returnResult;
@@ -262,14 +262,14 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
                                 about={item.name} 
                                 onClick={ onItemSelect } 
                                 key={index} 
-                                value={item.value?.toString()} 
+                                value={item.id?.toString()} 
                                 className={cn(
                                     "min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible",
                                     focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden',
                                     (isMultiple ?
-                                        ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.value).includes(item.value) && 'selected')
+                                        ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.id).includes(item.id) && 'selected')
                                         :
-                                        ((selectedValue as SelectDataSourceInterface).value === item.value && 'selected')
+                                        ((selectedValue as SelectDataSourceInterface).id === item.id && 'selected')
                                     )
                                 )}
                                 dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>

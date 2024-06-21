@@ -9,7 +9,7 @@ const getCountry = (country_code: string): {
     country: Country | undefined;
     name: string;
 } => {
-    const country: Country | undefined = CountryAPI.getInstance().find(country => country.code === country_code);
+    const country: Country | undefined = CountryAPI.getInstance().find(country => country.id === country_code);
     return {
         country: country,
         name: uppercaseFirstWordsLetters(country?.name ?? 'Unknown')

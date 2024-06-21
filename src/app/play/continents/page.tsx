@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
 
-    const continents: Continent[] = ContinentAPI.getInstance().getAll();
+    const continents: Continent[] = ContinentAPI.getInstance().getAll().asList();
 
     return (
         <>

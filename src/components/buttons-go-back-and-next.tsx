@@ -1,7 +1,7 @@
 import cn from "@/lib/utils/cn";
 import ButtonGoBackOrNext, { Direction } from "./inputs/button-go-back-or-next";
 
-interface ButtonsGoBackAndNextInterface<T extends { value: string }> {
+interface ButtonsGoBackAndNextInterface<T extends { id: string }> {
     className?: string;
     url: string;
     dataSource: T[];
@@ -9,7 +9,7 @@ interface ButtonsGoBackAndNextInterface<T extends { value: string }> {
     cannotLoop?: boolean;
 }
 
-const ButtonsGoBackAndNext = <T extends {value: string}>({className = "", url, dataSource, currentValue, cannotLoop = false}: ButtonsGoBackAndNextInterface<T>) => {
+const ButtonsGoBackAndNext = <T extends {id: string}>({className = "", url, dataSource, currentValue, cannotLoop = false}: ButtonsGoBackAndNextInterface<T>) => {
     return (
         <div className={cn("w-fit h-fit flex gap-3", className)}>
             <ButtonGoBackOrNext direction={Direction.BACK} url={url} dataSource={dataSource} currentValue={currentValue} cannotLoop={cannotLoop} />

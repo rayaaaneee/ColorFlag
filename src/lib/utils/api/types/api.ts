@@ -1,39 +1,41 @@
 import JSONAPI from "./json-api-interface";
+import QueryBuilder from "./query-builder";
 
-abstract class API<T extends { code: string }> implements JSONAPI<T> {
+abstract class API<T extends { id: string }> implements JSONAPI<T> {
 
     public abstract readonly data: Iterable<T>;
 
     public abstract init(entity: T): T;
 
-    public get(codes: string[], init = false): Iterable<T> {
-        const countries: T[] = (Array.from(this.data).filter((entity: T) => codes.includes(entity.code)) satisfies T[] as T[]);
+    public get(ids: string[], init = false): QueryBuilder<T> {
+        const entities: T[] = (Array.from(this.data).filter((entity: T) => ids.includes(entity.id)) satisfies T[] as T[]);
         if (init) {
-            countries.forEach((country: T) => country = this.init(country));
+            entities.forEach((country: T) => country = this.init(country));
         }
-        return countries;
+        return new QueryBuilder(entities);
     }
 
     public find(filter: (data: T) => boolean = (_ => true), init = false): T | undefined {
         const entity: T | undefined = Array.from(this.data).find((entity) => filter(entity)) satisfies T | undefined;
-
-        if (init && entity) return this.init(entity);
-        return entity;
+        let result: T | undefined = entity;
+        if (entity && init) result = this.init(entity);
+        return result;
     }
 
-    public findAll(filter: (data: T) => boolean = (_ => true), init = false): Iterable<T> {
-        const entities: T[] = Array.from(this.data).filter((entity) => filter(entity)) satisfies T[];
-
-        if (init) return entities.map((entity: T) => this.init(entity));
-        return entities;
-    }
-
-    public some(filter: (entity: T) => boolean = _ => false): boolean {
+    public some(filter: (data: T) => boolean = _ => true): boolean {
         return Array.from(this.data).some(filter);
     }
 
-    public getAll(init = false): T[] {
-        return Array.from(this.data).map((entity: T) => (init ? this.init(entity) : entity));
+    public findAll(filter: (data: T) => boolean = (_ => true), init = false): QueryBuilder<T> {
+        const entities: T[] = Array.from(this.data).filter((entity) => filter(entity)) satisfies T[];
+
+        let result: T[] = entities;
+        if (init) result = entities.map((entity: T) => this.init(entity));
+        return new QueryBuilder(result);
+    }
+
+    public getAll(init = false): QueryBuilder<T> {
+        return new QueryBuilder(Array.from(this.data).map((entity: T) => (init ? this.init(entity) : entity)));
     }
 
     public getRandomEntity(init: boolean | undefined = false): T {

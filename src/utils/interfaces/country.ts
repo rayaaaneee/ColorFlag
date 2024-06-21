@@ -1,11 +1,11 @@
 import Continent from "@/utils/interfaces/continent";
 
 interface Country {
-    code: string,
+    id: string,
     name: string,
-    continent_code: string,
+    continent_id: string,
     non_country?: boolean,
-    
+
     continent?: Continent,
 }
 

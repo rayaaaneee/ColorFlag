@@ -22,7 +22,7 @@ const getContinents = (continent_codes: string[]): {
 } => {
     continent_codes = continent_codes.map((code) => code.replace("-", "/"));
 
-    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(continent_codes));
+    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(continent_codes).asList());
 
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
 
@@ -52,7 +52,7 @@ const Page = ({ params }: PageProps) => {
             title: `Choose a country`,
             imgClass: "w-1/2 m-auto",
             description: "",
-            href: `/play/country?continent_codes=${continents.map((continent: Continent) => continent.code).join(",")}`,
+            href: `/play/country?continent_codes=${continents.map((continent: Continent) => continent.id).join(",")}`,
             tags: [
                 "local",
             ]
@@ -62,7 +62,7 @@ const Page = ({ params }: PageProps) => {
             title: `Guess all countries flags`,
             description: "",
             imgClass: "w-[45%] m-auto",
-            href: `/play/continents/all/${continents.map((continent: Continent) => continent.code.replace("/", "-")).join("/")}`,
+            href: `/play/continents/all/${continents.map((continent: Continent) => continent.id.replace("/", "-")).join("/")}`,
             tags: [
                 "tour",
                 "global",
@@ -73,7 +73,7 @@ const Page = ({ params }: PageProps) => {
             title: `Shape test`,
             description: "",
             imgClass: "w-[65%] m-auto",
-            href: `/play/shapes/all?continent_codes=${continents.map((continent: Continent) => continent.code.replace("/", "-")).join("/")}`,
+            href: `/play/shapes/all?continent_codes=${continents.map((continent: Continent) => continent.id.replace("/", "-")).join("/")}`,
             tags: [
                 "geography",
                 "worldmap"

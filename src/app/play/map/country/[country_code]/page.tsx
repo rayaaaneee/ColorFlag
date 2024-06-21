@@ -22,7 +22,7 @@ const getCountry = (country_code: string): {
 } => {
 
     const country: CountryMapGame | undefined = CountryAPI.getInstance().find((country) => {
-        return country.non_country !== true && country.continent_code === country_code;
+        return country.non_country !== true && country.continent_id === country_code;
     }, true);
 
     if (country) country.isAnswer = true;
@@ -49,7 +49,7 @@ const Page = ({ params: { country_code } }: PageProps) => {
     if (!country) return (<NotFound />);
 
     const otherCountries: CountryMapGame[] = CountryAPI.getInstance().getRandomEntities(3, (country) => {
-        return country.continent_code === country.continent_code && country.non_country !== true;
+        return country.continent_id === country.continent_id && country.non_country !== true;
     }, true);
     otherCountries.forEach((country: CountryMapGame) => country.isAnswer = false)
 

@@ -27,12 +27,7 @@ const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
     return (
         <>
             <Select 
-                dataSources={ countries.map(
-                    (country:Country) => ({
-                        name: country.name,
-                        value: country.code
-                    } as SelectDataSourceInterface)
-                ) }
+                dataSources={ countries as SelectDataSourceInterface[] }
                 itemName="country"
                 isSearcheable={true}
                 setter={setSelectedCountry as Setter}

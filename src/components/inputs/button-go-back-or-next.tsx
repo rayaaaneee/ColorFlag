@@ -7,7 +7,7 @@ export enum Direction {
     NEXT = 2
 }
 
-export interface ButtonGoPlayNextProps<T extends {value:string}> extends ButtonProps {
+export interface ButtonGoPlayNextProps<T extends {id:string}> extends ButtonProps {
     dataSource: T[],
     currentValue: string,
     url: string,
@@ -15,11 +15,11 @@ export interface ButtonGoPlayNextProps<T extends {value:string}> extends ButtonP
     cannotLoop?: boolean,
 }
 
-const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValue, url, direction = Direction.NEXT, className = "", onClick = undefined, disabled = false, title = undefined, cannotLoop = false }: ButtonGoPlayNextProps<T>) => {
+const ButtonGoBackOrNext = <T extends {id: string}>({ dataSource, currentValue, url, direction = Direction.NEXT, className = "", onClick = undefined, disabled = false, title = undefined, cannotLoop = false }: ButtonGoPlayNextProps<T>) => {
 
     const text: string = `Go ${direction === Direction.NEXT ? "next" : "back"}`;
     
-    const nextElementIndex: number | undefined  = dataSource.findIndex((element: T) => element.value === currentValue) + (direction === Direction.NEXT ? 1 : -1);
+    const nextElementIndex: number | undefined  = dataSource.findIndex((element: T) => element.id === currentValue) + (direction === Direction.NEXT ? 1 : -1);
 
     
     if (nextElementIndex === undefined) {
@@ -33,7 +33,7 @@ const ButtonGoBackOrNext = <T extends {value: string}>({ dataSource, currentValu
         <>
             { nextElement !== undefined && (
                 <Button title={title} disabled={disabled} className={className} onClick={onClick}>
-                    <Link href={`${url}/${nextElement.value}`} className="flex flex-row items-center justify-center gap-2">
+                    <Link href={`${url}/${nextElement.id}`} className="flex flex-row items-center justify-center gap-2">
                         {direction === Direction.BACK && (<IoMdArrowRoundBack />)}
                         {text}
                         {direction === Direction.NEXT && (<IoMdArrowRoundForward />)}

@@ -2,7 +2,7 @@ import Country from "./country";
 
 interface Continent {
     name: string;
-    code: string;
+    id: string;
     non_continent?: boolean;
 
     countries?: Country[];

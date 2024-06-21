@@ -1,35 +1,35 @@
 [
     {
-        "code": "af",
+        "id": "af",
         "name": "africa"
     },
     {
-        "code": "an",
+        "id": "an",
         "name": "antarctica"
     },
     {
-        "code": "as",
+        "id": "as",
         "name": "asia"
     },
     {
-        "code": "eu",
+        "id": "eu",
         "name": "europe"
     },
     {
-        "code": "na",
+        "id": "na",
         "name": "north-america"
     },
     {
-        "code": "n/a",
+        "id": "n/a",
         "name": "not-available",
         "non_continent": true
     },
     {
-        "code": "oc",
+        "id": "oc",
         "name": "oceania"
     },
     {
-        "code": "sa",
+        "id": "sa",
         "name": "south-and-central-america"
     }
 ]

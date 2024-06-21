@@ -1,6 +1,6 @@
 "use client";
 
-import { type SvgCodeInterface, type ToolButtonInterface } from "@/app/dev/verify/country/[country_code]/page";
+import { type SvgCodeInterface, type ToolButtonInterface } from "@/app/dev/verify/country/[country_id]/page";
 import styles from "@/asset/scss/play.module.scss";
 import Button from "@/components/inputs/button";
 import NotFound from "@/components/not-found";
@@ -26,7 +26,7 @@ import ProgressBar from "./utils/progress-bar";
 
 export interface sourceElementInterface {
     name: string;
-    code: string;
+    id: string;
 }
 
 export interface ScoreInterface {
@@ -97,7 +97,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
     const loadElementSVG = async () => {
         if (sourceElement === undefined) return;
 
-        const stringFlag: string | null = await FlagSvg({ code : sourceElement.code, type : FlagType.COUNTRY});
+        const stringFlag: string | null = await FlagSvg({ code : sourceElement.id, type : FlagType.COUNTRY});
 
         if (stringFlag !== null) {
 
@@ -367,7 +367,7 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
                                 <ProgressBar value={score.score + score.bonus} colorSync />
                             </div>
                         </div>
-                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/images/flags/country/${sourceElement.code}.svg`} width={100} height={100} />
+                        <Image alt="correction" className={`${styles.right} ${!isValidated && "opacity-0" }`} src={`/images/flags/country/${sourceElement.id}.svg`} width={100} height={100} />
                     </div>
                     { (selectedColor) && 
                         (<PaintbrushMouse

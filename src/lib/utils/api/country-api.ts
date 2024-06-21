@@ -8,21 +8,23 @@ import API from "./types/api";
 
 class CountryAPI extends API<Country> {
 
-    public readonly data: Country[] = countriesJson satisfies Country[] as Country[];
     private static instance: CountryAPI;
-    private continentAPI: ContinentAPI = ContinentAPI.getInstance();
+    public readonly data: Country[] = countriesJson satisfies Country[] as Country[];
 
-    private constructor() {
+    private constructor(
+        private continentAPI: ContinentAPI
+    ) {
         super();
     }
 
     public init(entity: Country): Country { 
-        entity.continent = this.continentAPI.find((country) => country.code === entity.continent_code) as Continent | undefined;
+        entity.continent = this.continentAPI.find((country) => country.id === entity.continent_id) as Continent | undefined;
         return entity;
     }
 
     public static getInstance(): CountryAPI {
-        if (!CountryAPI.instance) CountryAPI.instance = new CountryAPI();
+        console.log('CountryAPI getInstance');
+        if (!CountryAPI.instance) CountryAPI.instance = new CountryAPI(ContinentAPI.getInstance());
         return CountryAPI.instance;
     }
 }

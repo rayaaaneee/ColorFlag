@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/inputs/button";
-import Select, { ElementValue, Setter } from "@/components/inputs/select";
+import Select, { ElementValue, SelectDataSourceInterface, Setter } from "@/components/inputs/select";
 import Continent from "@/utils/interfaces/continent";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
@@ -29,12 +29,7 @@ export const ClientComponent = ({ continents }: ClientComponentProps) => {
     return (
         <>
             <Select 
-                dataSources={ continents.map(
-                    (continent:Continent) => ({
-                        name: continent.name,
-                        value: continent.code
-                    })
-                ) } 
+                dataSources={ continents as SelectDataSourceInterface[] } 
                 itemName="continent"
                 isMultiple={true}
                 setter={setSelectedContinents as Setter}

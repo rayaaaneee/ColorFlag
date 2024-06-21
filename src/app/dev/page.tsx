@@ -21,7 +21,7 @@ const DevPage = () => {
             title: "Treat all SVGs",
             imgClass: "w-1/2",
             description: "Treat all SVGs for setting selectables shapes",
-            href: `/dev/verify/country/${countries.at(0)?.code}`,
+            href: `/dev/verify/country/${countries.at(0)?.id}`,
         }
     ]
     
