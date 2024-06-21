@@ -10,15 +10,15 @@ const Account = () => {
     const genders: SelectDataSourceInterface[] = [
         {
             name: "Man",
-            value: true
+            id: true
         },
         {
             name: "Woman",
-            value: false
+            id: false
         },
         {
             name: "Unspecified",
-            value: null
+            id: null
         }
     ]
 

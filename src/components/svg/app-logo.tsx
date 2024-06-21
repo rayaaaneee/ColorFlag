@@ -61,6 +61,7 @@ export type FlagColorCode = 'fr' | 'be' | 'ro' | 'it' | 'ie' | 'ci' | 'ng' | 'mx
 
 export interface AppLogoInterface {
     className?: string;
+    id?: string;
 
     asLoader?: boolean;
     loaderLoop?: boolean;
@@ -83,7 +84,7 @@ export type FlagColor = {
 
 // TODO : Insert has light background
 
-const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any", hasHoverEffect = false, hasLightBackground = false, borderThin = false }: AppLogoInterface) => {
+const AppLogo = ({ className, id = styles.appLogoSvg, allowClick = true, loaderLoop = false, asLoader = false, loaderTransitionDuration = 150, startsWith = 'any', displayedCountries = "any", hasHoverEffect = false, hasLightBackground = false, borderThin = false }: AppLogoInterface) => {
 
     if (asLoader) allowClick = false;
     if (startsWith !== 'any' && !displayedCountries.includes(startsWith)) throw new Error('Starts with flag color not in displayed countries');
@@ -224,7 +225,7 @@ const AppLogo = ({className, allowClick = true, loaderLoop = false, asLoader = f
     return (
         <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            id={styles.appLogoSvg} 
+            id={id} 
             viewBox="0 0 640 480" 
             className={`${ className } ${ borderThin && styles.borderThin } ${ (hasHoverEffect === true) && styles.hasHover } ${asLoader && styles.loader} rounded-lg border-black border-2`}>
             <defs>

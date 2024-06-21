@@ -10,7 +10,6 @@ interface JSONAPI<T> {
     init: (entity: T) => T;
     getAll: (init?: boolean) => QueryBuilder<T>;
     get: (codes: string[], init?: boolean) => QueryBuilder<T>;
-    some: (filter?: (data: T) => boolean) => boolean;
     find: (filter?: (data: T) => boolean, init?: boolean) => T | undefined;
     findAll: (filter?: (data: T) => boolean, init?: boolean) => QueryBuilder<T>;
     getRandomEntity: (init?: boolean) => T;

@@ -12,17 +12,17 @@ import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstW
 
 interface PageProps {
     params: { 
-        continent_codes: string[]; 
+        continent_ids: string[]; 
     };
 }
 
-const getContinents = (continent_codes: string[]): {
+const getContinents = (continent_ids: string[]): {
     continents: Continent[];
     names: string[];
 } => {
-    continent_codes = continent_codes.map((code) => code.replace("-", "/"));
+    continent_ids = continent_ids.map((code) => code.replace("-", "/"));
 
-    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(continent_codes).asList());
+    const continents: Continent[] = ContinentAPI.getInstance().get(continent_ids).asList();
 
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
 
@@ -31,9 +31,9 @@ const getContinents = (continent_codes: string[]): {
 
 export const generateMetadata = ({ params }: PageProps) => {
 
-    const { continent_codes } = params;
+    const { continent_ids } = params;
 
-    const { names: continentNames } = getContinents(continent_codes);
+    const { names: continentNames } = getContinents(continent_ids);
 
     const title = `Train - ${continentNames.join(", ")}`;
 
@@ -42,9 +42,9 @@ export const generateMetadata = ({ params }: PageProps) => {
 
 const Page = ({ params }: PageProps) => {
 
-    const { continent_codes } = params;
+    const { continent_ids } = params;
 
-    const { continents, names } = getContinents(continent_codes);
+    const { continents, names } = getContinents(continent_ids);
 
     const cardElements: Card[] = [
         {
@@ -52,7 +52,7 @@ const Page = ({ params }: PageProps) => {
             title: `Choose a country`,
             imgClass: "w-1/2 m-auto",
             description: "",
-            href: `/play/country?continent_codes=${continents.map((continent: Continent) => continent.id).join(",")}`,
+            href: `/play/country?continent_ids=${continents.map((continent: Continent) => continent.id).join(",")}`,
             tags: [
                 "local",
             ]
@@ -73,7 +73,7 @@ const Page = ({ params }: PageProps) => {
             title: `Shape test`,
             description: "",
             imgClass: "w-[65%] m-auto",
-            href: `/play/shapes/all?continent_codes=${continents.map((continent: Continent) => continent.id.replace("/", "-")).join("/")}`,
+            href: `/play/shapes/all?continent_ids=${continents.map((continent: Continent) => continent.id.replace("/", "-")).join("/")}`,
             tags: [
                 "geography",
                 "worldmap"
@@ -81,7 +81,7 @@ const Page = ({ params }: PageProps) => {
         }
     ];
 
-    if (continents.length === 0 || continents.length !== continent_codes.length) return <NotFound />
+    if (continents.length === 0 || continents.length !== continent_ids.length) return <NotFound />
 
     return (
         <>

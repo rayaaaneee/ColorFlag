@@ -12,7 +12,7 @@ export interface SvgPatternInterface {
 const SvgPattern = ({ x, y, patternWidth, patternHeight, imageWidth, imageHeight, customPatternId = undefined, customImageSrc = undefined }: SvgPatternInterface) => {
     return (
         <pattern xmlns="http://www.w3.org/2000/svg" id={ customPatternId !== undefined ? customPatternId : "emptyPathImg" } patternUnits="userSpaceOnUse" width={ patternWidth } height={ patternHeight }>
-                <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref={customImageSrc !== undefined ? `/images/${customImageSrc}` : "/images/png-background.jpg" } x={ x } y={ y } width={ imageWidth } height={ imageHeight }/>
+                <image xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref={customImageSrc !== undefined ? `/images/patterns/${customImageSrc}` : "/images/patterns/png-background.jpg" } x={ x } y={ y } width={ imageWidth } height={ imageHeight }/>
         </pattern>
     )
 }

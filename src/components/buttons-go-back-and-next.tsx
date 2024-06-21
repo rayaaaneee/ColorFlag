@@ -1,19 +1,17 @@
 import cn from "@/lib/utils/cn";
-import ButtonGoBackOrNext, { Direction } from "./inputs/button-go-back-or-next";
+import ButtonGoBackOrNext, { ButtonGoBackOrNextProps, Direction } from "./inputs/button-go-back-or-next";
 
-interface ButtonsGoBackAndNextInterface<T extends { id: string }> {
-    className?: string;
+export interface ButtonsGoBackAndNextProps<T extends { id: string }> extends ButtonGoBackOrNextProps<T> {
     url: string;
     dataSource: T[];
     currentValue: string;
-    cannotLoop?: boolean;
 }
 
-const ButtonsGoBackAndNext = <T extends {id: string}>({className = "", url, dataSource, currentValue, cannotLoop = false}: ButtonsGoBackAndNextInterface<T>) => {
+const ButtonsGoBackAndNext = <T extends {id: string}>({className = "", url, dataSource, currentValue, canLoop = false}: ButtonsGoBackAndNextProps<T>) => {
     return (
         <div className={cn("w-fit h-fit flex gap-3", className)}>
-            <ButtonGoBackOrNext direction={Direction.BACK} url={url} dataSource={dataSource} currentValue={currentValue} cannotLoop={cannotLoop} />
-            <ButtonGoBackOrNext url={url} dataSource={dataSource} currentValue={currentValue} cannotLoop={cannotLoop} />
+            <ButtonGoBackOrNext direction={Direction.BACK} url={url} dataSource={dataSource} currentValue={currentValue} canLoop={canLoop} />
+            <ButtonGoBackOrNext url={url} dataSource={dataSource} currentValue={currentValue} canLoop={canLoop} />
         </div>
     )
 }

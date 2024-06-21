@@ -11,8 +11,9 @@ export interface CustomErrorBoundaryPropsInterface {
 const CustomErrorBoundary = ({error, reset}: CustomErrorBoundaryPropsInterface) => {
 
     useEffect(() => {
-        console.log(error);
+        console.error(error);
     }, [error]);
+
     return (<>
     </>);
 }

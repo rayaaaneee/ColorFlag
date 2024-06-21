@@ -3,6 +3,9 @@ import QueryBuilder from "./query-builder";
 interface QueryBuilderInterface<T> { 
     select: <Y>(selector: (data: T) => Y) => QueryBuilder<Y>;
     sort: (compareFn: (a: T, b: T) => number) => QueryBuilder<T>;
+    some: (filter?: (data: T) => boolean) => boolean;
+    count: (filter?: (data: T) => boolean) => number;
+    every: (filter?: (data: T) => boolean) => boolean;
 
     asList: () => T[];
     asSet: () => Set<T>;

@@ -12,10 +12,7 @@ const ProgressBar = ({value, color = "bg-gray-900", colorSync = false, className
 
     const [valueState, setValueState] = useState((value > 100) ? 100 : (value < 0) ? 0 : value);
 
-    useEffect(() => {
-        console.log(value);
-        setValueState((value > 100) ? 100 : (value < 0) ? 0 : value);
-    }, [value]);
+    useEffect(() => setValueState((value > 100) ? 100 : (value < 0) ? 0 : value), [value]);
 
     const getSyncColor = (value: number): string => {
         let color: string;

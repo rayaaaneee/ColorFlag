@@ -5,30 +5,30 @@ import type Continent from "@/utils/interfaces/continent";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import ClientComponent from "./_components/client-component";
 
-const getContinents = (continent_codes: string): {
+const getContinents = (continent_ids: string): {
     continents: Continent[];
     names: string[];
-    allCodesExist: boolean;
+    allIdsExist: boolean;
 } => { 
-    let codes = continent_codes.split(",");
-    codes = codes.map((code) => code.replace("-", "/"));
+    let ids = continent_ids.split(",");
+    ids = ids.map((code) => code.replace("-", "/"));
 
-    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(codes, true).asList());
+    const continents: Continent[] = ContinentAPI.getInstance().get(ids, true).asList();
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
-    const allCodesExist = codes.every((code) => ContinentAPI.getInstance().some(country => country.id === code));
+    const allIdsExist = ids.every((code) => ContinentAPI.getInstance().findAll().some(country => country.id === code));
 
-    return { continents, names, allCodesExist };
+    return { continents, names, allIdsExist };
 }
 
 interface PageProps {
     searchParams: { 
-        continent_codes?: string | undefined; 
+        continent_ids?: string | undefined; 
     };
 }
 
-export const generateMetadata = ({ searchParams: { continent_codes } }: PageProps) => {
+export const generateMetadata = ({ searchParams: { continent_ids } }: PageProps) => {
     
-    const { continents, names } = getContinents(continent_codes ? continent_codes : '');
+    const { continents, names } = getContinents(continent_ids ? continent_ids : '');
 
     const baseTitle: string = 'Choose the country to train';
     const title = continents.length > 0 ? `${baseTitle} in ${ names.join(", ") }` : baseTitle;
@@ -36,15 +36,15 @@ export const generateMetadata = ({ searchParams: { continent_codes } }: PageProp
     return { title };
 };
 
-const Page = ({ searchParams: { continent_codes } }: PageProps) => {
+const Page = ({ searchParams: { continent_ids } }: PageProps) => {
 
-    const { continents, allCodesExist, names: continentNames } = getContinents(continent_codes ? continent_codes : '');
+    const { continents, allIdsExist, names: continentNames } = getContinents(continent_ids ? continent_ids : '');
 
-    if (continent_codes && (!allCodesExist || (continent_codes.length === 0))) {
+    if (continent_ids && (!allIdsExist || (continent_ids.length === 0))) {
         return <NotFound />
     }
 
-    const countries = continent_codes ? continents.map((continent) => {
+    const countries = continent_ids ? continents.map((continent) => {
         if (continent.countries) return continent.countries
         else return []
     }).flat() : CountryAPI.getInstance().getAll().asList();

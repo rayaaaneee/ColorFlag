@@ -5,17 +5,17 @@ import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstW
 
 interface PageProps {
     params: { 
-        continent_codes: string[]; 
+        continent_ids: string[]; 
     };
 }
 
-const getContinents = (continent_codes: string[]): {
+const getContinents = (continent_ids: string[]): {
     continents: Continent[];
     names: string[];
 } => {
-    continent_codes = continent_codes.map((code) => code.replace("-", "/"));
+    continent_ids = continent_ids.map((code) => code.replace("-", "/"));
     
-    const continents: Continent[] = Array.from(ContinentAPI.getInstance().get(continent_codes.map((code) => code.replace("-", "/"))).asList());
+    const continents: Continent[] = ContinentAPI.getInstance().get(continent_ids.map((code) => code.replace("-", "/"))).asList();
     const names: string[] = continents.map((currentContinent: Continent) => uppercaseFirstWordsLetters(currentContinent.name || ""));
 
     return { continents, names };
@@ -23,9 +23,9 @@ const getContinents = (continent_codes: string[]): {
 
 export const generateMetadata = ({ params }: PageProps) => {
 
-    const { continent_codes } = params;
+    const { continent_ids } = params;
 
-    const { names: continentNames } = getContinents(continent_codes);
+    const { names: continentNames } = getContinents(continent_ids);
 
     const title = `Guess all flags - ${continentNames.join(", ")}`;
 
@@ -35,11 +35,11 @@ export const generateMetadata = ({ params }: PageProps) => {
 
 const Page = ({ params }: PageProps) => {
 
-    const { continent_codes } = params;
+    const { continent_ids } = params;
 
-    const { names: continentNames, continents } = getContinents(continent_codes);
+    const { names: continentNames, continents } = getContinents(continent_ids);
 
-    if (continents.length === 0 || continents.length !== continent_codes.length) return <NotFound />
+    if (continents.length === 0 || continents.length !== continent_ids.length) return <NotFound />
 
     return (
         <>

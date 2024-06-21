@@ -9,25 +9,24 @@ class ContinentAPI extends API<Continent> {
 
     public readonly data: Continent[] = continentsJson;
     private static instance: ContinentAPI;
+    private static countryAPI: CountryAPI;
     
-    private constructor(
-        private countryAPI: CountryAPI
-    ) {
+    private constructor() {
         super();
+        ContinentAPI.countryAPI = CountryAPI.getInstance();
     }
 
     public init(continent: Continent): Continent {
-        continent.countries = Array.from(this.getCountries(continent).asList());
+        continent.countries = this.getCountries(continent).asList();
         return continent;
     }
 
     public getCountries(continent: Continent, init: boolean = false) {
-        return this.countryAPI.findAll((country) => country.continent_id === continent.id, init);
+        return ContinentAPI.countryAPI.findAll((country) => country.continent_id === continent.id, init);
     }
 
     public static getInstance(): ContinentAPI {
-        console.log('ContinentAPI getInstance');
-        if (!ContinentAPI.instance) ContinentAPI.instance = new ContinentAPI(CountryAPI.getInstance());
+        if (!ContinentAPI.instance) ContinentAPI.instance = new ContinentAPI();
         return ContinentAPI.instance;
     }
 }

@@ -5,11 +5,12 @@ import type Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import { type Metadata } from "next";
 
-const getCountry = (country_code: string): {
+const getCountry = (country_id: string): {
     country: Country | undefined;
     name: string;
 } => {
-    const country: Country | undefined = CountryAPI.getInstance().find(country => country.id === country_code);
+    debugger;
+    const country: Country | undefined = CountryAPI.getInstance().find(country => country.id === country_id);
     return {
         country: country,
         name: uppercaseFirstWordsLetters(country?.name ?? 'Unknown')
@@ -18,22 +19,22 @@ const getCountry = (country_code: string): {
 
 interface PageProps {
     params: { 
-        country_code: string; 
+        country_id: string; 
     };
 }
 
-export const generateMetadata = ({ params: { country_code } }: PageProps): Metadata => {
+export const generateMetadata = ({ params: { country_id } }: PageProps): Metadata => {
     
-    const { country } = getCountry(country_code);
+    const { country } = getCountry(country_id);
 
     const title = country ? `Guess the flag of ${uppercaseFirstWordsLetters(country.name)}` : 'Unknown';
 
     return { title };
 }
 
-const Page = ({ params: { country_code } }: PageProps) => {
+const Page = ({ params: { country_id } }: PageProps) => {
 
-    const { country } = getCountry(country_code);
+    const { country } = getCountry(country_id);
 
     if (!country) {
         return (<NotFound />);

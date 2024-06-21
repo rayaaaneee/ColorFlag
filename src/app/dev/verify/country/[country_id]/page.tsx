@@ -108,7 +108,6 @@ const Page = ({ params }: PageProps) => {
                     selectAllShapes();
                 } else if (alreadyKeepedOnes) {
                     svgCodeContainer.current?.querySelectorAll('.keep').forEach((element: Element) => {
-                        console.log("finding colorable shape for ", element);
                         const elementAttrs: AttributeInterface[] = getAttributes(element, ["class", "id"]);
                         const colorableShape: Shape | undefined = 
                             colorableShapes.find((colorableShape: Shape) => {
@@ -129,7 +128,6 @@ const Page = ({ params }: PageProps) => {
                                 });
                                 return isFindingShape;
                             });
-                        console.log("founded shape is", colorableShape);
                         if (colorableShape !== undefined) {
                             colorableShape.setAttribute('fill', `url(#selectedPathImg)`);
                         }
@@ -216,7 +214,6 @@ const Page = ({ params }: PageProps) => {
         }
 
         if (shape.getAttribute("data-fill") !== null) {
-            console.log("shape clicked", shape);
             const pathBackground: string = toolSelected.pathBackground;
             shape.setAttribute('fill', `url(#${pathBackground})`);
     
@@ -339,7 +336,7 @@ const Page = ({ params }: PageProps) => {
                         dataSource={CountryAPI.getInstance().findAll().asList()} 
                         currentValue={ country_id } 
                         url={ `/dev/verify/country` }
-                        cannotLoop={true}
+                        canLoop={false}
                     />
                 </div>
                 <ColorableFlag 

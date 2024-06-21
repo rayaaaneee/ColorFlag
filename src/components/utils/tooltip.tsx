@@ -23,7 +23,7 @@ export interface TooltipInterface {
 }
 
 
-const Tooltip = ({ children, text, position = "top", forceShow = false, disabled = false, className = "", tooltipClassName = "", type = "default", hasIcon = false }: TooltipInterface) => {
+const Tooltip = ({ children, text, position = "top", forceShow = false, disabled = false, className = undefined, tooltipClassName = undefined, type = "default", hasIcon = false }: TooltipInterface) => {
 
     const getPositionClasses = (): string => {
         let classes = '';
@@ -80,14 +80,14 @@ const Tooltip = ({ children, text, position = "top", forceShow = false, disabled
     }
 
     return (
-        <div className={`relative group ${className}`}>
+        <div className={cn('relative group', className)}>
             {children}
             <div role="tooltip" className={cn(
                 "absolute z-10 px-3 py-2 flex-row items-center justify-center gap-2 whitespace-nowrap text-sm font-medium text-white rounded-lg shadow-sm tooltip pointer-events-none",
                 getPositionClasses(), 
                 getTooltipTypeClasses(), 
                 (forceShow && !disabled) ? "flex" : "hidden", 
-                { "group-hover:flex": !disabled },
+                { "group-hover:flex": !disabled && text },
                 tooltipClassName)}>
                     {hasIcon && getTooltipIcon()}
                     {text}

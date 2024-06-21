@@ -22,10 +22,6 @@ abstract class API<T extends { id: string }> implements JSONAPI<T> {
         return result;
     }
 
-    public some(filter: (data: T) => boolean = _ => true): boolean {
-        return Array.from(this.data).some(filter);
-    }
-
     public findAll(filter: (data: T) => boolean = (_ => true), init = false): QueryBuilder<T> {
         const entities: T[] = Array.from(this.data).filter((entity) => filter(entity)) satisfies T[];
 
@@ -35,7 +31,7 @@ abstract class API<T extends { id: string }> implements JSONAPI<T> {
     }
 
     public getAll(init = false): QueryBuilder<T> {
-        return new QueryBuilder(Array.from(this.data).map((entity: T) => (init ? this.init(entity) : entity)));
+        return new QueryBuilder(this.findAll().select((entity: T) => (init ? this.init(entity) : entity)).asList());
     }
 
     public getRandomEntity(init: boolean | undefined = false): T {

@@ -1,6 +1,7 @@
 "use client";
 
 import { type SvgCodeInterface, type ToolButtonInterface } from "@/app/dev/verify/country/[country_id]/page";
+import logoStyles from "@/asset/scss/logo.module.scss";
 import styles from "@/asset/scss/play.module.scss";
 import Button from "@/components/inputs/button";
 import NotFound from "@/components/not-found";
@@ -258,9 +259,9 @@ const ColorableFlag = ({ sourceElement, onValidate = (_) => {}, onClickOnShape =
 
     const initShapes = (firstCall = false) => {
         const acceptedTags: string[] = ['path', 'circle', 'g', 'rect'];
-        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${styles.loaderSvg}) ${selector}[fill]:not(defs *)`)).join(', '));
+        const allShapes: NodeListOf<SVGElement> | undefined = svgContainer.current?.querySelectorAll(acceptedTags.map((selector: string) => (`svg:not(.${logoStyles.appLogoSvg}) ${selector}[fill]:not(defs *)`)).join(', '));
         const allShapesKeeped: boolean = colorableSvgElement?.classList.contains("keep-all") || false;
-        if (firstCall) { 
+        if (firstCall) {
             const colorableShapesTmp: Shape[] = [];
             if (allShapes != undefined) {
                 let flagColors: string[] = [];

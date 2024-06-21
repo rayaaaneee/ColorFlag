@@ -20,7 +20,7 @@ const getRandomRgbColors = (num: number, forbiddenColors: string[] = [], minDiff
     }
  
     while (colors.length < num) {
-        console.log("colors length", colors.length, "expected", num);
+
         const rgbObject: RgbaObject = {
             red: Math.floor(Math.random() * 256),
             green: Math.floor(Math.random() * 256),
