@@ -2,7 +2,7 @@
 
 import SvgPattern, { SvgPatternInterface } from "@/components/svg/svg-pattern";
 import cn from "@/lib/utils/cn";
-import getRandomNumberBetween from "@/utils/getRandomNumberBetween";
+import randint from "@/utils/randint";
 import { MouseEventHandler, useEffect, useRef } from "react";
 import { renderToString } from "react-dom/server";
 import { CountryMapGame } from "../page";
@@ -25,13 +25,14 @@ const MapButtonCard = ({ country, id, className, showAnswer = false, selected = 
     useEffect(() => { 
         console.log(svgRef.current);
         if (svgRef.current) {
-            //svgRef.current.setAttribute('fill', 'currentColor');
+
             let defs: SVGDefsElement | null = svgRef.current.querySelector('defs');
             if (!defs) {
                 defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
                 svgRef.current.appendChild(defs);
             }
-            const svgWidth: number = 6000;
+            const svgWidth: number = 8000;
+            const svgHeight: number = 8000;
             const objectPattern: SvgPatternInterface = {
                 x: 0,
                 y: 0,
@@ -40,17 +41,23 @@ const MapButtonCard = ({ country, id, className, showAnswer = false, selected = 
                 imageWidth: svgWidth,
                 imageHeight: svgWidth,
                 customPatternId: `pattern-map-${country.id}`,
-                customImageSrc: `maps/map${getRandomNumberBetween(1, 4)}.jpg`,
+                customImageSrc: `maps/map${randint(1, 4)}.jpg`,
             };
 
             const pattern: string = renderToString(<SvgPattern {...objectPattern} />);
 
             if (!defs.querySelector(`#${objectPattern.customPatternId}`)) {
                 defs.insertAdjacentHTML('afterbegin', pattern);
-                svgRef.current.querySelectorAll('path').forEach((path: SVGPathElement) => {
-                    path.setAttribute('fill', `url(#${objectPattern.customPatternId})`);
-                });
+                const group: SVGGElement | null = svgRef.current.querySelector('g');
+                if (group) {
+                    group.setAttribute('fill', `url(#${objectPattern.customPatternId})`);
+                    group.setAttribute('stroke', '#000');
+                    group.setAttribute('stroke-width', '40');
+                }
             }
+
+            svgRef.current.classList.remove('opacity-0');
+
         }
     }, [SvgImage]);
     
@@ -63,7 +70,7 @@ const MapButtonCard = ({ country, id, className, showAnswer = false, selected = 
             showAnswer && !country.isAnswer && selected && `bg-red-100 hover:bg-red-200 animate-pulse-fast`,
             className
         )}>
-            <SvgImage ref={svgRef} draggable={false} alt="country-map" className="w-[80%] h-fit" />
+            <SvgImage ref={svgRef} draggable={false} alt="country-map" className="w-[80%] h-fit opacity-0 transition-opacity" />
         </div>
     );
 }

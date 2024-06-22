@@ -237,7 +237,7 @@ const AppLogo = ({ className, id = styles.appLogoSvg, allowClick = true, loaderL
                     height="400">
                     <image 
                         xmlnsXlink="http://www.w3.org/1999/xlink" 
-                        xlinkHref={`/images/${hasLightBackground ? 
+                        xlinkHref={`/images/patterns/${hasLightBackground ? 
                             `png-background` 
                             : `png-background-grey`
                         }.jpg`} 
