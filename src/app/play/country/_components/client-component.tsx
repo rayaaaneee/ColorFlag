@@ -25,7 +25,7 @@ const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
     }
     return (
         <>
-            <Select 
+            <Select
                 setter={setSelectedCountry as Setter}
                 dataSource={ countries as SelectDataSourceInterface[] }
                 itemName="country"
@@ -37,7 +37,7 @@ const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
                 sortGroups={true}
             />
             <Button onClick={goToPage} className="z-0" >OK</Button>
-        </>            
+        </>
     );
 }
 

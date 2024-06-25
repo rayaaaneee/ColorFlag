@@ -24,7 +24,7 @@ interface PageProps {
 }
 
 export const generateMetadata = ({ params: { country_id } }: PageProps): Metadata => {
-    
+
     const { country } = getCountry(country_id);
 
     const title = country ? `Guess the flag of ${uppercaseFirstWordsLetters(country.name)}` : 'Unknown';

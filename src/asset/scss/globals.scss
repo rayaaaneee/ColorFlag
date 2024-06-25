@@ -80,6 +80,14 @@ body {
     }
   }
 
+  .border-main {
+    border-color: $bg-main-color;
+  }
+
+  .border-scnd {
+    border-color: $bg-scnd-color;
+  }
+
   .text-main {
     color: $bg-main-color;
   }

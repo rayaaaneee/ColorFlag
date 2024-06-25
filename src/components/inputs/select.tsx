@@ -24,15 +24,17 @@ type SelectedValueType = SelectDataSourceInterface | SelectDataSourceInterface[]
 
 export type Setter = React.Dispatch<React.SetStateAction<SetterValue>>;
 
-interface SelectInterface <T extends SelectDataSourceInterface> {
+interface SelectInterface <T> {
     dataSource: T[],
+    className?: string,
+    id?: string,
+
     isMultiple?: boolean,
     isSearcheable?: boolean,
-    className?: string,
-    groupBy?: string,
-    groupNames?: string,
+
+    groupBy?: keyof T,
+    groupNames?: keyof T,
     sortGroups?: boolean,
-    id?: string,
     itemName?: string,
     isOpen?: boolean,
     setter?: Setter,
@@ -48,9 +50,9 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
     if (groupBy && groupNames) {
         if (dataSource.length !== 0) {
             if (!dataSource[0].hasOwnProperty(groupBy)) {
-                throw new Error(`The property ${groupBy} does not exist in the dataSource`);
+                throw new Error(`The property ${groupBy.toString()} does not exist in the dataSource`);
             } else if (!dataSource[0].hasOwnProperty(groupNames)) {
-                throw new Error(`The property ${groupNames} does not exist in the dataSource`);
+                throw new Error(`The property ${groupNames.toString()} does not exist in the dataSource`);
             }
             dataSource = dataSource.sort((a: T, b: T) => {
                 if (a[groupBy] < b[groupBy]) return -1;
@@ -87,11 +89,11 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         return `Select ${prefix} ${word}`;
     }
 
-    const defaultSelectedValue: SelectDataSourceInterface = { 
-        name: initDefaultValue(), 
+    const defaultSelectedValue: SelectDataSourceInterface = {
+        name: initDefaultValue(),
         id: undefined,
         isDefault: true
-    }
+    };
 
     const [selectedValue, setSelectedValue] = 
         useState<SelectedValueType>(isMultiple ? [defaultSelectedValue] : defaultSelectedValue);
@@ -100,14 +102,14 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
 
     const [dropdownIsOpen, setDropdownIsOpen] = useState(isOpen);
 
-    const [filteredDataSource, setFilteredDataSource] = useState<SelectDataSourceInterface[]>(dataSource);
+    const [filteredDataSource, setFilteredDataSource] = useState<T[]>(dataSource);
 
     const onSearchInput = () => {
         if (searchInput.current) {
             const searchTerm: string = replaceAccents(searchInput.current.value.toLowerCase());
             const searchedWord: string[] = searchTerm.split(' ');
 
-            setFilteredDataSource(dataSource.filter((item: SelectDataSourceInterface) => {
+            setFilteredDataSource(dataSource.filter((item: T) => {
                 return item.name.toLowerCase().split(' ').some((word: string) => searchedWord.every((searched: string) => word.includes(searched)));
             }));
 
@@ -123,7 +125,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         if (isMultiple) {
             if (!isSelected) {
                 setSelectedValue((value: SelectedValueType) => {
-                    const returnResult: SelectDataSourceInterface[] = [...value as SelectDataSourceInterface[], newValue]
+                    const returnResult: SelectDataSourceInterface[] = [...value as T[], newValue]
                         .filter((item) => item.isDefault !== true);
 
                     if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.id));
@@ -132,10 +134,10 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                 });
             } else {
                 setSelectedValue((value: SelectedValueType) => {
-                    const returnResult: SelectDataSourceInterface[] = (value as SelectDataSourceInterface[])
+                    const returnResult: T[] = (value as T[])
                         .filter((item) => item.id !== newValue.id && item.isDefault !== true);
 
-                    if (setter !== undefined) setter(returnResult.map((element: SelectDataSourceInterface) => element.id));
+                    if (setter !== undefined) setter(returnResult.map((element: T) => element.id));
 
                     if (returnResult.length === 0) return [defaultSelectedValue];
                     else return returnResult;
@@ -144,9 +146,21 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
 
         } else {
             setDropdownIsOpen(false);
+            scrollToTop();
             if (setter !== undefined) setter(value);
             if (!isSelected) setSelectedValue(newValue);
             else setSelectedValue(defaultSelectedValue);
+        }
+    }
+
+    const scrollToTop = () => {
+        debugger;
+        if (!dropdownMenu.current) return;
+
+        const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector<HTMLDivElement>(`div#listContainer`);
+        console.log(elementToScroll);
+        if (elementToScroll) {
+            elementToScroll.scrollTop = 0;
         }
     }
 
@@ -154,6 +168,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         if (dropdownMenu.current && dropdownButton.current) {
             if (!dropdownMenu.current.contains(e.target as Node) && !dropdownButton.current.contains(e.target as Node) && dropdownIsOpen) {
                 setDropdownIsOpen(false);
+                scrollToTop();
             }
         }
     }
@@ -200,7 +215,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                 setFocusedItem(focusedItem => focusedItem + 1);
             } else {
                 if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
                     if (elementToScroll) {
                         elementToScroll.scrollTop = 0;
                     }
@@ -212,7 +227,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                 setFocusedItem(focusedItem => focusedItem - 1);
                 // Automatically scroll up in the list (only on the div that contains the list)
                 if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
                     const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
                     if (elementToScroll) {
                         if (groupBy) {
@@ -232,7 +247,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
             } else {
                 setFocusedItem(filteredDataSource.length - 1);
                 if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
                     const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
                     if (elementToScroll) {
                         elementToScroll.scrollTop = (filteredDataSource.length - 1) * itemHeight;
@@ -286,7 +301,10 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
     }, [dropdownIsOpen]);
 
     const onClickSelect: MouseEventHandler = (e) => {
-        e.currentTarget === dropdownButton.current && setDropdownIsOpen(bool => !bool);
+        e.currentTarget === dropdownButton.current && setDropdownIsOpen(bool => {
+            if (bool) scrollToTop();
+            return !bool;
+        });
     }
 
     return (
@@ -294,10 +312,10 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
             <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white bg-main border-gray-300 shadow-sm`}>
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
-                        ((selectedValue as SelectDataSourceInterface[])
-                            .map((value: SelectDataSourceInterface) => (value.name)).join(', '))
+                        ((selectedValue as T[])
+                            .map((value: T) => (value.name)).join(', '))
                             : 
-                        ((selectedValue as SelectDataSourceInterface).name
+                        ((selectedValue as T).name
                     )}
                 </span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -307,14 +325,14 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
                 <ul ref={dropdownMenu} className={cn("overflow-hidden w-full text-sm right-0 shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1", styles.dropDownMenu, dropdownIsOpen ? 'rounded-b-md' : 'rounded-md')}>
                     { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
-                    <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
-                        {filteredDataSource.map((item: SelectDataSourceInterface, index: number, arr: SelectDataSourceInterface[]) => {
-                            const previousItem: SelectDataSourceInterface | null = index > 0 ? arr[index - 1] : null;
-                            const switchingGroup: boolean = Boolean(groupBy && previousItem && previousItem[groupBy] !== item[groupBy as string]);
+                    <div id={"listContainer"} className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
+                        {filteredDataSource.map((item: T, index: number, arr: T[]) => {
+                            const previousItem: T | null = index > 0 ? arr[index - 1] : null;
+                            const switchingGroup: boolean = Boolean(groupBy && previousItem && previousItem[groupBy.toString()] !== item[groupBy as string]);
                             return (
                                 <Fragment key={index}>
-                                    {switchingGroup && (
-                                        <li className="self-end ml-auto mr-2 py-2  px-4 w-fit text-end font-medium let italic text-white text-sm bg-gray-400 rounded-md text-ellipsis whitespace-nowrap tracking-wider group-declaration">{uppercaseFirstWordsLetters(item[(groupNames ?? groupBy) as string])}</li>
+                                    {(switchingGroup || previousItem === null) && (
+                                        <li className="self-end ml-auto mr-2 py-2 px-4 w-fit text-end font-medium let italic text-black text-sm bg-gray-100 rounded-3xl text-ellipsis whitespace-nowrap tracking-wider group-declaration border-main border-4">{uppercaseFirstWordsLetters(item[(groupNames ?? groupBy) as string])}</li>
                                     )}
                                     <li 
                                         about={item.name} 
@@ -324,9 +342,9 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                                             "min-w-full h-fit relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible",
                                             focusedItem === index ? `focused overflow-visible w-fit` : 'overflow-hidden',
                                             (isMultiple ?
-                                                ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.id).includes(item.id) && 'selected')
+                                                ((selectedValue as T[]).map((value: T) => value.id).includes(item.id) && 'selected')
                                                 :
-                                                ((selectedValue as SelectDataSourceInterface).id === item.id && 'selected')
+                                                ((selectedValue as T).id === item.id && 'selected')
                                             ),
                                             switchingGroup && 'first-group-item'
                                         )}
