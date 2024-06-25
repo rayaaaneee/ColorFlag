@@ -13,7 +13,7 @@ export interface CustomLinkPropsInterface {
 
 const CustomLink = forwardRef(({ href, children = undefined, className = "", onClick = undefined  }: CustomLinkPropsInterface, ref: ForwardedRef<HTMLAnchorElement>) => {
     return (
-        <Link ref={ref} href={href} className={cn("font-medium w-full text-gray-600 hover:text-gray-700 hover:underline", className)} onClick={onClick}>
+        <Link ref={ref} href={href} className={cn("w-fit font-medium text-gray-600 hover:text-gray-700 hover:underline", className)} onClick={onClick}>
             { children }
         </Link>
     )

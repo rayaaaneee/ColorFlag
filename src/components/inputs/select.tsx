@@ -1,7 +1,7 @@
 "use client";
 
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
-import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type MouseEventHandler } from "react";
+import { Fragment, forwardRef, useEffect, useRef, useState, type ForwardedRef, type MouseEventHandler } from "react";
 
 import styles from "@/asset/scss/components/search-select.module.scss";
 import cn from "@/lib/utils/cn";
@@ -15,6 +15,7 @@ export interface SelectDataSourceInterface {
     name: string,
     id: ElementValue,
     isDefault?: boolean,
+    [key: string]: any,
 }
 
 type SetterValue = ElementValue | ElementValue[];
@@ -24,22 +25,50 @@ type SelectedValueType = SelectDataSourceInterface | SelectDataSourceInterface[]
 export type Setter = React.Dispatch<React.SetStateAction<SetterValue>>;
 
 interface SelectInterface <T extends SelectDataSourceInterface> {
-    dataSources: T[],
+    dataSource: T[],
     isMultiple?: boolean,
     isSearcheable?: boolean,
     className?: string,
+    groupBy?: string,
+    groupNames?: string,
+    sortGroups?: boolean,
     id?: string,
     itemName?: string,
     isOpen?: boolean,
     setter?: Setter,
 }
 
-const Select = <T extends SelectDataSourceInterface>({ className = "", id = undefined, isOpen = false, isSearcheable = false, isMultiple = false, dataSources, setter, itemName = "item" }: SelectInterface<T>, ref: ForwardedRef<HTMLDivElement>) => {
+const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpen = false, isSearcheable = false, isMultiple = false, dataSource, setter, itemName = "item", groupBy, sortGroups = false, groupNames }: SelectInterface<T>, ref: ForwardedRef<HTMLDivElement>) => {
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);
     const searchInput = useRef<HTMLInputElement>(null);
     itemName = itemName.toLowerCase();
+    
+    if (groupBy && groupNames) {
+        if (dataSource.length !== 0) {
+            if (!dataSource[0].hasOwnProperty(groupBy)) {
+                throw new Error(`The property ${groupBy} does not exist in the dataSource`);
+            } else if (!dataSource[0].hasOwnProperty(groupNames)) {
+                throw new Error(`The property ${groupNames} does not exist in the dataSource`);
+            }
+            dataSource = dataSource.sort((a: T, b: T) => {
+                if (a[groupBy] < b[groupBy]) return -1;
+                else if (a[groupBy] > b[groupBy]) return 1;
+                else if (sortGroups) {
+                    if (a.name < b.name) return -1;
+                    else if (a.name > b.name) return 1;
+                    else return 0;
+                } else {
+                    return 0;
+                }
+            });
+        }
+    } else if (groupBy && !groupNames) {
+        throw new Error('You must provide a groupNames property when groupBy is set');
+    } else if (!groupBy && groupNames) {
+        throw new Error('You must provide a groupBy property when groupNames is set');
+    }
 
     const boldSearchedTokens = (text: string): string => {
         text = uppercaseFirstWordsLetters(text);
@@ -71,14 +100,14 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
 
     const [dropdownIsOpen, setDropdownIsOpen] = useState(isOpen);
 
-    const [filteredDataSources, setFilteredDataSources] = useState<SelectDataSourceInterface[]>(dataSources);
+    const [filteredDataSource, setFilteredDataSource] = useState<SelectDataSourceInterface[]>(dataSource);
 
     const onSearchInput = () => {
         if (searchInput.current) {
             const searchTerm: string = replaceAccents(searchInput.current.value.toLowerCase());
             const searchedWord: string[] = searchTerm.split(' ');
 
-            setFilteredDataSources(dataSources.filter((item: SelectDataSourceInterface) => {
+            setFilteredDataSource(dataSource.filter((item: SelectDataSourceInterface) => {
                 return item.name.toLowerCase().split(' ').some((word: string) => searchedWord.every((searched: string) => word.includes(searched)));
             }));
 
@@ -91,7 +120,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
         const value: ElementValue = element.getAttribute('value') as ElementValue;
         const isSelected: boolean = element.classList.contains('selected');
         const newValue: SelectDataSourceInterface = { name: element.textContent || '', id: value};
-        if (isMultiple) { 
+        if (isMultiple) {
             if (!isSelected) {
                 setSelectedValue((value: SelectedValueType) => {
                     const returnResult: SelectDataSourceInterface[] = [...value as SelectDataSourceInterface[], newValue]
@@ -140,7 +169,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
                     item.click();
                 }
             } else {
-                if (filteredDataSources.length === 1) {
+                if (filteredDataSource.length === 1) {
                     const item = dropdownMenu.current?.querySelector('li');
                     if (item) {
                         item.click();
@@ -148,24 +177,35 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
                 }
             }
         } else if (e.key === 'ArrowDown') {
-            if (focusedItem < filteredDataSources.length - 1) {
-                setFocusedItem(focusedItem => focusedItem + 1);
+            if (focusedItem < filteredDataSource.length - 1) {
                 // Automatically scroll down in the list (only on the div that contains the list)
                 if (dropdownMenu.current) {
                     const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
-                    const itemHeight = dropdownMenu.current.querySelectorAll('li')[0].clientHeight;
+                    const itemHeight = dropdownMenu.current.querySelectorAll('li:not(.group-declaration)')[0].clientHeight;
                     if (elementToScroll) {
-                        elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
+                        if (groupBy) {
+                            const i = focusedItem === -1 ? 2 : 1;
+                            const nbGroupsPassed: number = Array.from(dropdownMenu.current.querySelectorAll<HTMLLIElement>('li:not(.group-declaration)')).slice(0, focusedItem + i).filter((element: HTMLLIElement) => element.classList.contains('first-group-item')).length;
+                            const groupDeclarationElement: HTMLLIElement | null = dropdownMenu.current.querySelector('.group-declaration');
+                            if (nbGroupsPassed > 0 && groupDeclarationElement) {
+                                elementToScroll.scrollTop = (focusedItem + 1) * itemHeight + (groupDeclarationElement.offsetHeight * nbGroupsPassed);
+                            } else {
+                                elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
+                            }
+                        } else { 
+                            elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
+                        }
                     }
                 }
+                setFocusedItem(focusedItem => focusedItem + 1);
             } else {
-                setFocusedItem(0);
                 if (dropdownMenu.current) {
                     const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
                     if (elementToScroll) {
                         elementToScroll.scrollTop = 0;
                     }
                 }
+                setFocusedItem(0);
             }
         } else if (e.key === 'ArrowUp') {
             if (focusedItem > 0) {
@@ -175,16 +215,27 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
                     const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
                     const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
                     if (elementToScroll) {
-                        elementToScroll.scrollTop = (focusedItem - 1) * itemHeight;
+                        if (groupBy) {
+                            const i = focusedItem === -1 ? 2 : 1;
+                            const nbGroupsPassed: number = Array.from(dropdownMenu.current.querySelectorAll<HTMLLIElement>('li:not(.group-declaration)')).slice(0, focusedItem + i).filter((element: HTMLLIElement) => element.classList.contains('first-group-item')).length;
+                            const groupDeclarationElement: HTMLLIElement | null = dropdownMenu.current.querySelector('.group-declaration');
+                            if (nbGroupsPassed > 0 && groupDeclarationElement) {
+                                elementToScroll.scrollTop = (focusedItem - 1) * itemHeight + (groupDeclarationElement.offsetHeight * nbGroupsPassed);
+                            } else {
+                                elementToScroll.scrollTop = (focusedItem - 1) * itemHeight;
+                            }
+                        } else {
+                            elementToScroll.scrollTop = (focusedItem - 1) * itemHeight;
+                        }
                     }
                 }
             } else {
-                setFocusedItem(filteredDataSources.length - 1);
+                setFocusedItem(filteredDataSource.length - 1);
                 if (dropdownMenu.current) {
                     const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector('div');
                     const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
                     if (elementToScroll) {
-                        elementToScroll.scrollTop = (filteredDataSources.length - 1) * itemHeight;
+                        elementToScroll.scrollTop = (filteredDataSource.length - 1) * itemHeight;
                     }
                 }
             }
@@ -257,25 +308,34 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id = unde
                 <ul ref={dropdownMenu} className={cn("overflow-hidden w-full text-sm right-0 shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1", styles.dropDownMenu, dropdownIsOpen ? 'rounded-b-md' : 'rounded-md')}>
                     { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
                     <div className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
-                        { filteredDataSources.map((item: SelectDataSourceInterface, index: number) => {
-                            return (<li 
-                                about={item.name} 
-                                onClick={ onItemSelect } 
-                                key={index} 
-                                value={item.id?.toString()} 
-                                className={cn(
-                                    "min-w-full relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible",
-                                    focusedItem == index ? `focused overflow-visible w-fit` : 'overflow-hidden',
-                                    (isMultiple ?
-                                        ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.id).includes(item.id) && 'selected')
-                                        :
-                                        ((selectedValue as SelectDataSourceInterface).id === item.id && 'selected')
-                                    )
-                                )}
-                                dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>
-                            </li>);
-                        }) }
-                        { filteredDataSources.length === 0 && <li className="text-gray-400 px-4 py-2 text-sm">No results found</li>}
+                        {filteredDataSource.map((item: SelectDataSourceInterface, index: number, arr: SelectDataSourceInterface[]) => {
+                            const previousItem: SelectDataSourceInterface | null = index > 0 ? arr[index - 1] : null;
+                            const switchingGroup: boolean = Boolean(groupBy && previousItem && previousItem[groupBy] !== item[groupBy as string]);
+                            return (
+                                <Fragment key={index}>
+                                    {switchingGroup && (
+                                        <li className="self-end ml-auto mr-2 py-2  px-4 w-fit text-end font-medium let italic text-white text-sm bg-gray-400 rounded-md text-ellipsis whitespace-nowrap tracking-wider group-declaration">{uppercaseFirstWordsLetters(item[(groupNames ?? groupBy) as string])}</li>
+                                    )}
+                                    <li 
+                                        about={item.name} 
+                                        onClick={onItemSelect} 
+                                        value={item.id?.toString()} 
+                                        className={cn(
+                                            "min-w-full h-fit relative text-ellipsis whitespace-nowrap block px-4 py-2 text-white bg-main hoverable active:bg-gray-500 cursor-pointer rounded-md hover:overflow-visible",
+                                            focusedItem === index ? `focused overflow-visible w-fit` : 'overflow-hidden',
+                                            (isMultiple ?
+                                                ((selectedValue as SelectDataSourceInterface[]).map((value: SelectDataSourceInterface) => value.id).includes(item.id) && 'selected')
+                                                :
+                                                ((selectedValue as SelectDataSourceInterface).id === item.id && 'selected')
+                                            ),
+                                            switchingGroup && 'first-group-item'
+                                        )}
+                                        dangerouslySetInnerHTML={{ __html: boldSearchedTokens(item.name) }}>
+                                    </li>
+                                </Fragment>
+                            );
+                        })}
+                        { filteredDataSource.length === 0 && <li className="text-gray-400 px-4 py-2 text-sm">No results found</li>}
                     </div>
                 </ul>
             </div>

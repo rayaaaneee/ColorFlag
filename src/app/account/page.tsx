@@ -24,7 +24,7 @@ const Account = () => {
 
     return (
         <Select
-            dataSources={genders}
+            dataSource={genders}
             itemName="gender"
         />
     );

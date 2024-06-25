@@ -2,8 +2,14 @@ import NotFound from "@/components/not-found";
 import ContinentAPI from "@/lib/utils/api/continent-api";
 import CountryAPI from "@/lib/utils/api/country-api";
 import type Continent from "@/utils/interfaces/continent";
+import Country from "@/utils/interfaces/country";
 import uppercaseFirstWordsLetters from "@/utils/string-treatment/uppercaseFirstWordsLetters";
 import ClientComponent from "./_components/client-component";
+
+
+export interface SelectableCountry extends Country { 
+    continent_name: string;
+}
 
 const getContinents = (continent_ids: string): {
     continents: Continent[];
@@ -44,10 +50,19 @@ const Page = ({ searchParams: { continent_ids } }: PageProps) => {
         return <NotFound />
     }
 
-    const countries = continent_ids ? continents.map((continent) => {
-        if (continent.countries) return continent.countries
-        else return []
-    }).flat() : CountryAPI.getInstance().getAll().asList();
+    const countries: SelectableCountry[] =
+        continent_ids ? continents.map((continent) => {
+            if (continent.countries) return continent.countries.map(country => ({
+                ...country,
+                continent_name: continent.name
+            }))
+            else return []
+        }).flat()
+            :
+        CountryAPI.getInstance().getAll(true).select((country) => ({
+            ...country,
+            continent_name: country.continent?.name
+        })).filter<SelectableCountry>(country => country.continent_name !== undefined).asList();
 
     return (
         <>

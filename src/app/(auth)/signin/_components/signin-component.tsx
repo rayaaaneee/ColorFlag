@@ -51,9 +51,7 @@ const SignInComponent = ({ }: SignInComponentProps) => {
                 toast.success(action.msg);
             }
         }
-        
         setIsLoading(false);
-
     }
 
     return (
@@ -69,15 +67,15 @@ const SignInComponent = ({ }: SignInComponentProps) => {
                         <FacebookConnectionButton />
                         <GithubConnectionButton />
                     </div>
-                    <form onSubmit={onSubmit} className="flex flex-col gap-3 w-72">
+                    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-72">
                         <Bar barClassName="border-gray-400">
                             <HeadingThree className="mb-0 font-semibold text-gray-400">Or</HeadingThree>
                         </Bar>
                         <InputText size="xl" mainColor name="username" placeholder="Username" type="username" />
                         <InputText size="xl" mainColor name="password" placeholder="Password" type="password" />
+                        <CustomLink href="/forgot-password" className="self-end">Forgot password ?</CustomLink>
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
-                        <Button type="submit" className="bg-main text-white rounded-full text-md">Sign In</Button>
-                        <CustomLink href="/forgot-password">Forgot password ?</CustomLink>
+                        <Button type="submit" tooltipClassName="m-auto" className="bg-main text-white rounded-full font-medium">Sign In</Button>
                     </form>
                 </>
             ) }

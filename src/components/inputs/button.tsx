@@ -6,6 +6,7 @@ import Tooltip, { TooltipPosition } from "../utils/tooltip";
 
 export interface ButtonProps {
     className?: string,
+    tooltipClassName?: string,
     onClick?: MouseEventHandler<HTMLButtonElement>,
     onMouseEnter?: MouseEventHandler<HTMLButtonElement>,
     onMouseLeave?: MouseEventHandler<HTMLButtonElement>,
@@ -18,7 +19,7 @@ export interface ButtonProps {
     type?: "button" | "submit" | "reset"
 }
 
-const Button = ({ onClick, children = "OK", className = "", title = undefined, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false }: ButtonProps) => {
+const Button = ({ onClick, children = "OK", className = "", title, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false, tooltipClassName }: ButtonProps) => {
     const btnProps = {
         title: title,
         onClick: onClick,
@@ -43,7 +44,7 @@ const Button = ({ onClick, children = "OK", className = "", title = undefined, h
     };
     
     return (
-        <Tooltip text={title} position={titlePosition}>
+        <Tooltip className={tooltipClassName} text={title} position={titlePosition}>
             {asDiv ? (
                 <div { ...divProps }>
                     { children }

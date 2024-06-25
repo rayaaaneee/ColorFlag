@@ -8,7 +8,7 @@ class QueryBuilder<T> implements QueryBuilderInterface<T> {
     
     public select<Y>(selector: (data: T, i: number, arr: T[]) => Y): QueryBuilder<Y> {
         const data: Y[] = Array.from(this.data).map(selector);
-        return new QueryBuilder(data);
+        return new QueryBuilder<Y>(data);
     }
 
     public sort(compareFn: (a: T, b: T) => number): QueryBuilder<T> {
@@ -26,6 +26,11 @@ class QueryBuilder<T> implements QueryBuilderInterface<T> {
 
     public every(filter: (data: T) => boolean = _ => true): boolean {
         return Array.from(this.data).every(filter);
+    }
+
+    public filter<Y extends T>(filter: (data: T) => boolean = _ => true): QueryBuilder<Y> {
+        const filteredData: Y[] = Array.from(this.data).filter(filter) as Y[];
+        return new QueryBuilder<Y>(filteredData);
     }
 
     public asList(): T[] {

@@ -2,13 +2,13 @@
 
 import Button from "@/components/inputs/button";
 import Select, { type ElementValue, type SelectDataSourceInterface, type Setter } from "@/components/inputs/select";
-import type Country from "@/utils/interfaces/country";
 import { useRouter } from "next/navigation";
 import { useState, type MouseEventHandler } from "react";
 import toast from "react-hot-toast";
+import { SelectableCountry } from "../page";
 
 export interface ClientComponentPropsInterface {
-    countries: Country[];
+    countries: SelectableCountry[];
 }
 
 const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
@@ -23,14 +23,18 @@ const ClientComponent = ({ countries }: ClientComponentPropsInterface) => {
             toast.error("Please select a country");
         }
     }
-
     return (
         <>
             <Select 
-                dataSources={ countries as SelectDataSourceInterface[] }
-                itemName="country"
-                isSearcheable={true}
                 setter={setSelectedCountry as Setter}
+                dataSource={ countries as SelectDataSourceInterface[] }
+                itemName="country"
+
+                isSearcheable={true}
+
+                groupBy="continent_id"
+                groupNames="continent_name"
+                sortGroups={true}
             />
             <Button onClick={goToPage} className="z-0" >OK</Button>
         </>            

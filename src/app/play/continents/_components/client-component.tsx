@@ -29,7 +29,7 @@ export const ClientComponent = ({ continents }: ClientComponentProps) => {
     return (
         <>
             <Select 
-                dataSources={ continents as SelectDataSourceInterface[] } 
+                dataSource={ continents as SelectDataSourceInterface[] } 
                 itemName="continent"
                 isMultiple={true}
                 setter={setSelectedContinents as Setter}
