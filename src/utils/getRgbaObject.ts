@@ -8,7 +8,7 @@ const getRgbaObject = (rgb: string): RgbaObject => {
         green: parseInt(rgbArray[1]),
         blue: parseInt(rgbArray[2]),
         alpha: 1
-    } as RgbaObject;
+    } satisfies RgbaObject;
 }
 
 export default getRgbaObject;

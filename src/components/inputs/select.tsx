@@ -41,11 +41,33 @@ interface SelectInterface <T> {
 }
 
 const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpen = false, isSearcheable = false, isMultiple = false, dataSource, setter, itemName = "item", groupBy, sortGroups = false, groupNames }: SelectInterface<T>, ref: ForwardedRef<HTMLDivElement>) => {
+
+    const initDefaultValue = (): string => {
+        const prefix: string = (isMultiple ? "some" : addAnBeforeVowel(itemName));
+        const word: string = (isMultiple ? getPluralWord(itemName) : itemName);
+
+        return `Select ${prefix} ${word}`;
+    }
     
     const dropdownButton = useRef<HTMLButtonElement>(null);
     const dropdownMenu = useRef<HTMLUListElement>(null);
     const searchInput = useRef<HTMLInputElement>(null);
     itemName = itemName.toLowerCase();
+
+    const defaultSelectedValue: SelectDataSourceInterface = {
+        name: initDefaultValue(),
+        id: undefined,
+        isDefault: true
+    };
+
+    const [selectedValue, setSelectedValue] = 
+        useState<SelectedValueType>(isMultiple ? [defaultSelectedValue] : defaultSelectedValue);
+
+    const [focusedItem, setFocusedItem] = useState<number>(-1);
+
+    const [dropdownIsOpen, setDropdownIsOpen] = useState(isOpen);
+
+    const [filteredDataSource, setFilteredDataSource] = useState<T[]>(dataSource);
     
     if (groupBy && groupNames) {
         if (dataSource.length !== 0) {
@@ -82,29 +104,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         return text.replace(new RegExp(`(${searchedTokens.join('|')})`, 'gi'), '<b>$1</b>');
     }
 
-    const initDefaultValue = (): string => {
-        const prefix: string = (isMultiple ? "some" : addAnBeforeVowel(itemName));
-        const word: string = (isMultiple ? getPluralWord(itemName) : itemName);
-
-        return `Select ${prefix} ${word}`;
-    }
-
-    const defaultSelectedValue: SelectDataSourceInterface = {
-        name: initDefaultValue(),
-        id: undefined,
-        isDefault: true
-    };
-
-    const [selectedValue, setSelectedValue] = 
-        useState<SelectedValueType>(isMultiple ? [defaultSelectedValue] : defaultSelectedValue);
-
-    const [focusedItem, setFocusedItem] = useState<number>(-1);
-
-    const [dropdownIsOpen, setDropdownIsOpen] = useState(isOpen);
-
-    const [filteredDataSource, setFilteredDataSource] = useState<T[]>(dataSource);
-
-    const onSearchInput = () => {
+    const onSearchInput = (): void => {
         if (searchInput.current) {
             const searchTerm: string = replaceAccents(searchInput.current.value.toLowerCase());
             const searchedWord: string[] = searchTerm.split(' ');
@@ -117,7 +117,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         }
     };
 
-    const onItemSelect: MouseEventHandler<HTMLLIElement> = (e) => {
+    const onItemSelect: MouseEventHandler<HTMLLIElement> = (e): void => {
         const element = e.currentTarget;
         const value: ElementValue = element.getAttribute('value') as ElementValue;
         const isSelected: boolean = element.classList.contains('selected');
@@ -153,18 +153,17 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
         }
     }
 
-    const scrollToTop = () => {
-        debugger;
+    const scrollToTop = (): void => {
         if (!dropdownMenu.current) return;
 
-        const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector<HTMLDivElement>(`div#listContainer`);
+        const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector<HTMLDivElement>(`div.list-container`);
         console.log(elementToScroll);
         if (elementToScroll) {
             elementToScroll.scrollTop = 0;
         }
     }
 
-    const closeSelectOnOutsideClick = (e: MouseEvent) => {
+    const closeSelectOnOutsideClick = (e: MouseEvent): void => {
         if (dropdownMenu.current && dropdownButton.current) {
             if (!dropdownMenu.current.contains(e.target as Node) && !dropdownButton.current.contains(e.target as Node) && dropdownIsOpen) {
                 setDropdownIsOpen(false);
@@ -178,14 +177,14 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
             setDropdownIsOpen(false);
         } else if (e.key === 'Enter') {
             if (focusedItem >= 0) {
-                const items = dropdownMenu.current?.querySelectorAll('li');
+                const items = dropdownMenu.current?.querySelectorAll<HTMLLIElement>('li:not(.group-declaration)');
                 if (items) {
                     const item = items[focusedItem];
                     item.click();
                 }
             } else {
                 if (filteredDataSource.length === 1) {
-                    const item = dropdownMenu.current?.querySelector('li');
+                    const item = dropdownMenu.current?.querySelector<HTMLLIElement>('li:not(.group-declaration)');
                     if (item) {
                         item.click();
                     }
@@ -203,9 +202,9 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                             const nbGroupsPassed: number = Array.from(dropdownMenu.current.querySelectorAll<HTMLLIElement>('li:not(.group-declaration)')).slice(0, focusedItem + i).filter((element: HTMLLIElement) => element.classList.contains('first-group-item')).length;
                             const groupDeclarationElement: HTMLLIElement | null = dropdownMenu.current.querySelector('.group-declaration');
                             if (nbGroupsPassed > 0 && groupDeclarationElement) {
-                                elementToScroll.scrollTop = (focusedItem + 1) * itemHeight + (groupDeclarationElement.offsetHeight * nbGroupsPassed);
+                                elementToScroll.scrollTop = (focusedItem) * itemHeight + (groupDeclarationElement.offsetHeight * nbGroupsPassed);
                             } else {
-                                elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
+                                elementToScroll.scrollTop = (focusedItem) * itemHeight;
                             }
                         } else { 
                             elementToScroll.scrollTop = (focusedItem + 1) * itemHeight;
@@ -214,20 +213,15 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                 }
                 setFocusedItem(focusedItem => focusedItem + 1);
             } else {
-                if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
-                    if (elementToScroll) {
-                        elementToScroll.scrollTop = 0;
-                    }
-                }
                 setFocusedItem(0);
+                scrollToTop();
             }
         } else if (e.key === 'ArrowUp') {
             if (focusedItem > 0) {
                 setFocusedItem(focusedItem => focusedItem - 1);
                 // Automatically scroll up in the list (only on the div that contains the list)
                 if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
+                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div.list-container`);
                     const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
                     if (elementToScroll) {
                         if (groupBy) {
@@ -245,12 +239,16 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                     }
                 }
             } else {
-                setFocusedItem(filteredDataSource.length - 1);
-                if (dropdownMenu.current) {
-                    const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div#listContainer`);
-                    const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
-                    if (elementToScroll) {
-                        elementToScroll.scrollTop = (filteredDataSource.length - 1) * itemHeight;
+                if (dropdownMenu.current) { 
+                    setFocusedItem(filteredDataSource.length - 1);
+                    const totalGroups: number = Array.from(dropdownMenu.current.querySelectorAll<HTMLLIElement>('li:not(.group-declaration)')).length;
+                    const groupDeclarationElement: HTMLLIElement | null = dropdownMenu.current.querySelector('.group-declaration');
+                    if (groupDeclarationElement !== null) {
+                        const elementToScroll: HTMLDivElement | null = dropdownMenu.current.querySelector(`div.list-container`);
+                        const itemHeight = dropdownMenu.current.querySelector('li')?.clientHeight || 0;
+                        if (elementToScroll) {
+                            elementToScroll.scrollTop = (filteredDataSource.length - 1) * itemHeight + (groupDeclarationElement.offsetHeight * totalGroups);
+                        }
                     }
                 }
             }
@@ -309,7 +307,7 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
 
     return (
         <div className={cn("relative group w-60", className)} id={id} ref={ref}>
-            <button onClick={ onClickSelect } ref={dropdownButton} id="dropdown-button" style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white bg-main border-gray-300 shadow-sm`}>
+            <button onClick={ onClickSelect } ref={dropdownButton} style={{ display: "grid", gridTemplateColumns: "1fr auto"}} className={`${dropdownIsOpen && "border-b-2 border-slate-100" } rounded-md justify-center w-full px-4 py-2 text-sm font-medium text-white bg-main border-gray-300 shadow-sm`}>
                 <span className="text-start mr-2 text-ellipsis whitespace-nowrap overflow-hidden">
                     { isMultiple ? 
                         ((selectedValue as T[])
@@ -324,8 +322,8 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
             </button>
             <div id={styles.ulWrapper} className={ `${ dropdownIsOpen && styles.opened }` }>
                 <ul ref={dropdownMenu} className={cn("overflow-hidden w-full text-sm right-0 shadow-lg bg-main ring-1 ring-black ring-opacity-5 p-1 space-y-1", styles.dropDownMenu, dropdownIsOpen ? 'rounded-b-md' : 'rounded-md')}>
-                    { (isSearcheable === true && (<input ref={searchInput} id="search-input" className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
-                    <div id={"listContainer"} className={`overflow-scroll no-scrollbar h-fit max-h-60`}>
+                    { (isSearcheable === true && (<input ref={searchInput} className="block w-full px-4 py-2 text-slate-50 bg-scnd rounded-md focus:outline-none" type="text" placeholder={ `Search ${itemName}`} autoComplete="off" />)) }
+                    <div className={`list-container overflow-scroll no-scrollbar h-fit max-h-60`}>
                         {filteredDataSource.map((item: T, index: number, arr: T[]) => {
                             const previousItem: T | null = index > 0 ? arr[index - 1] : null;
                             const switchingGroup: boolean = Boolean(groupBy && previousItem && previousItem[groupBy.toString()] !== item[groupBy as string]);
