@@ -326,10 +326,11 @@ const Select = <T extends SelectDataSourceInterface>({ className = "", id, isOpe
                     <div className={`list-container overflow-scroll no-scrollbar h-fit max-h-60`}>
                         {filteredDataSource.map((item: T, index: number, arr: T[]) => {
                             const previousItem: T | null = index > 0 ? arr[index - 1] : null;
-                            const switchingGroup: boolean = Boolean(groupBy && previousItem && previousItem[groupBy.toString()] !== item[groupBy as string]);
+                            const switchingGroup: boolean = Boolean(groupBy && ((previousItem && previousItem[groupBy.toString()] !== item[groupBy as string]) || previousItem === null));
+                            console
                             return (
                                 <Fragment key={index}>
-                                    {(switchingGroup || previousItem === null) && (
+                                    {(switchingGroup) && (
                                         <li className="self-end ml-auto mr-2 py-2 px-4 w-fit text-end font-medium let italic text-black text-sm bg-gray-100 rounded-3xl text-ellipsis whitespace-nowrap tracking-wider group-declaration border-main border-4">{uppercaseFirstWordsLetters(item[(groupNames ?? groupBy) as string])}</li>
                                     )}
                                     <li 
