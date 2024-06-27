@@ -75,7 +75,6 @@ model Game {
 model FlagColoringGame {
   id    String @id @default(cuid())
   item  String
-  id  String
   score Int
 
   game_id String @unique
@@ -94,7 +93,6 @@ model GuessMapGame {
 model GuessFlagGame {
   id      String  @id @default(cuid())
   item    String
-  id    String
   success Boolean
 
   game_id String @unique
