@@ -84,7 +84,7 @@ const SignUpComponent = ({}: SignUpComponentProps) => {
                             <InputText className="col-span-3" mainColor size="xl" placeholder="Confirm password" name="confirm-password" type="password" />
                         </div>
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
-                        <Button type="submit" className="bg-main text-white rounded-full text-md my-2">Sign Up</Button>
+                        <Button type="submit" className="bg-main text-white rounded-full text-md my-2" tooltipClassName="w-full">Sign Up</Button>
                         <Bar barClassName="border-gray-400 w-1/4">
                             <HeadingThree className="mb-0 font-semibold text-gray-400">Or with</HeadingThree>
                         </Bar>
