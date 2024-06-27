@@ -1,6 +1,6 @@
 import cn from "@/lib/utils/cn";
 import type ChildrenType from "@/utils/types/children-type";
-import { type MouseEventHandler } from "react";
+import { ForwardedRef, forwardRef, type MouseEventHandler } from "react";
 import Tooltip, { TooltipPosition } from "../utils/tooltip";
 
 
@@ -19,7 +19,7 @@ export interface ButtonProps {
     type?: "button" | "submit" | "reset"
 }
 
-const Button = ({ onClick, children = "OK", className = "", title, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false, tooltipClassName }: ButtonProps) => {
+const Button = ({ onClick, children = "OK", className = "", title, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false, tooltipClassName }: ButtonProps, ref: ForwardedRef<HTMLButtonElement>) => {
     const btnProps = {
         title: title,
         onClick: onClick,
@@ -50,7 +50,7 @@ const Button = ({ onClick, children = "OK", className = "", title, hasShadow = f
                     { children }
                 </div>
             ): (
-                <button { ...btnProps }>
+                <button ref={ref} { ...btnProps }>
                     { children }
                 </button>
             )}
@@ -58,4 +58,4 @@ const Button = ({ onClick, children = "OK", className = "", title, hasShadow = f
     );
 }
 
-export default Button;
+export default forwardRef(Button);

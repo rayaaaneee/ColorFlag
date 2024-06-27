@@ -74,7 +74,7 @@ const SignInComponent = ({ }: SignInComponentProps) => {
                         <InputText size="xl" mainColor name="username" placeholder="Username" type="username" />
                         <InputText size="xl" mainColor name="password" placeholder="Password" type="password" />
                         <CheckboxContainer size="lg" label="Remember me" id="remember-me" />
-                        <Button type="submit" tooltipClassName="w-full" className="bg-main text-white rounded-full font-medium">Sign In</Button>
+                        <Button type="submit" tooltipClassName="w-full" className=" w-full bg-main text-white rounded-full font-medium">Sign In</Button>
                         <CustomLink href="/forgot-password" className="self-end">Forgot password ?</CustomLink>
                     </form>
                 </>
