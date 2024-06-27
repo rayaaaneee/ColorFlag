@@ -19,7 +19,7 @@ export interface ButtonProps {
     type?: "button" | "submit" | "reset"
 }
 
-const Button = ({ onClick, children = "OK", className = "", title, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false, tooltipClassName }: ButtonProps, ref: ForwardedRef<HTMLButtonElement>) => {
+const Button = ({ onClick, children = "OK", className = "", title, hasShadow = false, disabled = false, onMouseEnter, onMouseLeave, type = "button", titlePosition = "top", asDiv = false, tooltipClassName }: ButtonProps, ref: ForwardedRef<HTMLButtonElement | HTMLDivElement>) => {
     const btnProps = {
         title: title,
         onClick: onClick,
@@ -46,11 +46,11 @@ const Button = ({ onClick, children = "OK", className = "", title, hasShadow = f
     return (
         <Tooltip className={tooltipClassName} text={title} position={titlePosition}>
             {asDiv ? (
-                <div { ...divProps }>
+                <div ref={ref as ForwardedRef<HTMLDivElement>} { ...divProps }>
                     { children }
                 </div>
             ): (
-                <button ref={ref} { ...btnProps }>
+                <button ref={ref as ForwardedRef<HTMLButtonElement>} { ...btnProps }>
                     { children }
                 </button>
             )}
